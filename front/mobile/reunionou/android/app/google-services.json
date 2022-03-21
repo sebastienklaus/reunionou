@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "190214868440",
+    "project_id": "reunionou-50146",
+    "storage_bucket": "reunionou-50146.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190214868440:android:fd743f74c804d3a5ea36ad",
+        "android_client_info": {
+          "package_name": "com.example.reunionou"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "190214868440-ulc4ihjpqil79334nee3o72qns6p79uh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZQPsIsamIQA8O5FELJ_n_dy7oELsdD0s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "190214868440-ulc4ihjpqil79334nee3o72qns6p79uh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
