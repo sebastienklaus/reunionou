@@ -12,3 +12,27 @@
 - Backend : Slim
 - Web app : Vue.js
 - Mobile app : Flutter
+
+
+# API end-points
+
+## Events/Messages Service
+
+### Client
+- /signin/ : **POST**
+- /events/{id} : **GET** - **POST** - **PUT** - **DELETE**
+- /events/ : **GET**
+- /events/{id}/messages : **GET**
+- /messages/{id} : **PUT** - **POST** - **DELETE**
+- /events/{id}/members : **GET**
+
+### Backoffice
+- All routes in Client
+- /messages/{id} : **GET**
+- /users/{id} : **GET** - **POST** - **PUT** - **DELETE**
+- /users/ : **GET**
+
+## Auth Users Service
+- /create/ : **POST**
+- /auth/ : **POST**
+- /check/ : **GET**

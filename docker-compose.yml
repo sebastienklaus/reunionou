@@ -5,13 +5,7 @@ networks:
     driver: bridge
 
 services:
-###########
- # service php / apache utilisant un vhost dont le nom est celui de la machine hôte
- #
- #  le service sera accessible à https://docketu.iutnc.univ-lorraine.fr:19043
-###########
-
-  back1:
+  events.service:
     image: canals/php:latest
     environment:
       - VHOST_HOSTNAME=docketu.iutnc.univ-lorraine.fr
@@ -19,33 +13,28 @@ services:
       - http_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
       - https_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
     ports:
-      - "19080:80"
-      - "19043:443"
+      - "62010:80"
+      # - "19043:443"
     volumes:
-      - ./backend1/public:/var/www/web
-      - ./backend1/src:/var/www/src
+      - ./events_service/public:/var/www/web
+      - ./events_service/src:/var/www/src
     working_dir: /var/www/src
     networks:
       - d.net
     links:
       - mysql:db
 
-###########
-# service php / apache utilisant le vhost par défaut
-#
-#  le service sera accessible à https://docketu.iutnc.univ-lorraine.fr:19143
-###########
-  back2:
+  auth.service:
     image: canals/php:latest
     environment:
       - http_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
       - https_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
     ports:
-    - "19180:80"
-    - "19143:443"
+    - "62011:80"
+    # - "19143:443"
     volumes:
-    - ./backend2/public:/var/www/html
-    - ./backend2/src:/var/www/src
+    - ./auth_service/public:/var/www/html
+    - ./auth_service/src:/var/www/src
     working_dir: /var/www/src
     networks:
     - d.net
@@ -63,7 +52,7 @@ services:
       - http_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
       - https_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
     ports:
-      - "19280:80"
+      - "62012:80"
     volumes:
       - ./front/public:/usr/local/apache2/htdocs
     working_dir: /usr/local/apache2/htdocs
@@ -90,29 +79,29 @@ services:
   myadmin:
     image: phpmyadmin/phpmyadmin:latest
     ports:
-      - "19780:80"
+      - "62013:80"
     links:
       - mysql:db
     networks:
       - d.net
 
-################################################
-# mongodb & mongo-express
-###############################################
-  mongo:
-    image: mongo:latest
-    volumes:
-    - ./backend2/data:/var/data
-    working_dir: /var/data
-    networks:
-    - d.net
+# ################################################
+# # mongodb & mongo-express
+# ###############################################
+#   mongo:
+#     image: mongo:latest
+#     volumes:
+#     - ./backend2/data:/var/data
+#     working_dir: /var/data
+#     networks:
+#     - d.net
 
 
-  mongo-express:
-    image: mongo-express:latest
-    networks:
-    - d.net
-    ports:
-    - "19781:8081"
-    links:
-    - mongo:mongo
+#   mongo-express:
+#     image: mongo-express:latest
+#     networks:
+#     - d.net
+#     ports:
+#     - "19781:8081"
+#     links:
+#     - mongo:mongo
