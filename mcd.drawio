@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-03-21T13:47:46.780Z" agent="5.0 (X11)" etag="Je-xvwZPOYj1OSDFR9w5" version="17.1.3" type="github">
+<mxfile host="app.diagrams.net" modified="2022-03-21T13:49:29.224Z" agent="5.0 (X11)" etag="FxhTZyrxgw2nFUF3TLYe" version="17.1.3" type="github">
   <diagram id="kh0qzleask_zGiQaN6OA" name="Page-1">
     <mxGraphModel dx="1356" dy="820" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -37,7 +37,7 @@
         <mxCell id="gKOD2q_dbxWJM7LlFmg6-11" value="+ author: string" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="gKOD2q_dbxWJM7LlFmg6-7">
           <mxGeometry y="104" width="150" height="26" as="geometry" />
         </mxCell>
-        <mxCell id="gKOD2q_dbxWJM7LlFmg6-30" value="+ is_users: boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="gKOD2q_dbxWJM7LlFmg6-7">
+        <mxCell id="gKOD2q_dbxWJM7LlFmg6-30" value="+ is_user: boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="gKOD2q_dbxWJM7LlFmg6-7">
           <mxGeometry y="130" width="150" height="26" as="geometry" />
         </mxCell>
         <mxCell id="gKOD2q_dbxWJM7LlFmg6-12" value="+ created_at: date" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="gKOD2q_dbxWJM7LlFmg6-7">
