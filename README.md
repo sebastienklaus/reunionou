@@ -19,6 +19,7 @@
 ## Events/Messages Service
 
 ### Client
+- /signin/ : **POST**
 - /events/{id} : **GET** - **POST** - **PUT** - **DELETE**
 - /events/ : **GET**
 - /events/{id}/messages : **GET**
@@ -26,15 +27,12 @@
 - /events/{id}/members : **GET**
 
 ### Backoffice
-- /All routes in Client
+- All routes in Client
 - /messages/{id} : **GET**
 - /users/{id} : **GET** - **POST** - **PUT** - **DELETE**
 - /users/ : **GET**
-- /guests/{id} :  **GET** - **POST** - **PUT** - **DELETE**
-- /guests/ : **GET**
-
 
 ## Auth Users Service
-- /signin/ : **POST**
+- /create/ : **POST**
 - /auth/ : **POST**
 - /check/ : **GET**
