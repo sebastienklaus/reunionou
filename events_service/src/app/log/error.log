@@ -1,0 +1,5 @@
+[2022-03-22T13:39:39.687674+00:00] lbs.log.ERROR: GET http://events.service.local:62010/test : malformed uri [] []
+[2022-03-22T13:40:18.217882+00:00] lbs.log.ERROR: GET http://events.service.local:62010/getAllEvent : malformed uri [] []
+[2022-03-22T13:40:25.516621+00:00] lbs.log.ERROR: GET http://events.service.local:62010/getAllEvent : malformed uri [] []
+[2022-03-22T13:40:41.741150+00:00] lbs.log.ERROR: error | 500 | internal server error: Class 'reu\events\app\models\Events' not found | /var/www/src/app/controller/Events_Controller.phpline: 31 [] []
+[2022-03-22T13:46:16.278840+00:00] lbs.log.ERROR: error | 500 | internal server error: Class 'reu\events\app\controller\Messages' not found | /var/www/src/app/controller/Events_Controller.phpline: 31 [] []
