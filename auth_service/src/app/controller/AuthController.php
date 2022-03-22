@@ -62,7 +62,7 @@ class AuthController {
         $token = JWT::encode(['iss' => 'http://api.auth.local/auth',
             'aud' => 'http://api.backoffice.local',
             'iat' => time(),
-            'exp' => time() + (12 * 30 * 24 * 3600),
+            'exp' => time() + (3600 * 24 * 30), // validité = 30 jours
             'upr' => [
                 'email' => $user->email,
                 'username' => $user->username,
@@ -82,15 +82,17 @@ class AuthController {
 
 
     public function check(Request $req, Response $resp, $args): Response {
-
         try {
             
+            //le secret est conservé dans le container de dépendances
             $secret = $this->container->settings['secret'];
 
+            //le token est récupéré et scanné depuis le header "Authorization" de la requête
             $h = $req->getHeader('Authorization')[0] ;
             $tokenstring = sscanf($h, "Bearer %s")[0] ;
             $token = JWT::decode($tokenstring, new Key($secret,'HS512' ) );
 
+            //le tableau de data retourné est formé
             $data = [
                 'user_mail' => $token->upr->email,
                 'user_username' => $token->upr->username,
@@ -103,13 +105,13 @@ class AuthController {
             return Writer::jsonError($req, $resp, 401, 'The token is expired');
 
         } catch (SignatureInvalidException $e) {
-            return Writer::jsonError($req, $resp, 401, 'The signature is not valid');
+            return Writer::jsonError($req, $resp, 401, 'The signature isn\'t valid');
 
         } catch (BeforeValidException $e) {
             return Writer::jsonError($req, $resp, 401, 'BeforeValidException');
 
         } catch (\UnexpectedValueException $e) { 
-            return Writer::jsonError($req, $resp, 401, 'The value of token is not the right one');
+            return Writer::jsonError($req, $resp, 401, 'The value of token is wrong');
 
         }    
 
