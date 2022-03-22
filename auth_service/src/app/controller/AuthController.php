@@ -40,7 +40,7 @@ class AuthController {
         list($email, $pass) = explode(':', $authstring);
 
         try {
-            $user = User::select('id', 'email', 'username', 'password', 'refresh_token')
+            $user = User::select('email','password', 'refresh_token')
                 ->where('email', '=', $email)
                 ->firstOrFail();
 
