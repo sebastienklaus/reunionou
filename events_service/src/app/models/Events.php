@@ -13,8 +13,13 @@ class Events extends \Illuminate\Database\Eloquent\Model
 
     // fillable ?
 
-    // public function items()
-    // {
-    //     return $this->hasMany('\reu\events\app\models\Item', 'command_id');
-    // }
+    public function messages()
+    {
+        return $this->hasMany('\reu\events\app\models\Messages', 'event_id');
+    }
+
+    public function members()
+    {
+        return $this->hasMany('\reu\events\app\models\Members', 'event_id');
+    }
 }

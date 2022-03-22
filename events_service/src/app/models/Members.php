@@ -18,9 +18,8 @@ class Members extends \Illuminate\Database\Eloquent\Model
     // );
 
 
-
-    // public function events()
-    // {
-    //     return $this->belongsTo('\reu\events\app\models\Events', 'command_id');
-    // }
+    public function events()
+    {
+        return $this->belongsTo('\reu\events\app\models\Events', 'event_id');
+    }
 }

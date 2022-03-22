@@ -15,15 +15,15 @@ $app->get('/events[/]', Events_Controller::class . ':getAllEvent')
     ->setName('getAllEvent');
 
     
-// // Messages
+// Messages
 
-// $app->get('/events/{id}/messages[/]]', Messages_Controller::class . ':getMessagesByEvent')
+$app->get('/messages/{id}[/]]', Messages_Controller::class . ':getMessage')
+    ->setName('getMessage');
+
+// $app->get('/events/{id}/messages[/]', Messages_Controller::class . ':getMessagesByEvent')
 //     ->setName('getMessagesByEvent');
-
-// $app->get('/messages/{id}[/]]', Messages_Controller::class . ':getMessage')
-//     ->setName('getMessage');
 
 // // Members
 
 // $app->get('/events/{id}/members[/]]', Members_Controller::class . ':getMembersByEvent')
-//     ->setName('getEventMembers');
+//     ->setName('getMembersByEvent');

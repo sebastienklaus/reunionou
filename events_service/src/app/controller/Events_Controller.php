@@ -26,28 +26,6 @@ class Events_Controller
         $this->container = $container;
     }
 
-    // // Toutes les commandes
-    // public function getAllEventTest(Request $req, Response $resp): Response
-    // {
-
-    //     $event = Events::select(['id', 'username'])->get();
-
-    //     // Construction des donnés à retourner dans le body
-    //     $datas_resp = [
-    //         "type" => "collection",
-    //         "test" => $event
-    //     ];
-
-    //     $resp = $resp->withStatus(200);
-    //     $resp = $resp->withHeader('application-header', 'TD 1');
-    //     $resp = $resp->withHeader("Content-Type", "application/json;charset=utf-8");
-
-    //     $resp->getBody()->write(json_encode($datas_resp));
-
-    //     return $resp;
-    // }
-
-
     // // Créer une commande
     // public function createCommande(Request $req, Response $resp, array $args): Response
     // {
@@ -189,82 +167,82 @@ class Events_Controller
     //     //
     // }
 
-    // // get une commande
-    // public function getCommande(Request $req, Response $resp, array $args): Response
-    // {
-    //     $id_commande = $args['id'];
+    // 
+    public function getEvent(Request $req, Response $resp, array $args): Response
+    {
+        $id_event = $args['id'];
+        
+        try {
+            
+            //* Modification TD4.2
+            $event = Events::select(['id', 'title', 'description', 'author', 'spot', 'date', 'created_at', 'updated_at'])
+            ->where('id', '=', $id_event)
+            ->firstOrFail();
 
-    //     // Récupérer les queries
-    //     $query_embed = $req->getQueryParams()['embed'] ?? null;
+            //TODO Vérifier type de controle depuis réception base de donnée dans cours
+            //TODO étape filtrage à garder ou améliorer ?
+            $event_resp = [
+                'id' => $event->id,
+                'title' => $event->title,
+                'description' => $event->description,
+                'author' => $event->author,
+                'spot' => $event->spot,
+                'date' => $event->date,
+                'created_at' => $event->created_at,
+                'updated_at' => $event->updated_at
+            ];
 
-    //     try {
+            // Récupération de la route events                            
+            $pathForEvent = $this->container->router->pathFor(
+                'getEvent',
+                ['id' => $id_event]
+            );
 
-    //         // $commande = Commande::select(['id', 'nom', 'mail', 'montant'])
-    //         //                     ->where('id', '=', $id_commande)
-    //         //                     ->firstOrFail();
+            // // Récupération de la route              
+            // //? route Event Members + Messages pour hateoas ?                  
+            // $pathForMessagesByEvent = $this->container->router->pathFor(
+            //     'getMessagesByEvent',
+            //     ['id' => $id_commande]
+            // );
 
-    //         //* Modification TD4.2
-    //         $commande = Commande::select(['id', 'mail', 'nom', 'created_at', 'updated_at', 'livraison', 'montant'])
-    //             ->where('id', '=', $id_commande)
-    //             ->firstOrFail();
+            // $pathForMembersByEvent = $this->container->router->pathFor(
+            //     'getMembersByEvent',
+            //     ['id' => $id_commande]
+            // );
 
-    //         // Récupération de la route commandes                            
-    //         $pathForCommandes = $this->container->router->pathFor(
-    //             'getCommande',
-    //             ['id' => $id_commande]
-    //         );
-
-    //         // Récupération de la rouge commandesItems
-    //         // Récupération de la route                                
-    //         $pathForCommandesItems = $this->container->router->pathFor(
-    //             'getCommandesItems',
-    //             ['id' => $id_commande]
-    //         );
-
-    //         // Création des liens hateos
-    //         $hateoas = [
-    //             "items" => ["href" => $pathForCommandesItems],
-    //             "self" => ["href" => $pathForCommandes]
-    //         ];
-
-
-    //         // Création du body de la réponse
-    //         //? Renomer les keys ou laisser les noms issus de la DB ?
-    //         $datas_resp = [
-    //             "type" => "ressource",
-    //             // "commande" => $commande_resp
-    //             "commande" => $commande,
-    //             "links" => $hateoas
-    //         ];
-
-    //         // Ressources imbiriquée //? peut se mettre/s'automatiser ailleurs ?
-    //         if ($query_embed === 'categories') { //? invoquer directmeent getQueryParam ici ? 
-    //             //! === items plutôt ?? $query=$query->with('items') ??? faire une seul query pour tout, mettre dans try catch
-    //             $items = $commande->items()->select('id', 'libelle', 'tarif', 'quantite')->get();
-    //             $datas_resp["commande"]["items"] = $items;
-    //         }
+            // Création des liens hateos
+            $hateoas = [
+                "self" => ["href" => $pathForEvent],
+                // "members" => ["href" => $pathForMembersByEvent],
+                // "messages" => ["href" => $pathForMessagesByEvent]
+            ];
 
 
-    //         $resp = $resp->withStatus(200);
-    //         $resp = $resp->withHeader('application-header', 'TD 1');
-    //         $resp = $resp->withHeader("Content-Type", "application/json;charset=utf-8");
+            // Création du body de la réponse
+            //? Renomer les keys ou laisser les noms issus de la DB ?
+            $datas_resp = [
+                "type" => "ressource",
+                "event" => $event_resp,
+                "links" => $hateoas
+            ];
+
+            //? Ressources imbriquées ? à priori non.
+
+            $resp = $resp->withStatus(200);
+            $resp = $resp->withHeader("Content-Type", "application/json;charset=utf-8");
+            
+            $resp->getBody()->write(json_encode($datas_resp));
+
+            return $resp;
+        } catch (ModelNotFoundException $e) {
+
+            $clientError = $this->container->clientError;
+            return $clientError($req, $resp, 404, "Event not found");
 
 
-    //         $resp->getBody()->write(json_encode($datas_resp));
-
-    //         return $resp;
-    //     } catch (ModelNotFoundException $e) {
-
-    //         //TODO: Ask
-    //         //? Which is the best ??
-
-    //         $clientError = $this->container->clientError;
-    //         return $clientError($req, $resp, 404, "Commande not found");
-
-
-    //         // return Writer::json_error($resp, 404, "Alors j'ai bien regardé, j'ai pas trouvé ta commande");
-    //     }
-    // }
+            // return Writer::json_error($resp, 404, "Alors j'ai bien regardé, j'ai pas trouvé ta commande");
+        }
+    }
 
     // // Toutes les commandes
     public function getAllEvent(Request $req, Response $resp): Response
