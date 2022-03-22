@@ -69,7 +69,7 @@ class AuthController {
             ]],
             $secret, 'HS512');
 
-        $user->refresh_token = bin2hex(random_bytes(32));
+        $user->refresh_token = $token;
         $user->save();
         $data = [
             'access-token' => $token,
