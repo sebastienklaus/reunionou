@@ -11,8 +11,8 @@ class Validators{
         return [
             'fullname' => v::stringType()->alpha(),
             'email' => v::email(),
-            'username' => v::stringType()->alnum('- @ + ! ? & #'),
-            'password'=> v::stringType()->alnum('- @ + ! ? & #'),
+            'username' => v::stringType()->alnum('@ - . + _'),
+            'password'=> v::stringType()->alnum("! # $ % & ' ( ) * + , - . / : ; < = > ? @ [ \ ] ^ _ ` { | } ~ "),
         ];
     }
 }
