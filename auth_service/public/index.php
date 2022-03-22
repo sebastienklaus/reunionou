@@ -33,7 +33,7 @@ $app->get('/check[/]', AuthController::class . ':check')
 
 $app->post('/create[/]', AuthController::class . ':createAccount')
     ->add(Middleware::class . ':createID')
-    ->add(new Validation(Validators::validators_createCommand()))
+    ->add(new Validation(Validators::validators_createUser()))
     ->setName('check');
     
 $app->run();

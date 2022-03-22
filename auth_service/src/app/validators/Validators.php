@@ -6,7 +6,7 @@ use \Respect\Validation\Validator as v;
 
 class Validators{
 
-    public static function validators_createCommand(){
+    public static function validators_createUser(){
 
         return [
             'fullname' => v::stringType()->alpha(),
