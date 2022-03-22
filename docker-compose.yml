@@ -5,103 +5,96 @@ networks:
     driver: bridge
 
 services:
+
+# Service d'events/messages
   events.service:
     image: canals/php:latest
     environment:
-      - VHOST_HOSTNAME=docketu.iutnc.univ-lorraine.fr
+      - VHOST_HOSTNAME=events.service.local
       - VHOST_DOCROOT=/var/www/web
-      - http_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
-      - https_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
     ports:
       - "62010:80"
-      # - "19043:443"
     volumes:
       - ./events_service/public:/var/www/web
       - ./events_service/src:/var/www/src
-    working_dir: /var/www/src
+    working_dir: /var/www/web
     networks:
       - d.net
     links:
-      - mysql:db
+      - mysql.events:db
 
+# Service d'utilisateurs
   auth.service:
     image: canals/php:latest
-    environment:
-      - http_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
-      - https_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
     ports:
-    - "62011:80"
-    # - "19143:443"
+      - "62011:80"
     volumes:
-    - ./auth_service/public:/var/www/html
-    - ./auth_service/src:/var/www/src
+      - ./auth_service/public:/var/www/html
+      - ./auth_service/src:/var/www/src
     working_dir: /var/www/src
     networks:
-    - d.net
-    links:
-    - mysql:db
-
-###############
-#  service apache pour la webapp front
-#  service accessible sur http://docketu.iutnc.univ-lorraine.fr:19280
-###############
-
-  webfront:
-    image: httpd:latest
-    environment:
-      - http_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
-      - https_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
-    ports:
-      - "62012:80"
-    volumes:
-      - ./front/public:/usr/local/apache2/htdocs
-    working_dir: /usr/local/apache2/htdocs
-    networks:
       - d.net
+    links:
+      - mysql.users:db
+
+# ###############
+# #  service apache pour la webapp front
+# #  service accessible sur http://docketu.iutnc.univ-lorraine.fr:19280
+# ###############
+
+#   webfront:
+#     image: httpd:latest
+#     # environment:
+#     #   - http_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
+#     #   - https_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
+#     ports:
+#       - "62012:80"
+#     volumes:
+#       - ./front/public:/usr/local/apache2/htdocs
+#     working_dir: /usr/local/apache2/htdocs
+#     networks:
+#       - d.net
 
 
 #############################
 # mysql + phpmyadmin
 #############################
-  mysql:
+# Base de données d'events/messages
+  mysql.events:
+    image: mariadb:latest
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8 --collation-server=utf8_general_ci
+    environment:
+      - MYSQL_ROOT_PASSWORD=root456
+      - MYSQL_USER=events
+      - MYSQL_PASSWORD=events
+      - MYSQL_DATABASE=mysql.events
+    volumes :
+      - ./events_service/sql:/var/sql
+    ports:
+      - 6307:3306
+    networks:
+      - d.net
+
+# Base de données d'utilisateurs
+  mysql.users:
     image: mariadb:latest
     command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8 --collation-server=utf8_general_ci
     environment:
       - MYSQL_ROOT_PASSWORD=root123
-      - MYSQL_USER=com
-      - MYSQL_PASSWORD=com
-      - MYSQL_DATABASE=com
+      - MYSQL_USER=users
+      - MYSQL_PASSWORD=users
+      - MYSQL_DATABASE=mysql.users
     volumes :
-      - ./backend1/sql:/var/sql
-    networks:
-      - d.net
-
-  myadmin:
-    image: phpmyadmin/phpmyadmin:latest
+      - ./auth_service/sql:/var/sql
     ports:
-      - "62013:80"
-    links:
-      - mysql:db
+      - 3307:3306
     networks:
       - d.net
 
-# ################################################
-# # mongodb & mongo-express
-# ###############################################
-#   mongo:
-#     image: mongo:latest
-#     volumes:
-#     - ./backend2/data:/var/data
-#     working_dir: /var/data
-#     networks:
-#     - d.net
-
-
-#   mongo-express:
-#     image: mongo-express:latest
-#     networks:
-#     - d.net
-#     ports:
-#     - "19781:8081"
-#     links:
-#     - mongo:mongo
+# Administration des bases de données
+  adminer:
+    image: adminer
+    ports:
+      - '8080:8080'
+    networks:
+      - d.net
