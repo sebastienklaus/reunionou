@@ -118,7 +118,7 @@ class Messages_Controller
                 'content' => $message->content,
                 'author' => $message->author,
                 'media' => $message->media,
-                // 'event_id' => $message->event_id, //? to be or not to be ?
+                'event_id' => $message->event_id, //? to be or not to be ?
                 'created_at' => $message->created_at,
                 'updated_at' => $message->updated_at
             ];
@@ -130,19 +130,25 @@ class Messages_Controller
                 ['id' => $id_event]
             );
 
+            $pathForEvent = $this->container->router->pathFor(
+                'getEvent',
+                ['id' => $id_event]
+            );
 
             // Création des liens hateos
             $hateoas = [
                 "self" => ["href" => $pathForMessagesByEvent],
+                "event" => ["href" => $pathForEvent]
             ];
 
 
             // Création du body de la réponse
             //? Renomer les keys ou laisser les noms issus de la DB ?
             $datas_resp = [
-                "type" => "ressource",
+                "type" => "collection",
                 "count" => $nbMessage,
                 "message" => $messages_resp,
+                "links" => $hateoas
    
             ];
 
@@ -157,7 +163,7 @@ class Messages_Controller
         } catch (ModelNotFoundException $e) {
 
             $clientError = $this->container->clientError;
-            return $clientError($req, $resp, 404, "Message not found");
+            return $clientError($req, $resp, 404, "Event not found");
 
         }
     }

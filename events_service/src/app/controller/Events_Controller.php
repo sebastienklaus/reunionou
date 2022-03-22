@@ -266,7 +266,7 @@ class Events_Controller
                 'spot' => $event->spot,
                 'date' => $event->date,
                 'created_at' => $event->created_at,
-                'updated_at' => $event->updated_at
+                'updated_at' => $event->updated_at //?rajouter un link avec pathfor ?
             ];
         }
 
