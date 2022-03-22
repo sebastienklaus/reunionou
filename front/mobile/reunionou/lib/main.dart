@@ -1,22 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:reunionou/screens/homePage.dart';
+import 'package:reunionou/screens/guest_login.dart';
+import 'package:reunionou/screens/home.dart';
+import 'package:reunionou/screens/user_login.dart';
+import 'package:provider/provider.dart';
+import 'data/datProvider.dart';
+import 'data/dataLoader.dart';
 
-void main() async {
-  runApp(MyApp());
+Future<void> main() async {
+  var pataProider = DataProider();
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => pataProider,
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
+    Widget initHome;
     return OverlaySupport(
-      child: MaterialApp(
-        title: 'Reunionou',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        debugShowCheckedModeBanner: false,
-        home: HomePage(),
+      child: FutureBuilder(
+        future: DataLoader().checkAuthSession(),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          if (snapshot.data == null || snapshot.data == false) {
+            initHome = const UserLoginScreen();
+          } else {
+            initHome = const HomeScreen();
+          }
+          return MaterialApp(
+            title: 'Reunionou',
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+            ),
+            debugShowCheckedModeBanner: false,
+            initialRoute: '/',
+            routes: {
+              UserLoginScreen.route: (context) => const UserLoginScreen(),
+              GuestLoginScreen.route: (context) => const GuestLoginScreen(),
+              HomeScreen.route: (context) => const HomeScreen(),
+            },
+            home: initHome,
+          );
+        },
       ),
     );
   }
