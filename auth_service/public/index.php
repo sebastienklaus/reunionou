@@ -25,7 +25,7 @@ $app->get('/users[/]', AuthController::class . ':users')
 $app->post('/auth[/]', AuthController::class . ':authenticate')
     ->setName('authentification');
 
-// $app->get('/check[/]', LBSAuthController::class . ':check')
-//     ->setName('check');
+$app->get('/check[/]', AuthController::class . ':check')
+    ->setName('check');
     
 $app->run();

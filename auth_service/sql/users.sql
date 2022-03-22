@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS users (
     `email` VARCHAR(29),
     `username` VARCHAR(17),
     `password` VARCHAR(60),
-    `refresh_token` VARCHAR(128),
+    `refresh_token` VARCHAR(1024),
     `created_at` DATETIME,
     `updated_at` DATETIME
 );

@@ -69,16 +69,51 @@ class AuthController {
             ]],
             $secret, 'HS512');
 
-        $user->refresh_token = bin2hex(random_bytes(32));
+        $user->refresh_token = $token;
         $user->save();
         $data = [
-            'access-token' => $token,
             'refresh-token' => $user->refresh_token
         ];
 
         return Writer::json_output($resp, 200, $data);
 
 
+    }
+
+
+    public function check(Request $req, Response $resp, $args): Response {
+
+        try {
+            
+            $secret = $this->container->settings['secret'];
+
+            $h = $req->getHeader('Authorization')[0] ;
+            $tokenstring = sscanf($h, "Bearer %s")[0] ;
+            $token = JWT::decode($tokenstring, new Key($secret,'HS512' ) );
+
+            $data = [
+                'user_mail' => $token->upr->email,
+                'user_username' => $token->upr->username,
+            ];
+
+            return Writer::json_output($resp, 200, $data);
+
+        } 
+        catch (ExpiredException $e) {
+            return Writer::jsonError($req, $resp, 401, 'The token is expired');
+
+        } catch (SignatureInvalidException $e) {
+            return Writer::jsonError($req, $resp, 401, 'The signature is not valid');
+
+        } catch (BeforeValidException $e) {
+            return Writer::jsonError($req, $resp, 401, 'BeforeValidException');
+
+        } catch (\UnexpectedValueException $e) { 
+            return Writer::jsonError($req, $resp, 401, 'The value of token is not the right one');
+
+        }    
+
+        return $resp;
     }
     
 }
