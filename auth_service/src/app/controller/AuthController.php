@@ -47,7 +47,7 @@ class AuthController {
             if (!password_verify($pass, $user->password))
                 throw new \Exception("password check failed");
 
-            unset ($user->password);
+            unset($user->password);
 
         } catch (ModelNotFoundException $e) {
             $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="reunionou auth" ');
@@ -59,8 +59,8 @@ class AuthController {
 
 
         $secret = $this->container->settings['secret'];
-        $token = JWT::encode(['iss' => 'http://api.auth.local/auth',
-            'aud' => 'http://api.backoffice.local',
+        $token = JWT::encode(['iss' => 'http://docketu.iutnc.univ-lorraine.fr:62011/auth',
+            'aud' => 'http://docketu.iutnc.univ-lorraine.fr:62014',
             'iat' => time(),
             'exp' => time() + (3600 * 24 * 30), // validité = 30 jours
             'upr' => [
@@ -71,8 +71,10 @@ class AuthController {
 
         $user->refresh_token = $token;
         $user->save();
+
+        //return the refresh_token
         $data = [
-            'refresh-token' => $user->refresh_token
+            'refresh-token' => $user->refresh_token,
         ];
 
         return Writer::json_output($resp, 200, $data);
