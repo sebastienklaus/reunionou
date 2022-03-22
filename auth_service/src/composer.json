@@ -1,8 +1,20 @@
 {
-  "name": "demo/docketu",
-   "description": "demo docketu",
+  "name": "auth/service",
+  "description": "Service d'authentification pour le projet d'atelier Reunionou",
   "require" : {
-    "php": ">=7.0",
-    "slim/slim": "^3.0"
+    "php": ">=7.4",
+    "slim/slim": "3.*",
+    "ramsey/uuid": "^4.2",
+    "illuminate/database":"^8.83",
+    "firebase/php-jwt": "^6.0",
+    "davidepastore/slim-validation": "^0.5.1",
+    "monolog/monolog": "^2.1",
+    "erusev/parsedown": "^1.7"
+  },
+  "autoload": {
+    "psr-4" : {
+      "reunionou\\auth\\" : "."
+
+    }
   }
 }
