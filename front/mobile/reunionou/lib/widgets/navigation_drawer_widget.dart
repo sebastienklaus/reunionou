@@ -12,13 +12,18 @@ class NavigationDrawerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
         child: Material(
-      color: Color.fromRGBO(143, 148, 251, 1),
+      color: const Color.fromRGBO(143, 148, 251, 1),
       child: ListView(
         padding: padding,
         children: <Widget>[
           DrawerHeader(
             child: Image.asset("assets/logo.png"),
           ),
+          const SizedBox(height: 16),
+          buildMenuItem(
+              text: DataLoader().getUser().fullname,
+              icon: Icons.logout,
+              onClicked: () => selectedItem(context, 3)),
           const SizedBox(height: 16),
           buildMenuItem(
               text: 'Accueil',

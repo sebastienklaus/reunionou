@@ -1,15 +1,17 @@
 class User {
-  final String? id;
+  final String id;
   final String fullname;
-  final String? email;
   final String username;
+  final String type;
+  final String? email;
   final String? token;
 
 //Constructor
   const User({
-    this.id,
+    required this.id,
     required this.fullname,
     required this.username,
+    required this.type,
     this.email,
     this.token,
   });
@@ -19,15 +21,17 @@ class User {
     return User(
       id: json['id'],
       fullname: json['fullname'],
-      email: json['email'],
       username: json['username'],
+      type: json['type'],
       token: json['token'],
+      email: json['email'],
     );
   }
 
   User.fromMap(Map<String, dynamic> res)
       : id = res["id"],
         fullname = res['fullname'],
+        type = res['type'],
         email = res['email'],
         username = res['username'],
         token = res['token'];
@@ -35,6 +39,6 @@ class User {
   //To string
   @override
   String toString() {
-    return 'User{id: $id, fullname: $fullname, email: $email, username: $username, token: $token}';
+    return 'User{id: $id, fullname: $fullname, username: $username, type: $type, email: $email, token: $token}';
   }
 }

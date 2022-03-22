@@ -55,11 +55,11 @@ class DatabaseHandler {
   }
 
   //Get user by id
-  Future<List<User>> getUsers() async {
+  Future<User> getUser() async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> result =
-        await db.rawQuery('SELECT * FROM users');
-    return result.map((e) => User.fromMap(e)).toList();
+        await db.rawQuery('SELECT * FROM users limit 1');
+    return User.fromJson(result[0]);
   }
 
   //Count for empty DB or not
