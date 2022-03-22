@@ -22,8 +22,6 @@ $capsule->setAsGlobal();
 
 // Set the differents routes
 
-$app->get('/users[/]', AuthController::class . ':users')
-    ->setName('check');
  
 $app->post('/auth[/]', AuthController::class . ':authenticate')
     ->setName('authentification');
