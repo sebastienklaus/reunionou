@@ -25,6 +25,70 @@ class Members_Controller
     {
         $this->container = $container;
     }
+    public function getMember(Request $req, Response $resp, array $args): Response
+    {
+        $id_member = $args['id'];
+        
+        try {
+            
+            //* Modification TD4.2
+            $member = Members::select(['id', 'username', 'is_guest', 'event_id', 'created_at', 'updated_at'])
+            ->where('id', '=', $id_member)
+            ->firstOrFail();
+
+            //TODO Vérifier type de controle depuis réception base de donnée dans cours
+            //TODO étape filtrage à garder ou améliorer ?
+            $member_resp = [
+                'id' => $member->id,
+                'username' => $member->username,
+                'is_guest' => $member->is_guest,
+                'event_id' => $member->event_id, //? to be or not to be ?
+                'created_at' => $member->created_at,
+                'updated_at' => $member->updated_at
+            ];
+
+            // Récupération de la route member                          
+            $pathForMember = $this->container->router->pathFor(
+                'getMember',
+                ['id' => $id_member]
+            );
+
+            $pathForEvent = $this->container->router->pathFor(
+                'getEvent',
+                ['id' => $member->event_id] //! a supprimer si uuid members = uuid user
+            );
+
+            // Création des liens hateos
+            $hateoas = [
+                "self" => ["href" => $pathForMember],
+                "event" => ["href" => $pathForEvent]
+                //todo: ?? maybe "messages" => ["href" => $pathForMessagesByMember]
+            ];
+
+
+            // Création du body de la réponse
+            //? Renomer les keys ou laisser les noms issus de la DB ?
+            $datas_resp = [
+                "type" => "ressource",
+                "member" => $member_resp,
+                "links" => $hateoas
+            ];
+
+            //? Ressources imbriquées ? à priori non.
+
+            $resp = $resp->withStatus(200);
+            $resp = $resp->withHeader("Content-Type", "application/json;charset=utf-8");
+            
+            $resp->getBody()->write(json_encode($datas_resp));
+
+            return $resp;
+        } catch (ModelNotFoundException $e) {
+
+            $clientError = $this->container->clientError;
+            return $clientError($req, $resp, 404, "Member not found");
+
+        }
+    }
 
    public function getMembersByEvent(Request $req, Response $resp, array $args): Response
     {
