@@ -136,7 +136,7 @@ class AuthController {
             try {
 
                 if ($requestBody['password'] !== $requestBody['password_confirm']) {
-                    return Writer::jsonError($req, $resp, 401, 'Erreur authentification model');
+                    return Writer::jsonError($req, $resp, 401, 'Les mots de passes ne sont pas identiques');
                 }
                 else {
                     //creation of a new user
@@ -156,8 +156,11 @@ class AuthController {
                 $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="lbs auth" ');
                 return Writer::jsonError($req, $resp, 401, 'Erreur PHP');
             }    
-            // return Writer::json_output($resp, 200, $parsedBody['nom']);
-    
+            
+            //configure the response headers
+            $resp = $resp->withStatus(201)
+                        ->withHeader('Content-Type', 'application/json; charset=utf-8');
+
             return $resp;
         }
 
