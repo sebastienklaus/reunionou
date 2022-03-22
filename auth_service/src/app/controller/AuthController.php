@@ -117,5 +117,45 @@ class AuthController {
 
         return $resp;
     }
+
+
+    public function createAccount(Request $req, Response $resp, $args): Response {
+        
+        //get body of request
+        $requestBody = $req->getParsedBody();
+        //get the UUID from middleware
+        $idUser = $req->getAttribute('idUser');
+
+        //if condition about validators filter
+        if ($req->getAttribute('has_errors')) {
+            $errors = $req->getAttribute('errors');
+            var_dump($errors);
+        } else {
+            try {
+                //creation of a new user
+                $newUser = new User();
+                $newUser->id = $idUser;
+                $newUser->fullname = $requestBody['fullname'];
+                $newUser->email = $requestBody['email'];
+                $newUser->username = $requestBody['username'];
+                $newUser->password = password_hash($requestBody['password'], PASSWORD_DEFAULT);
+                $newUser->save();
+    
+            } catch (ModelNotFoundException $e) {
+                $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="lbs auth" ');
+                return Writer::jsonError($req, $resp, 401, 'Erreur authentification model');
+            } catch (\Exception $e) {
+                $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="lbs auth" ');
+                return Writer::jsonError($req, $resp, 401, 'Erreur PHP');
+            }
+            
+            
+    
+            // return Writer::json_output($resp, 200, $parsedBody['nom']);
+    
+            return $resp;
+        }
+
+    }
     
 }
