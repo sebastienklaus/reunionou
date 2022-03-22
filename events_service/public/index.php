@@ -7,7 +7,7 @@
 
 require_once  __DIR__ . '/../src/vendor/autoload.php';
 
-use \app\bootstrap\lbsBootstrap;
+use reu\events\app\bootstrap\lbsBootstrap;
 
 // video 3 contaeneur (de dépendance ?)
 // $config = [

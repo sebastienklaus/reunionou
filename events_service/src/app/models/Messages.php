@@ -11,7 +11,7 @@ class Item extends \Illuminate\Database\Eloquent\Model
     protected $primaryKey = 'id';
 
     public  $incrementing = true;      //pour primarykey, on annule l'auto_increment
-    public $timestamps = false;
+    public $timestamps = true;
 
     // protected $fillable = array(
     //     'id', 'uri', 'libelle', 'tarif', 'quantite', 'command_id'
@@ -19,8 +19,8 @@ class Item extends \Illuminate\Database\Eloquent\Model
 
 
 
-    public function commande()
+    public function events()
     {
-        return $this->belongsTo('\reu\events\app\models\Commande', 'command_id');
+        return $this->belongsTo('\reu\events\app\models\Events', 'command_id');
     }
 }
