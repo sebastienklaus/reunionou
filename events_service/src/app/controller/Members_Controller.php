@@ -47,16 +47,21 @@ class Members_Controller
             ];
         }
 
-            // Récupération de la route getmembersByEvent                            
-            $pathFormembersByEvent = $this->container->router->pathFor(
+            // Récupération de la route getMembersByEvent                            
+            $pathForMembersByEvent = $this->container->router->pathFor(
                 'getMembersByEvent',
                 ['id' => $id_event]
             );
 
+            $pathForEvent = $this->container->router->pathFor(
+                'getEvent',
+                ['id' => $id_event]
+            );
 
             // Création des liens hateos
             $hateoas = [
-                "self" => ["href" => $pathFormembersByEvent],
+                "self" => ["href" => $pathForMembersByEvent],
+                "event" => ["href" => $pathForEvent]
             ];
 
 
@@ -66,6 +71,7 @@ class Members_Controller
                 "type" => "collection",
                 "count" => $nbMember,
                 "member" => $members_resp,
+                "links" => $hateoas
    
             ];
 

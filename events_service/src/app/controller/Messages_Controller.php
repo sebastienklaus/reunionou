@@ -130,10 +130,15 @@ class Messages_Controller
                 ['id' => $id_event]
             );
 
+            $pathForEvent = $this->container->router->pathFor(
+                'getEvent',
+                ['id' => $id_event]
+            );
 
             // Création des liens hateos
             $hateoas = [
                 "self" => ["href" => $pathForMessagesByEvent],
+                "event" => ["href" => $pathForEvent]
             ];
 
 
@@ -143,6 +148,7 @@ class Messages_Controller
                 "type" => "collection",
                 "count" => $nbMessage,
                 "message" => $messages_resp,
+                "links" => $hateoas
    
             ];
 
