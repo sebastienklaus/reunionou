@@ -50,10 +50,10 @@ class AuthController {
             unset ($user->password);
 
         } catch (ModelNotFoundException $e) {
-            $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="lbs auth" ');
-            return Writer::jsonError($req, $resp, 401, 'Erreur authentification model');
+            $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="reunionou auth" ');
+            return Writer::jsonError($req, $resp, 401, 'Cet utilisateur n\'existe pas');
         } catch (\Exception $e) {
-            $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="lbs auth" ');
+            $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="reunionou auth" ');
             return Writer::jsonError($req, $resp, 401, 'Erreur authentification');
         }
 
