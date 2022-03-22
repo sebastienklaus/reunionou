@@ -267,28 +267,44 @@ class Events_Controller
     // }
 
     // // Toutes les commandes
-    // public function getAllCommande(Request $req, Response $resp): Response
-    // {
+    public function getAllEvent(Request $req, Response $resp): Response
+    {
 
-    //     // Récupérer les commandes depuis le model
-    //     $commandes = Commande::select(['id', 'nom', 'mail', 'montant'])->get();
+        // Récupérer les commandes depuis le model
+        $events = Events::select(['id', 'title', 'description', 'author', 'spot', 'date', 'created_at', 'updated_at'])
+                          ->get();
 
-    //     // Construction des donnés à retourner dans le body
-    //     $datas_resp = [
-    //         "type" => "collection",
-    //         // "count" => count($datas['commandes']),
-    //         "count" => count($commandes),
-    //         "commandes" => $commandes
-    //     ];
+        //TODO Vérifier type de controle depuis réception base de donnée dans cours
+        //TODO étape filtrage à garder ou améliorer ?
+        $nbEvents = count($events);
+        $events_resp = [];
+        foreach ($events as $event) {
+            $events_resp[] = [
+                'id' => $event->id,
+                'title' => $event->title,
+                'description' => $event->description,
+                'author' => $event->author,
+                'spot' => $event->spot,
+                'date' => $event->date,
+                'created_at' => $event->created_at,
+                'updated_at' => $event->updated_at
+            ];
+        }
 
-    //     $resp = $resp->withStatus(200);
-    //     $resp = $resp->withHeader('application-header', 'TD 1');
-    //     $resp = $resp->withHeader("Content-Type", "application/json;charset=utf-8");
+        // Construction des donnés à retourner dans le body
+        $datas_resp = [
+            "type" => "collection",
+            "count" => $nbEvents,
+            "events" => $events_resp
+        ];
 
-    //     $resp->getBody()->write(json_encode($datas_resp));
+        $resp = $resp->withStatus(200);
+        $resp = $resp->withHeader("Content-Type", "application/json;charset=utf-8");
 
-    //     return $resp;
-    // }
+        $resp->getBody()->write(json_encode($datas_resp));
+
+        return $resp;
+    }
 
     // // Remplacer une commande. PUT, pas PATCH !!
     // public function putCommande(Request $req, Response $resp, array $args): Response
