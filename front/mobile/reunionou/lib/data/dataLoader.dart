@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import '../models/user.dart';
 import 'DatabaseHandler.dart';
+import 'package:uuid/uuid.dart';
+import 'package:username_generator/username_generator.dart';
 
 class DataLoader {
   late DatabaseHandler handler;
@@ -15,15 +17,36 @@ class DataLoader {
     token: "3qs4d6q5s4fvd6s5v165165aze1d",
   );
 
-  //Authentificate
+  //Authentificate user
   Future<bool> authentificate(String email, String password) async {
     //Call authentificate api here
     if (1 == 1) {
-      print("handler");
       handler = await DatabaseHandler();
 
       //In case of success store user to db
       handler.initializeDB().whenComplete(() async {
+        await handler.insertUser(_user);
+      });
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  //Authentificate guest
+  Future<bool> authentificateGuest(String fullname) async {
+    //Call authentificate api here
+    if (1 == 1) {
+      handler = await DatabaseHandler();
+      String id = const Uuid().v4();
+      var generator = UsernameGenerator();
+      //In case of success store user to db
+      handler.initializeDB().whenComplete(() async {
+        User _user = User(
+          id: id,
+          fullname: fullname,
+          username: generator.generate(fullname),
+        );
         await handler.insertUser(_user);
       });
       return true;

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:reunionou/screens/guest_login.dart';
 import 'package:reunionou/screens/home.dart';
-import 'package:reunionou/screens/login.dart';
+import 'package:reunionou/screens/user_login.dart';
 import 'package:provider/provider.dart';
 import 'data/datProvider.dart';
 import 'data/dataLoader.dart';
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
         future: DataLoader().checkAuthSession(),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if (snapshot.data == null || snapshot.data == false) {
-            initHome = const LoginScreen();
+            initHome = const UserLoginScreen();
           } else {
             initHome = const HomeScreen();
           }
@@ -39,7 +40,8 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             initialRoute: '/',
             routes: {
-              LoginScreen.route: (context) => const LoginScreen(),
+              UserLoginScreen.route: (context) => const UserLoginScreen(),
+              GuestLoginScreen.route: (context) => const GuestLoginScreen(),
               HomeScreen.route: (context) => const HomeScreen(),
             },
             home: initHome,

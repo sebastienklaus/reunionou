@@ -3,15 +3,15 @@ import '../animations/loginAnimation.dart';
 import 'package:email_validator/email_validator.dart';
 import '../data/dataLoader.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
-  static String get route => '/login';
+class UserLoginScreen extends StatefulWidget {
+  const UserLoginScreen({Key? key}) : super(key: key);
+  static String get route => '/userLogin';
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<UserLoginScreen> {
   @override
   Widget build(BuildContext context) {
     final email = TextEditingController();
@@ -248,10 +248,18 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           FadeAnimation(
                             1.5,
-                            const Text(
-                              "Connectez-vous en tant qu'invité",
-                              style: TextStyle(
-                                  color: Color.fromRGBO(143, 148, 251, 1)),
+                            InkWell(
+                              onTap: () {
+                                Navigator.pushNamed(context, "/guestLogin");
+                              },
+                              child: const Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: Text(
+                                  "Connectez-vous en tant qu'invité",
+                                  style: TextStyle(
+                                      color: Color.fromRGBO(143, 148, 251, 1)),
+                                ),
+                              ),
                             ),
                           ),
                         ],

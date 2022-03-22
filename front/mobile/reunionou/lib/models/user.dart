@@ -1,17 +1,17 @@
 class User {
-  final String id;
+  final String? id;
   final String fullname;
-  final String email;
+  final String? email;
   final String username;
-  final String token;
+  final String? token;
 
 //Constructor
   const User({
-    required this.id,
+    this.id,
     required this.fullname,
-    required this.email,
     required this.username,
-    required this.token,
+    this.email,
+    this.token,
   });
 
   //From Json

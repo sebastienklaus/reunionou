@@ -12,7 +12,7 @@ class DatabaseHandler {
       onCreate: (database, version) async {
         //Create users table
         await database.execute(
-          'CREATE TABLE users(id TEXT PRIMARY KEY, fullname TEXT, email INTEGER,username TEXT, token TEXT)',
+          'CREATE TABLE users(id TEXT PRIMARY KEY, fullname TEXT, email INTEGER TEXT NULL, username TEXT, token TEXT DEFAULT NULL)',
         );
       },
       version: 1,

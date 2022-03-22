@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reunionou/screens/home.dart';
-import 'package:reunionou/screens/login.dart';
+import 'package:reunionou/screens/user_login.dart';
 import '../data/dataLoader.dart';
 
 class NavigationDrawerWidget extends StatelessWidget {
@@ -66,7 +66,7 @@ class NavigationDrawerWidget extends StatelessWidget {
       case 3:
         await DataLoader().logout();
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const LoginScreen(),
+          builder: (context) => const UserLoginScreen(),
         ));
         break;
     }
