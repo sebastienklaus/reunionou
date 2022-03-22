@@ -99,4 +99,4 @@ vendor
 
 #! les adresses sont à modifier.
 # si déjà pushed :  git rm -R --cached filename
-# *.ini
+*.ini
