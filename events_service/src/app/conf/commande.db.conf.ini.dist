@@ -1,0 +1,7 @@
+driver=mysql
+username=events
+password=events
+host=mysql.events
+database=mysql.events
+charset=utf8
+collation=utf8_unicode_ci
