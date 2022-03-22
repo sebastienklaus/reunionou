@@ -134,25 +134,28 @@ class AuthController {
             var_dump($errors);
         } else {
             try {
-                //creation of a new user
-                $newUser = new User();
-                $newUser->id = $idUser;
-                $newUser->fullname = $requestBody['fullname'];
-                $newUser->email = $requestBody['email'];
-                $newUser->username = $requestBody['username'];
-                $newUser->password = password_hash($requestBody['password'], PASSWORD_DEFAULT);
-                $newUser->save();
-    
+
+                if ($requestBody['password'] !== $requestBody['password_confirm']) {
+                    return Writer::jsonError($req, $resp, 401, 'Erreur authentification model');
+                }
+                else {
+                    //creation of a new user
+                    $newUser = new User();
+                    $newUser->id = $idUser;
+                    $newUser->fullname = $requestBody['fullname'];
+                    $newUser->email = $requestBody['email'];
+                    $newUser->username = $requestBody['username'];
+                    $newUser->password = password_hash($requestBody['password'], PASSWORD_DEFAULT);
+                    $newUser->save();
+
+                }    
             } catch (ModelNotFoundException $e) {
                 $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="lbs auth" ');
                 return Writer::jsonError($req, $resp, 401, 'Erreur authentification model');
             } catch (\Exception $e) {
                 $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="lbs auth" ');
                 return Writer::jsonError($req, $resp, 401, 'Erreur PHP');
-            }
-            
-            
-    
+            }    
             // return Writer::json_output($resp, 200, $parsedBody['nom']);
     
             return $resp;
