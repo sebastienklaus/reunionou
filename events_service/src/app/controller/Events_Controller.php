@@ -25,6 +25,7 @@ class Events_Controller
     public function test(Request $req, Response $resp): Response
     {
 
+        $event = Events ::select(['id', 'nom', 'mail', 'montant'])->get();
 
         // Construction des donnés à retourner dans le body
         $datas_resp = [
