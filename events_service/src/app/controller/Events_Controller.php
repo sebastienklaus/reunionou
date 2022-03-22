@@ -247,6 +247,7 @@ class Events_Controller
     // // Toutes les commandes
     public function getAllEvent(Request $req, Response $resp): Response
     {
+        //todo: try catch
 
         // Récupérer les commandes depuis le model
         $events = Events::select(['id', 'title', 'description', 'author', 'spot', 'date', 'created_at', 'updated_at'])

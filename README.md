@@ -26,6 +26,7 @@
 - /events/{id}/messages : **GET**
 - /messages/{id} : **PUT** - **POST** - **DELETE**
 - /events/{id}/members : **GET**
+- /members/{id}/ : **PUT** (gateway)
 
 ### Backoffice
 
