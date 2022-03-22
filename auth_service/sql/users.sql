@@ -1,10 +1,10 @@
 CREATE TABLE IF NOT EXISTS users (
-    `id` VARCHAR(36),
+    `id` VARCHAR(36) PRIMARY KEY,
     `fullname` VARCHAR(20),
     `email` VARCHAR(29),
     `username` VARCHAR(17),
     `password` VARCHAR(60),
-    `token` VARCHAR(36),
+    `refresh_token` VARCHAR(128),
     `created_at` DATETIME,
     `updated_at` DATETIME
 );
