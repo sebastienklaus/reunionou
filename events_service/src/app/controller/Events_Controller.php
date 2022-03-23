@@ -4,6 +4,12 @@ namespace reu\events\app\controller;
 
 use DateTime;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+
+use reu\events\app\models\Events;
+use reu\events\app\models\Messages;
+use reu\events\app\models\Members;
+use reu\events\app\models\EventValidator;
+
 use reu\events\app\utils\Writer;
 
 use \Slim\Container;
@@ -21,268 +27,305 @@ class Events_Controller
         $this->container = $container;
     }
 
-    // Toutes les commandes
-    public function test(Request $req, Response $resp): Response
+    // Créer un event
+    public function createEvent(Request $req, Response $resp, array $args): Response
     {
 
-        $event = Events ::select(['id', 'nom', 'mail', 'montant'])->get();
+        //TODO: - Création d'une nvlle commande => génération d'un token unique, cryptographique, retourné dans la rep
+        //TODO: et utilisé pour valider les prochaines requête de cette même commande
+        //TODO: Remplace FILTER_SANITIZE_STRING par htmlentities, ou htmlspecialchars (check param) ou strip_tags.
+        //? check_Token : middleware, mais createToken-> middleware ??
+
+        // Récupération du body de la requête
+        $event_req = $req->getParsedBody();
+        
+        
+        if ($req->getAttribute('has_errors')) {
+
+            $errors = $req->getAttribute('errors');
+
+            //? à mettre ailleurs ? Container ? Utils ? Maiddleware ? Errors ? Faire fonction + générique
+            if (isset($errors['title'])) {
+                $this->container->get('logger.error')->error("error input event title");
+                return Writer::json_error($resp, 403, '"title" : invalid input, string expected');
+            }
+            if (isset($errors['description'])) {
+                $this->container->get('logger.error')->error("error mail event description");
+                return Writer::json_error($resp, 403, '"description" : invalid input, text format expected');
+            }
+            if (isset($errors['author'])) {
+                $this->container->get('logger.error')->error("error input author UUID");
+                return Writer::json_error($resp, 403, '"author" : invalid input. d-m-Y format expected : uuid');
+            }
+            // if (isset($errors['spot'])) {
+            //     $this->container->get('logger.error')->error("error input livraison heure");
+            //     return Writer::json_error($resp, 403, '"heure" : invalid input. H:i format expected');
+            // }
+            if (isset($errors['date'])) {
+                ($this->container->get('logger.error'))->error("error input date event");
+                return Writer::json_error($resp, 403, '"date" : invalid input. date exepected : d-m-y H:m:i');
+            }
+        };
+
+
+        try {
+            
+            // Création d'un event via le model
+            $new_event = new Events();
+            
+            // Récupération de la fonction UUID generator depuis le container
+            $new_uuid = $this->container->uuid;
+            // génération id basé sur un aléa : UUID v4
+            $new_event->id = $new_uuid(4);
+
+            $new_event->title = filter_var($event_req['title'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $new_event->description = filter_var($event_req['description'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $new_event->author = filter_var($event_req['author'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            //! FILTE POUR SPOT : SPOT JSON DOIT ETRE OK
+            $new_event->spot = $event_req['spot'];
+            // Création de la date  de livraison
+            $date_event = new DateTime($event_req['date']);
+            $new_event->date = $date_event->format('Y-m-d H:i:s');
+
+
+            $new_event->save();
+
+            // Récupération du path pour le location dans header
+            $pathForEvent = $this->container->router->pathFor(
+                'getEvent',
+                ['id' => $new_event->id]
+            );
+
+            $datas_resp = [
+                "type" => "ressource",
+                "event" => [
+                    "title" => $new_event->title,
+                    "description" => $new_event->description,
+                    "author" => $new_event->author,
+                    "spot" => $new_event->spot,
+                    "date" => $new_event->date,
+                    "created_at" => $new_event->created_at,
+                    "updated_at" => $new_event->updated_at
+                ]
+            ];
+
+            $resp = Writer::json_output($resp, 201)
+                ->withAddedHeader('application-header', 'reuninou') // 201 : created
+                ->withHeader("Location", $pathForEvent);
+
+            $resp->getBody()->write(json_encode($datas_resp));
+
+            return $resp;
+        } catch (ModelNotFoundException $e) {
+            //todo: logError
+            return Writer::json_error($resp, 404, 'Ressource not found : event ID = ' . $new_evente->id);
+        } catch (\Exception $th) {
+            //todo : log Error
+            return Writer::json_error($resp, 500, 'Server Error : Can\'t create event');
+        }
+        //
+    }
+
+    public function updateEvent(Request $req, Response $resp, array $args): Response
+    {
+
+        // Récupération du body de la requête
+        $received_event = $req->getParsedBody();
+        
+        if ($req->getAttribute('has_errors')) {
+
+            $errors = $req->getAttribute('errors');
+
+            if (isset($errors['title'])) {
+                $this->container->get('logger.error')->error("error input event title");
+                return Writer::json_error($resp, 403, '"title" : invalid input, string expected');
+            }
+            if (isset($errors['description'])) {
+                $this->container->get('logger.error')->error("error mail event description");
+                return Writer::json_error($resp, 403, '"description" : invalid input, text format expected');
+            }
+            if (isset($errors['author'])) {
+                $this->container->get('logger.error')->error("error input author UUID");
+                return Writer::json_error($resp, 403, '"author" : invalid input. d-m-Y format expected : uuid');
+            }
+            // if (isset($errors['spot'])) {
+            //     $this->container->get('logger.error')->error("error input livraison heure");
+            //     return Writer::json_error($resp, 403, '"heure" : invalid input. H:i format expected');
+            // }
+            if (isset($errors['date'])) {
+                ($this->container->get('logger.error'))->error("error input date event");
+                return Writer::json_error($resp, 403, '"date" : invalid input. date exepected : d-m-y H:m:i');
+            }
+        };
+
+        try {
+
+            $event = Events::Select(['id', 'title', 'description', 'author', 'spot', 'date'])->findOrFail($args['id']);
+
+            $event->title = filter_var($received_event['title'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $event->description = filter_var($received_event['description'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $event->author = filter_var($received_event['author'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            //! FILTE POUR SPOT : SPOT JSON DOIT ETRE OK
+            $event->spot = $received_event['spot'];
+            // Création de la date  de livraison
+            $date_event = new DateTime($received_event['date']);
+            $event->date = $date_event->format('Y-m-d H:i:s');
+
+
+            $event->save();
+
+            // Récupération du path pour le location dans header
+            $pathForEvent = $this->container->router->pathFor(
+                'getEvent',
+                ['id' => $event->id]
+            );
+
+            $datas_resp = [
+                "type" => "ressource",
+                "event" => [
+                    "title" => $new_event->title,
+                    "description" => $new_event->description,
+                    "author" => $new_event->author,
+                    "spot" => $new_event->spot,
+                    "date" => $new_event->date,
+                    "created_at" => $new_event->created_at,
+                    "updated_at" => $new_event->updated_at
+                ]
+            ];
+
+            $resp = Writer::json_output($resp, 200)
+                ->withAddedHeader('application-header', 'reuninou')
+                ->withHeader("Location", $pathForEvent);
+
+            $resp->getBody()->write(json_encode($datas_resp));
+
+            return $resp;
+        } catch (ModelNotFoundException $e) {
+            //todo: logError
+            return Writer::json_error($resp, 404, 'Ressource not found : event ID = ' . $event->id);
+        } catch (\Exception $th) {
+            //todo : log Error
+            return Writer::json_error($resp, 500, 'Server Error : Can\'t update event');
+        }
+        //
+    }
+
+    
+    public function getEvent(Request $req, Response $resp, array $args): Response
+    {
+        $id_event = $args['id'];
+        
+        try {
+            
+            $event = Events::select(['id', 'title', 'description', 'author', 'spot', 'date', 'created_at', 'updated_at'])
+            ->where('id', '=', $id_event)
+            ->firstOrFail();
+
+            //TODO Vérifier type de controle depuis réception base de donnée dans cours
+            //TODO étape filtrage à garder ou améliorer ?
+            $event_resp = [
+                'id' => $event->id,
+                'title' => $event->title,
+                'description' => $event->description,
+                'author' => $event->author,
+                'spot' => $event->spot,
+                'date' => $event->date,
+                'created_at' => $event->created_at,
+                'updated_at' => $event->updated_at
+            ];
+
+            // Récupération de la route events                            
+            $pathForEvent = $this->container->router->pathFor(
+                'getEvent',
+                ['id' => $id_event]
+            );
+
+            // // Récupération de la route              
+            // //? route Event Members + Messages pour hateoas ?                  
+            $pathForMessagesByEvent = $this->container->router->pathFor(
+                'getMessagesByEvent',
+                ['id' => $id_event]
+            );
+
+            $pathForMembersByEvent = $this->container->router->pathFor(
+                'getMembersByEvent',
+                ['id' => $id_event]
+            );
+
+            // Création des liens hateos
+            $hateoas = [
+                "self" => ["href" => $pathForEvent],
+                "members" => ["href" => $pathForMembersByEvent],
+                "messages" => ["href" => $pathForMessagesByEvent]
+            ];
+
+
+            // Création du body de la réponse
+            //? Renomer les keys ou laisser les noms issus de la DB ?
+            $datas_resp = [
+                "type" => "ressource",
+                "event" => $event_resp,
+                "links" => $hateoas
+            ];
+
+            //? Ressources imbriquées ? à priori non.
+
+            $resp = $resp->withStatus(200);
+            $resp = $resp->withHeader("Content-Type", "application/json;charset=utf-8");
+            
+            $resp->getBody()->write(json_encode($datas_resp));
+
+            return $resp;
+        } catch (ModelNotFoundException $e) {
+
+            $clientError = $this->container->clientError;
+            return $clientError($req, $resp, 404, "Event not found");
+
+
+            // return Writer::json_error($resp, 404, "Alors j'ai bien regardé, j'ai pas trouvé ta commande");
+        }
+    }
+
+    // // Toutes les commandes
+    public function getAllEvent(Request $req, Response $resp): Response
+    {
+        //todo: try catch
+
+        // Récupérer les commandes depuis le model
+        $events = Events::select(['id', 'title', 'description', 'author', 'spot', 'date', 'created_at', 'updated_at'])
+                          ->get();
+
+        //TODO Vérifier type de controle depuis réception base de donnée dans cours
+        //TODO étape filtrage à garder ou améliorer ?
+        $nbEvents = count($events);
+        $events_resp = [];
+        foreach ($events as $event) {
+            $events_resp[] = [
+                'id' => $event->id,
+                'title' => $event->title,
+                'description' => $event->description,
+                'author' => $event->author,
+                'spot' => $event->spot,
+                'date' => $event->date,
+                'created_at' => $event->created_at,
+                'updated_at' => $event->updated_at //?rajouter un link avec pathfor ?
+            ];
+        }
 
         // Construction des donnés à retourner dans le body
         $datas_resp = [
-            "type" => "collection"
+            "type" => "collection",
+            "count" => $nbEvents,
+            "events" => $events_resp
         ];
 
         $resp = $resp->withStatus(200);
-        $resp = $resp->withHeader('application-header', 'TD 1');
         $resp = $resp->withHeader("Content-Type", "application/json;charset=utf-8");
 
         $resp->getBody()->write(json_encode($datas_resp));
 
         return $resp;
     }
-
-
-    // // Créer une commande
-    // public function createCommande(Request $req, Response $resp, array $args): Response
-    // {
-
-    //     // Controle de donné à faire plus tard  (middleware respect/validation : davidepastrore/slim-validation)
-
-    //     // Flitrer données pour éviter injection (on suppose qu'elle sont présentes et complète //? a coder plus tard ?)
-    //     // On ne traitre pas non plus la liste des items commander. Montant de commande : 0 //? à faire plus tard ? 
-
-
-    //     //TODO: - données transmises en json
-    //     //TODO: - ID d'une commande : uuid
-    //     //TODO: - Création d'une nvlle commande => génération d'un token unique, cryptographique, retourné dans la rep
-    //     //TODO: et utilisé pour valider les prochaines requête de cette même commande
-    //     //TODO: Remplace FILTER_SANITIZE_STRING par htmlentities, ou htmlspecialchars (check param) ou strip_tags.
-    //     //? check_Token : middleware, mais createToken-> middleware ??
-
-    //     // Récupération du body de la requête
-    //     $commande_req = $req->getParsedBody();
-
-    //     if ($req->getAttribute('has_errors')) {
-
-    //         $errors = $req->getAttribute('errors');
-
-    //         //? à mettre ailleurs ? Container ? Utils ? Maiddleware ? Errors ? Faire fonction + générique
-    //         if (isset($errors['nom'])) {
-    //             $this->container->get('logger.error')->error("error input nom client");
-    //             return Writer::json_error($resp, 403, '"nom" : invalid input, String expected');
-    //         }
-    //         if (isset($errors['mail'])) {
-    //             $this->container->get('logger.error')->error("error mail input client");
-    //             return Writer::json_error($resp, 403, '"mail" : invalid input, email format expected');
-    //         }
-    //         if (isset($errors['livraison.date'])) {
-    //             $this->container->get('logger.error')->error("error input livraison date");
-    //             return Writer::json_error($resp, 403, '"date" : invalid input. d-m-Y format expected, today or later');
-    //         }
-    //         if (isset($errors['livraison.heure'])) {
-    //             $this->container->get('logger.error')->error("error input livraison heure");
-    //             return Writer::json_error($resp, 403, '"heure" : invalid input. H:i format expected');
-    //         }
-    //         if (isset($errors['items.uri'])) {
-    //             ($this->container->get('logger.error'))->error("error input uri");
-    //             return Writer::json_error($resp, 403, '"uri" : invalid input. String expected');
-    //         }
-    //         if (isset($errors['items.q'])) {
-    //             ($this->container->get('logger.error'))->error("error input quantite");
-    //             return Writer::json_error($resp, 403, '"q" : invalid input. integer expected');
-    //         }
-    //         if (isset($errors['items.libelle'])) {
-    //             ($this->container->get('logger.error'))->error("error input lebelle");
-    //             return Writer::json_error($resp, 403, '"libelle" : String expected');
-    //         }
-    //         if (isset($errors['items.tarif'])) {
-    //             ($this->container->get('logger.error'))->error("error input tarif");
-    //             return Writer::json_error($resp, 403, '"tarif" : float expected');
-    //         }
-    //     };
-
-
-    //     //! Mettre les if isset etc.... mettre pour mail : || !filter_var($command_req['mail_client ...])
-
-    //     try {
-
-    //         // Récupération de la fonction UUID generator depuis le container
-    //         $new_uuid = $this->container->uuid;
-
-    //         //Récupération de la fonction token depuis le container
-    //         $new_token = $this->container->token;
-
-    //         // Création d'une commande via le model
-    //         $new_commande = new Commande();
-
-    //         $new_commande->nom = filter_var($commande_req['nom'], FILTER_SANITIZE_STRING);
-    //         $new_commande->mail = filter_var($commande_req['mail'], FILTER_SANITIZE_EMAIL);
-
-    //         // Création de la date  de livraison
-    //         $date_livraison = new DateTime($commande_req['livraison']['date'] . ' ' . $commande_req['livraison']['heure']);
-    //         $new_commande->livraison = $date_livraison->format('Y-m-d H:i:s');
-
-    //         // $new_commande->status = Commande::CREATED; ??
-
-    //         // génération id basé sur un aléa : UUID v4
-    //         $new_commande->id = $new_uuid(4);
-
-    //         // Génération token
-    //         $new_commande->token = $new_token(32);
-
-    //         $new_commande->montant = 0;
-
-    //         // Récupération des items de la requête
-    //         $items_req = $commande_req['items'];
-    //         //TODO: Filtrate items ?
-    //         foreach ($items_req as $item_req) {
-    //             $new_item = new Item();
-    //             $new_item->uri = $item_req['uri'];
-    //             $new_item->quantite = $item_req['q'];
-    //             $new_item->libelle = $item_req['libelle'];
-    //             $new_item->tarif = $item_req['tarif'];
-    //             $new_item->command_id = $new_commande->id;
-    //             $new_commande->montant += $item_req['tarif'];
-    //             $new_item->save();
-    //         }
-
-    //         $new_commande->save();
-
-    //         // Récupération du path pour le location dans header
-    //         $pathForCommandes = $this->container->router->pathFor(
-    //             'getCommande',
-    //             ['id' => $new_commande->id]
-    //         );
-
-    //         $datas_resp = [
-    //             "type" => "ressource",
-    //             "commande" => [
-    //                 "nom" => $new_commande->nom,
-    //                 "mail" => $new_commande->mail,
-    //                 "date_livraison" => $date_livraison->format('Y-m-d H:m'),
-    //                 "id" => $new_commande->id,
-    //                 "token" => $new_commande->token,
-    //                 "montant" => $new_commande->montant
-    //             ]
-    //         ];
-
-    //         $resp = Writer::json_output($resp, 201)
-    //             ->withAddedHeader('application-header', 'TD 5') // 201 : created
-    //             ->withHeader("Location", $pathForCommandes);
-
-    //         $resp->getBody()->write(json_encode($datas_resp));
-
-    //         return $resp;
-    //     } catch (ModelNotFoundException $e) {
-    //         //todo: logError
-    //         return Writer::json_error($resp, 404, 'Ressource not found : command ID = ' . $new_commande->id);
-    //     } catch (\Exception $th) {
-    //         //todo : log Error
-    //         return Writer::json_error($resp, 500, 'Server Error : Can\'t create command');
-    //     }
-    //     //
-    // }
-
-    // // get une commande
-    // public function getCommande(Request $req, Response $resp, array $args): Response
-    // {
-    //     $id_commande = $args['id'];
-
-    //     // Récupérer les queries
-    //     $query_embed = $req->getQueryParams()['embed'] ?? null;
-
-    //     try {
-
-    //         // $commande = Commande::select(['id', 'nom', 'mail', 'montant'])
-    //         //                     ->where('id', '=', $id_commande)
-    //         //                     ->firstOrFail();
-
-    //         //* Modification TD4.2
-    //         $commande = Commande::select(['id', 'mail', 'nom', 'created_at', 'updated_at', 'livraison', 'montant'])
-    //             ->where('id', '=', $id_commande)
-    //             ->firstOrFail();
-
-    //         // Récupération de la route commandes                            
-    //         $pathForCommandes = $this->container->router->pathFor(
-    //             'getCommande',
-    //             ['id' => $id_commande]
-    //         );
-
-    //         // Récupération de la rouge commandesItems
-    //         // Récupération de la route                                
-    //         $pathForCommandesItems = $this->container->router->pathFor(
-    //             'getCommandesItems',
-    //             ['id' => $id_commande]
-    //         );
-
-    //         // Création des liens hateos
-    //         $hateoas = [
-    //             "items" => ["href" => $pathForCommandesItems],
-    //             "self" => ["href" => $pathForCommandes]
-    //         ];
-
-
-    //         // Création du body de la réponse
-    //         //? Renomer les keys ou laisser les noms issus de la DB ?
-    //         $datas_resp = [
-    //             "type" => "ressource",
-    //             // "commande" => $commande_resp
-    //             "commande" => $commande,
-    //             "links" => $hateoas
-    //         ];
-
-    //         // Ressources imbiriquée //? peut se mettre/s'automatiser ailleurs ?
-    //         if ($query_embed === 'categories') { //? invoquer directmeent getQueryParam ici ? 
-    //             //! === items plutôt ?? $query=$query->with('items') ??? faire une seul query pour tout, mettre dans try catch
-    //             $items = $commande->items()->select('id', 'libelle', 'tarif', 'quantite')->get();
-    //             $datas_resp["commande"]["items"] = $items;
-    //         }
-
-
-    //         $resp = $resp->withStatus(200);
-    //         $resp = $resp->withHeader('application-header', 'TD 1');
-    //         $resp = $resp->withHeader("Content-Type", "application/json;charset=utf-8");
-
-
-    //         $resp->getBody()->write(json_encode($datas_resp));
-
-    //         return $resp;
-    //     } catch (ModelNotFoundException $e) {
-
-    //         //TODO: Ask
-    //         //? Which is the best ??
-
-    //         $clientError = $this->container->clientError;
-    //         return $clientError($req, $resp, 404, "Commande not found");
-
-
-    //         // return Writer::json_error($resp, 404, "Alors j'ai bien regardé, j'ai pas trouvé ta commande");
-    //     }
-    // }
-
-    // // Toutes les commandes
-    // public function getAllCommande(Request $req, Response $resp): Response
-    // {
-
-    //     // Récupérer les commandes depuis le model
-    //     $commandes = Commande::select(['id', 'nom', 'mail', 'montant'])->get();
-
-    //     // Construction des donnés à retourner dans le body
-    //     $datas_resp = [
-    //         "type" => "collection",
-    //         // "count" => count($datas['commandes']),
-    //         "count" => count($commandes),
-    //         "commandes" => $commandes
-    //     ];
-
-    //     $resp = $resp->withStatus(200);
-    //     $resp = $resp->withHeader('application-header', 'TD 1');
-    //     $resp = $resp->withHeader("Content-Type", "application/json;charset=utf-8");
-
-    //     $resp->getBody()->write(json_encode($datas_resp));
-
-    //     return $resp;
-    // }
 
     // // Remplacer une commande. PUT, pas PATCH !!
     // public function putCommande(Request $req, Response $resp, array $args): Response

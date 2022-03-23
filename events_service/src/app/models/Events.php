@@ -2,7 +2,7 @@
 
 namespace reu\events\app\models;
 
-class Commande extends \Illuminate\Database\Eloquent\Model
+class Events extends \Illuminate\Database\Eloquent\Model
 {
 
     protected $table      = 'events';  /* le nom de la table */
@@ -13,8 +13,13 @@ class Commande extends \Illuminate\Database\Eloquent\Model
 
     // fillable ?
 
-    public function items()
+    public function messages()
     {
-        return $this->hasMany('\reu\events\app\models\Item', 'command_id');
+        return $this->hasMany('\reu\events\app\models\Messages', 'event_id');
+    }
+
+    public function members()
+    {
+        return $this->hasMany('\reu\events\app\models\Members', 'event_id');
     }
 }
