@@ -16,7 +16,8 @@
 - creates : token container->middelware
 
 - Renomer Model sans s
-- comment
+- comments
+- revoir headers, ressource. Location everywhere ?
 
 ## Youssef
 

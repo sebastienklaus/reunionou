@@ -77,11 +77,6 @@ class Events_Controller
             $new_uuid = $this->container->uuid;
             // génération id basé sur un aléa : UUID v4
             $new_event->id = $new_uuid(4);
-            
-            // //Récupération de la fonction token depuis le container
-            // $new_token = $this->container->token;
-            // // Génération token
-            // $new_event->token = $new_token(32);
 
             $new_event->title = filter_var($event_req['title'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $new_event->description = filter_var($event_req['description'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -106,10 +101,11 @@ class Events_Controller
                 "event" => [
                     "title" => $new_event->title,
                     "description" => $new_event->description,
-                    "date" => $new_event->date,
                     "author" => $new_event->author,
-                    // "token" => $new_event->token,
-                    "date" => $new_event->date
+                    "spot" => $new_event->spot,
+                    "date" => $new_event->date,
+                    "created_at" => $new_event->created_at,
+                    "updated_at" => $new_event->updated_at
                 ]
             ];
 
@@ -130,6 +126,90 @@ class Events_Controller
         //
     }
 
+    public function updateEvent(Request $req, Response $resp, array $args): Response
+    {
+
+        // Récupération du body de la requête
+        $received_event = $req->getParsedBody();
+        
+        if ($req->getAttribute('has_errors')) {
+
+            $errors = $req->getAttribute('errors');
+
+            if (isset($errors['title'])) {
+                $this->container->get('logger.error')->error("error input event title");
+                return Writer::json_error($resp, 403, '"title" : invalid input, string expected');
+            }
+            if (isset($errors['description'])) {
+                $this->container->get('logger.error')->error("error mail event description");
+                return Writer::json_error($resp, 403, '"description" : invalid input, text format expected');
+            }
+            if (isset($errors['author'])) {
+                $this->container->get('logger.error')->error("error input author UUID");
+                return Writer::json_error($resp, 403, '"author" : invalid input. d-m-Y format expected : uuid');
+            }
+            // if (isset($errors['spot'])) {
+            //     $this->container->get('logger.error')->error("error input livraison heure");
+            //     return Writer::json_error($resp, 403, '"heure" : invalid input. H:i format expected');
+            // }
+            if (isset($errors['date'])) {
+                ($this->container->get('logger.error'))->error("error input date event");
+                return Writer::json_error($resp, 403, '"date" : invalid input. date exepected : d-m-y H:m:i');
+            }
+        };
+
+        try {
+
+            $event = Events::Select(['id', 'title', 'description', 'author', 'spot', 'date'])->findOrFail($args['id']);
+
+            $event->title = filter_var($received_event['title'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $event->description = filter_var($received_event['description'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $event->author = filter_var($received_event['author'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            //! FILTE POUR SPOT : SPOT JSON DOIT ETRE OK
+            $event->spot = $received_event['spot'];
+            // Création de la date  de livraison
+            $date_event = new DateTime($received_event['date']);
+            $event->date = $date_event->format('Y-m-d H:i:s');
+
+
+            $event->save();
+
+            // Récupération du path pour le location dans header
+            $pathForEvent = $this->container->router->pathFor(
+                'getEvent',
+                ['id' => $event->id]
+            );
+
+            $datas_resp = [
+                "type" => "ressource",
+                "event" => [
+                    "title" => $new_event->title,
+                    "description" => $new_event->description,
+                    "author" => $new_event->author,
+                    "spot" => $new_event->spot,
+                    "date" => $new_event->date,
+                    "created_at" => $new_event->created_at,
+                    "updated_at" => $new_event->updated_at
+                ]
+            ];
+
+            $resp = Writer::json_output($resp, 200)
+                ->withAddedHeader('application-header', 'reuninou')
+                ->withHeader("Location", $pathForEvent);
+
+            $resp->getBody()->write(json_encode($datas_resp));
+
+            return $resp;
+        } catch (ModelNotFoundException $e) {
+            //todo: logError
+            return Writer::json_error($resp, 404, 'Ressource not found : event ID = ' . $event->id);
+        } catch (\Exception $th) {
+            //todo : log Error
+            return Writer::json_error($resp, 500, 'Server Error : Can\'t update event');
+        }
+        //
+    }
+
     
     public function getEvent(Request $req, Response $resp, array $args): Response
     {
@@ -137,7 +217,6 @@ class Events_Controller
         
         try {
             
-            //* Modification TD4.2
             $event = Events::select(['id', 'title', 'description', 'author', 'spot', 'date', 'created_at', 'updated_at'])
             ->where('id', '=', $id_event)
             ->firstOrFail();
