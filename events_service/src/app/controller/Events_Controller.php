@@ -200,21 +200,21 @@ class Events_Controller
 
             // // Récupération de la route              
             // //? route Event Members + Messages pour hateoas ?                  
-            // $pathForMessagesByEvent = $this->container->router->pathFor(
-            //     'getMessagesByEvent',
-            //     ['id' => $id_commande]
-            // );
+            $pathForMessagesByEvent = $this->container->router->pathFor(
+                'getMessagesByEvent',
+                ['id' => $id_event]
+            );
 
-            // $pathForMembersByEvent = $this->container->router->pathFor(
-            //     'getMembersByEvent',
-            //     ['id' => $id_commande]
-            // );
+            $pathForMembersByEvent = $this->container->router->pathFor(
+                'getMembersByEvent',
+                ['id' => $id_event]
+            );
 
             // Création des liens hateos
             $hateoas = [
                 "self" => ["href" => $pathForEvent],
-                // "members" => ["href" => $pathForMembersByEvent],
-                // "messages" => ["href" => $pathForMessagesByEvent]
+                "members" => ["href" => $pathForMembersByEvent],
+                "messages" => ["href" => $pathForMessagesByEvent]
             ];
 
 
