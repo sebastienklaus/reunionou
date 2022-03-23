@@ -331,13 +331,15 @@ class Members_Controller
         $id_member = $args['id'] ?? null;
         try {
             $member = Members::findOrFail($id_member);
-            if( $member->delete()){
+            if ($member->delete())
+            {
                 $datas_resp = [
                     "type" => "member",
                     "member" => $member,
                     "response" => "member deleted",
                 ];
-            }else{
+            } else
+            {
                 $datas_resp = [
                     "type" => "member",
                     "member" => $member,
