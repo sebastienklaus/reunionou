@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:simple_animations/simple_animations.dart';
 import 'package:sa_v1_migration/sa_v1_migration.dart';
 
 class FadeAnimation extends StatelessWidget {
   final double delay;
   final Widget child;
 
-  FadeAnimation(this.delay, this.child);
+  const FadeAnimation(this.delay, this.child);
 
   @override
   Widget build(BuildContext context) {
     final tween = MultiTrackTween([
       Track("opacity")
-          .add(Duration(milliseconds: 500), Tween(begin: 0.0, end: 1.0)),
+          .add(const Duration(milliseconds: 500), Tween(begin: 0.0, end: 1.0)),
       Track("translateY").add(
-          Duration(milliseconds: 500), Tween(begin: -30.0, end: 0.0),
+          const Duration(milliseconds: 500), Tween(begin: -30.0, end: 0.0),
           curve: Curves.easeOut)
     ]);
 
@@ -25,7 +24,7 @@ class FadeAnimation extends StatelessWidget {
       child: child,
       builderWithChild: (context, child, animation) => Opacity(
         opacity: 1,
-        child: Transform.translate(offset: Offset(0, 3), child: child),
+        child: Transform.translate(offset: const Offset(0, 3), child: child),
       ),
     );
   }
