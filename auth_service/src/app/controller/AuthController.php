@@ -234,11 +234,6 @@ class AuthController {
             
             $user = User::select(['id', 'fullname','email', 'username', 'refresh_token'])->findOrFail($userID);
 
-            //le tableau de data retourné
-            $data = [
-                'id'=> $user->id
-            ];
-
             return Writer::json_output($resp, 200, $user);
 
         } catch (ModelNotFoundException $e) {
