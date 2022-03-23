@@ -165,8 +165,7 @@ class Members_Controller
 
             //? Ressources imbriquées ? à priori non.
 
-            $resp = $resp->withStatus(200);
-            $resp = $resp->withHeader("Content-Type", "application/json;charset=utf-8");
+            $resp = Writer::json_output($resp, 200);
             
             $resp->getBody()->write(json_encode($datas_resp));
 
@@ -197,7 +196,7 @@ class Members_Controller
                 'pseudo' => $member->pseudo,
                 'created_at' => $member->created_at,
                 'updated_at' => $member->updated_at
-            ];
+            ]; // TODO rajouter lien self pour chaque member
         }
 
             // Récupération de la route getMembersByEvent                            
@@ -230,8 +229,7 @@ class Members_Controller
 
             //? Ressources imbriquées ? à priori non.
 
-            $resp = $resp->withStatus(200);
-            $resp = $resp->withHeader("Content-Type", "application/json;charset=utf-8");
+            $resp = Writer::json_output($resp, 200);
             
             $resp->getBody()->write(json_encode($datas_resp));
 
@@ -243,4 +241,31 @@ class Members_Controller
 
         }
     }
+
+    public function deleteMemberById(Request $req, Response $resp, array $args): Response
+    {
+        $id_member = $args['id'] ?? null;
+        try {
+            $member = Members::findOrFail($id_member);
+            if( $member->delete()){
+                $datas_resp = [
+                    "type" => "member",
+                    "member" => $member,
+                    "response" => "member deleted",
+                ];
+            }else{
+                $datas_resp = [
+                    "type" => "member",
+                    "member" => $member,
+                    "response" => "member couldn't be deleted"
+                ];
+            }
+            $resp->getBody()->write(json_encode($datas_resp));
+            return writer::json_output($resp, 200);
+        } catch (ModelNotFoundException $e) {
+            return Writer::json_error($resp, 404, "member not found");
+        }
+    }
+
+    
 }

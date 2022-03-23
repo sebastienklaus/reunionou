@@ -270,8 +270,7 @@ class Events_Controller
 
             //? Ressources imbriquées ? à priori non.
 
-            $resp = $resp->withStatus(200);
-            $resp = $resp->withHeader("Content-Type", "application/json;charset=utf-8");
+            $resp = Writer::json_output($resp, 200);
             
             $resp->getBody()->write(json_encode($datas_resp));
 
@@ -309,7 +308,7 @@ class Events_Controller
                 'date' => $event->date,
                 'created_at' => $event->created_at,
                 'updated_at' => $event->updated_at //?rajouter un link avec pathfor ?
-            ];
+            ]; //TODO rajouter self dans chaque event
         }
 
         // Construction des donnés à retourner dans le body
@@ -319,8 +318,7 @@ class Events_Controller
             "events" => $events_resp
         ];
 
-        $resp = $resp->withStatus(200);
-        $resp = $resp->withHeader("Content-Type", "application/json;charset=utf-8");
+        $resp = Writer::json_output($resp, 200);
 
         $resp->getBody()->write(json_encode($datas_resp));
 

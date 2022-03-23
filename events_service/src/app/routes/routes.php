@@ -29,6 +29,9 @@ $app->get('/events[/]', Events_Controller::class . ':getAllEvent')
     ->setName('getAllEvent');
 
 //TODO evetually : creator of event can delete his/her event
+
+ // get event by id creator
+ // deleteEventExpired
     
 
     
@@ -46,6 +49,7 @@ $app->get('/events/{id}/messages[/]', Messages_Controller::class . ':getMessages
 $app->post('/messages[/]', Messages_Controller::class . ':createMessage')
     ->setName('createMessage');// todo validator
 
+  
 //todo ?? message by members. Dans ce cas, rajouter ce lien dans hateos dans getMember.
 
 // Members
@@ -55,11 +59,17 @@ $app->post('/messages[/]', Messages_Controller::class . ':createMessage')
 $app->post('/members[/]', Members_Controller::class . ':createMember')
     ->setName('createMember');// todo validator
 
+    
+    
 $app->get('/members/{id}[/]', Members_Controller::class . ':getMember')
     ->setName('getMember');
-
+    
 $app->get('/events/{id}/members[/]', Members_Controller::class . ':getMembersByEvent')
     ->setName('getMembersByEvent');
+    
+    
+$app->delete('/members/{id}[/]', Members_Controller::class . ':deleteMemberById')
+        ->setName('deleteMemberById');
 
 // GetMember avec pseudo
     // post delete
