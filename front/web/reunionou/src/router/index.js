@@ -10,6 +10,7 @@ import EditProfile from "../views/users/EditProfile";
 import Events from "../views/events/Events";
 import CreateEvent from "../views/events/CreateEvent";
 import OneEvent from "../views/events/OneEvent";
+import ShareEvent from "../views/events/ShareEvent";
 
 Vue.use(VueRouter);
 
@@ -28,6 +29,11 @@ const routes = [
         path: "/events/:id",
         name: "one-event",
         component: OneEvent,
+    },
+    {
+        path: "/share-events/:id",
+        name: "share-event",
+        component: ShareEvent,
     },
     {
         path: "/login",
