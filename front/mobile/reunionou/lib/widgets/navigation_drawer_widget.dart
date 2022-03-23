@@ -13,43 +13,72 @@ class NavigationDrawerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     user = context.read<DataLoader>().getUser();
-    return Drawer(
-        child: Material(
-      color: const Color.fromRGBO(143, 148, 251, 1),
-      child: ListView(
-        padding: padding,
-        children: <Widget>[
-          DrawerHeader(
-            child: Image.asset("assets/images/light-1.png"),
-          ),
-          const SizedBox(height: 16),
-          buildMenuItem(
-              text: user!.fullname,
-              icon: Icons.circle,
-              onClicked: () => selectedItem(context, 1)),
-          const SizedBox(height: 16),
-          buildMenuItem(
-              text: 'Accueil',
-              icon: Icons.home,
-              onClicked: () => selectedItem(context, 0)),
-          const SizedBox(height: 16),
-          buildMenuItem(
-              text: 'Profile',
-              icon: Icons.person,
-              onClicked: () => selectedItem(context, 1)),
-          const SizedBox(height: 16),
-          buildMenuItem(
-              text: 'Paramètres',
-              icon: Icons.settings,
-              onClicked: () => selectedItem(context, 2)),
-          const SizedBox(height: 16),
-          buildMenuItem(
-              text: 'Se déconnecter',
-              icon: Icons.logout,
-              onClicked: () => selectedItem(context, 3)),
-        ],
-      ),
-    ));
+    if (user!.type == "user") {
+      return Drawer(
+          child: Material(
+        color: const Color.fromRGBO(143, 148, 251, 1),
+        child: ListView(
+          padding: padding,
+          children: <Widget>[
+            DrawerHeader(
+              child: Image.asset("assets/images/light-1.png"),
+            ),
+            const SizedBox(height: 16),
+            buildMenuItem(
+                text: user!.fullname,
+                icon: Icons.circle,
+                onClicked: () => selectedItem(context, 1)),
+            const SizedBox(height: 16),
+            buildMenuItem(
+                text: 'Accueil',
+                icon: Icons.home,
+                onClicked: () => selectedItem(context, 0)),
+            const SizedBox(height: 16),
+            buildMenuItem(
+                text: 'Profile',
+                icon: Icons.person,
+                onClicked: () => selectedItem(context, 1)),
+            const SizedBox(height: 16),
+            buildMenuItem(
+                text: 'Paramètres',
+                icon: Icons.settings,
+                onClicked: () => selectedItem(context, 2)),
+            const SizedBox(height: 16),
+            buildMenuItem(
+                text: 'Se déconnecter',
+                icon: Icons.logout,
+                onClicked: () => selectedItem(context, 3)),
+          ],
+        ),
+      ));
+    } else {
+      return Drawer(
+          child: Material(
+        color: const Color.fromRGBO(143, 148, 251, 1),
+        child: ListView(
+          padding: padding,
+          children: <Widget>[
+            DrawerHeader(
+              child: Image.asset("assets/images/light-1.png"),
+            ),
+            const SizedBox(height: 16),
+            buildMenuItem(
+                text: user!.fullname,
+                icon: Icons.circle,
+                onClicked: () => selectedItem(context, 1)),
+            const SizedBox(height: 16),
+            buildMenuItem(
+                text: 'Accueil',
+                icon: Icons.home,
+                onClicked: () => selectedItem(context, 0)),
+            buildMenuItem(
+                text: 'Se déconnecter',
+                icon: Icons.logout,
+                onClicked: () => selectedItem(context, 3)),
+          ],
+        ),
+      ));
+    }
   }
 
   selectedItem(BuildContext context, int i) async {
