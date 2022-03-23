@@ -4,7 +4,7 @@ namespace reu\events\app\models;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Item extends \Illuminate\Database\Eloquent\Model
+class Members extends \Illuminate\Database\Eloquent\Model
 {
 
     protected $table      = 'members';  /* le nom de la table */
@@ -18,9 +18,8 @@ class Item extends \Illuminate\Database\Eloquent\Model
     // );
 
 
-
     public function events()
     {
-        return $this->belongsTo('\reu\events\app\models\Events', 'command_id');
+        return $this->belongsTo('\reu\events\app\models\Events', 'event_id');
     }
 }
