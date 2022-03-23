@@ -41,6 +41,9 @@ $app->get('/messages/{id}[/]', Messages_Controller::class . ':getMessage')
 $app->get('/events/{id}/messages[/]', Messages_Controller::class . ':getMessagesByEvent')
     ->setName('getMessagesByEvent');
 
+$app->post('/messages[/]', Messages_Controller::class . ':createMessage')
+    ->setName('createMessage');// todo validator
+
 //todo ?? message by members. Dans ce cas, rajouter ce lien dans hateos dans getMember.
 
 // Members
@@ -52,3 +55,6 @@ $app->get('/members/{id}[/]', Members_Controller::class . ':getMember')
 
 $app->get('/events/{id}/members[/]', Members_Controller::class . ':getMembersByEvent')
     ->setName('getMembersByEvent');
+
+
+    // post delete
