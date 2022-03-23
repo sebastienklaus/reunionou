@@ -52,7 +52,7 @@ $app->post('/messages[/]', Messages_Controller::class . ':createMessage')
 
 //todo members by id : delete put
 
-$app->post('/members[/]', Messages_Controller::class . ':createMember')
+$app->post('/members[/]', Members_Controller::class . ':createMember')
     ->setName('createMember');// todo validator
 
 $app->get('/members/{id}[/]', Members_Controller::class . ':getMember')
