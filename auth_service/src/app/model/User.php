@@ -14,5 +14,7 @@ class User extends \Illuminate\Database\Eloquent\Model {
     public    $timestamps = true;    /* si vrai la table doit contenir
                                         les deux colonnes updated_at,
                                         created_at */
+    public $keyType = 'string';
+
 
 }
