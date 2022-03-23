@@ -21,6 +21,12 @@ $capsule->bootEloquent();
 $capsule->setAsGlobal();
 
 // Set the differents routes
+
+$app->options('/{routes:.+}', function ($request, $response, $args) {
+    return $response;
+});
+
+$app->add(Middleware::class .':corsHeaders');
  
 $app->post('/auth[/]', AuthController::class . ':authenticate')
     ->setName('authentification');
@@ -40,15 +46,9 @@ $app->get('/users/{id}[/]', AuthController::class . ':getUser')
     ->setName('getUser');
 
 
-$app->options('/{routes:.+}', function ($request, $response, $args) {
-        return $response;
+$app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function($req, $res) {
+        $handler = $this->notFoundHandler; // handle using the default Slim page not found handler
+        return $handler($req, $res);
     });
-    
-$app->add(Middleware::class .':corsHeaders');
-
-// $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function($req, $res) {
-//         $handler = $this->notFoundHandler; // handle using the default Slim page not found handler
-//         return $handler($req, $res);
-//     });
 
 $app->run();
