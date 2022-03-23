@@ -7,7 +7,7 @@
 
 require_once  __DIR__ . '/../src/vendor/autoload.php';
 
-use reu\events\app\bootstrap\lbsBootstrap;
+use reu\events\app\bootstrap\reunionouBootstrap;
 
 // video 3 contaeneur (de dépendance ?)
 // $config = [
@@ -36,7 +36,7 @@ $container = new \Slim\Container(array_merge(
 
 $app = new \Slim\App($container);
 
-lbsBootstrap::startEloquent($container->settings['dbconf']);
+reunionouBootstrap::startEloquent($container->settings['dbconf']);
 $container->get('logger.debug')->debug('eloquent started - routes register started');
 
 // Routes d'essais
