@@ -1,12 +1,21 @@
 # Atelier n°2 - Reunionou
+ Project made by Sébastien Klaus, Malek Ben Khalifa, Youssef Bahi & Maxime Piscaglia
 
-## First Architecture
+# Summary
+- [Architecture](#architecture)
+- [API end-points](#api-end-points)
+  - [Events/Messages Service](#eventsmessages-service)
+    - [Client](#client)
+    - [Backoffice](#backoffice)
+  - [Auth Users Service](#auth-users-service)
+
+***
+
+# Architecture
 
 <p align="center">
-<img src="./first_architecture.png" alt="Reunionou structure" width="600"/>
+<img src="mcd.drawio.png" alt="Reunionou structure" width="600"/>
 </p>
-
-## Modified Architecture
 
 - Database : MySQL + PhpMyAdmin
 - Backoffice : Slim with Server-side rendering
@@ -14,19 +23,21 @@
 - Web app : Vue.js
 - Mobile app : Flutter
 
+***
+
 # API end-points
 
 ## Events/Messages Service
 
 ### Client
 
-- /signin/ : **POST** (gateway)
-- /events/{id} : **GET** - **POST** - **PUT** - **DELETE**
-- /events/ : **GET**
+<!-- - /signin/ : **POST** (gateway) -->
+- /events/{id} : **GET** - **PUT**
+- /events/ : **GET** - **POST** 
 - /events/{id}/messages : **GET**
-- /messages/{id} : **PUT** - **POST** - **DELETE**
+- /messages/{id} : **GET**
 - /events/{id}/members : **GET**
-- /members/{id}/ : **PUT** (gateway)
+- /members/{id}/ : **GET** (gateway)
 
 ### Backoffice
 
@@ -35,8 +46,12 @@
 - /users/{id} : **GET** - **POST** - **PUT** - **DELETE**
 - /users/ : **GET**
 
+***
+
 ## Auth Users Service
 
 - /create/ : **POST**
 - /auth/ : **POST**
 - /check/ : **GET**
+- /update/{id} : **PUT**
+- /users/{id} : **GET**
