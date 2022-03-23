@@ -5,6 +5,7 @@ namespace reunionou\auth\app\middleware;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
+use reunionou\auth\app\error\Writer as Writer;
 
 use Ramsey\Uuid\Uuid;
 use \DavidePastore\Slim\Validation\Validation as Validation ;
@@ -28,6 +29,20 @@ class Middleware {
         $resp = $next($req,$resp);
 
         return $resp;
+    }
+
+    public static function corsHeaders(Request $req,Response $resp,callable $next ): Response {
+        // if (! $req->hasHeader('Origin'))
+        //     return Writer::jsonError($req, $resp, 401, "missing Origin Header (cors)");
+        
+        $response = $next($req,$resp);
+
+        $response = $response->withHeader('Access-Control-Allow-Origin', $req->getHeader('Origin'))
+                                ->withHeader('Access-Control-Allow-Methods', 'POST, PUT, GET, DELTE' )
+                                ->withHeader('Access-Control-Allow-Headers','Authorization, Content-Type' )
+                                ->withHeader('Access-Control-Max-Age', 3600)
+                                ->withHeader('Access-Control-Allow-Credentials', 'true');
+        return $response;
     }
 
 }
