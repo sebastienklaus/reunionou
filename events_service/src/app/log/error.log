@@ -43,3 +43,7 @@
 [2022-03-23T15:20:55.508546+00:00] lbs.log.ERROR: bad ressource : http://events.service.local:62010/events/30be9b14-dad3-442d-991c-53c05ee82e1e/messages [] []
 [2022-03-23T16:55:04.794399+00:00] lbs.log.ERROR: bad ressource : http://events.service.local:62010/members/fc7b0e34-9048-4314-ac9d-7d9dd835b5ae [] []
 [2022-03-23T16:59:10.842699+00:00] lbs.log.ERROR: bad ressource : http://events.service.local:62010/events/30be9b14-dad3-442d-991c-53c05ee82e1e/members [] []
+[2022-03-23T22:15:12.826678+00:00] lbs.log.ERROR: error | 500 | internal server error: syntax error, unexpected '$resp' (T_VARIABLE) | /var/www/src/app/controller/Members_Controller.phpline: 170 [] []
+[2022-03-23T22:25:38.792683+00:00] lbs.log.ERROR: GET http://events.service.local:62010/members/ : bad method - POST wanted [] []
+[2022-03-23T22:37:01.841495+00:00] lbs.log.ERROR: PUT http://events.service.local:62010/members/463549f4-4eba-4463-8723-dd17c5321608 : bad method - GET, DELETE wanted [] []
+[2022-03-23T22:57:28.783855+00:00] lbs.log.ERROR: error input date event [] []
