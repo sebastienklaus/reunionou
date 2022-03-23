@@ -85,7 +85,6 @@ class AuthController {
 
     public function check(Request $req, Response $resp, $args): Response {
         try {
-            
             //le secret est conservé dans le container de dépendances
             $secret = $this->container->settings['secret'];
 
@@ -101,7 +100,6 @@ class AuthController {
             ];
 
             return Writer::json_output($resp, 200, $data);
-
         } 
         catch (ExpiredException $e) {
             return Writer::jsonError($req, $resp, 401, 'The token is expired');
@@ -116,7 +114,6 @@ class AuthController {
             return Writer::jsonError($req, $resp, 401, 'The value of token is wrong');
 
         }    
-
         return $resp;
     }
 
@@ -133,7 +130,6 @@ class AuthController {
             var_dump($errors);
         } else {
             try {
-
                 if ($requestBody['password'] !== $requestBody['password_confirm']) {
                     return Writer::jsonError($req, $resp, 401, 'Les mots de passes ne sont pas identiques');
                 }
@@ -157,7 +153,6 @@ class AuthController {
                     $newUser->username = $requestBody['username'];
                     $newUser->password = password_hash($requestBody['password'], PASSWORD_DEFAULT);
                     $newUser->save();
-
                 }    
             } catch (ModelNotFoundException $e) {
                 $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="lbs auth" ');
@@ -171,16 +166,14 @@ class AuthController {
             $resp = $resp->withStatus(201)
                         ->withHeader('Content-Type', 'application/json; charset=utf-8');
             
-            
             return Writer::json_output($resp, 200, 'Successful creation !');
+
             return $resp;
         }
-
     }
 
 
-    public function updateAccount(Request $req, Response $resp, $args): Response {
-        
+    public function updateAccount(Request $req, Response $resp, $args): Response {    
         //get body of request
         $requestBody = $req->getParsedBody();
         // old, new & new confirm
@@ -235,4 +228,27 @@ class AuthController {
 
     }
     
+    public function getUser(Request $req, Response $resp, $args): Response {
+        $userID = $args['id'];
+        try {
+            
+            $user = User::select(['id', 'fullname','email', 'username', 'refresh_token'])->findOrFail($userID);
+
+            //le tableau de data retourné
+            $data = [
+                'id'=> $user->id
+            ];
+
+            return Writer::json_output($resp, 200, $user);
+
+        } catch (ModelNotFoundException $e) {
+            $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="lbs auth" ');
+            return Writer::jsonError($req, $resp, 401, 'Erreur authentification model');
+        } catch (\Exception $e) {
+            $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="lbs auth" ');
+            return Writer::jsonError($req, $resp, 401, 'Erreur PHP');
+        } 
+
+        return $resp;
+    }
 }

@@ -37,4 +37,7 @@ $app->post('/create[/]', AuthController::class . ':createAccount')
 $app->put('/update/{id}[/]', AuthController::class . ':updateAccount')
     ->setName('updateAccount');
 
+$app->get('/users/{id}[/]', AuthController::class . ':getUser')
+    ->setName('getUser');
+
 $app->run();
