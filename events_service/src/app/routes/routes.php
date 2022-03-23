@@ -50,7 +50,7 @@ $app->post('/messages[/]', Messages_Controller::class . ':createMessage')
 
 // Members
 
-//todo members by id : delete put
+//todo members by id : delete put, put seulement sur user_id ??
 
 $app->post('/members[/]', Members_Controller::class . ':createMember')
     ->setName('createMember');// todo validator
