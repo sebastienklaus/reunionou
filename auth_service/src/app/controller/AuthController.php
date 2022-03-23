@@ -122,7 +122,6 @@ class AuthController {
 
 
     public function createAccount(Request $req, Response $resp, $args): Response {
-        
         //get body of request
         $requestBody = $req->getParsedBody();
         //get the UUID from middleware
@@ -160,6 +159,63 @@ class AuthController {
             //configure the response headers
             $resp = $resp->withStatus(201)
                         ->withHeader('Content-Type', 'application/json; charset=utf-8');
+            
+
+            return $resp;
+        }
+
+    }
+
+
+    public function updateAccount(Request $req, Response $resp, $args): Response {
+        
+        //get body of request
+        $requestBody = $req->getParsedBody();
+        // old, new & new confirm
+        $userID = $args['id'];
+
+        //if condition about validators filter
+        if ($req->getAttribute('has_errors')) {
+            $errors = $req->getAttribute('errors');
+            var_dump($errors);
+        } else {
+            try {
+
+                if ($requestBody['new_password'] !== $requestBody['new_password_confirm']) {
+                    return Writer::jsonError($req, $resp, 401, 'Les mots de passes ne sont pas identiques');
+                }
+                else {
+                    $user = User::findOrFail($userID);
+                    $checkEmail = User::select('username', 'email')->where('id', '!=', $user->id)->get();
+                        
+                    foreach ($checkEmail as $i) {
+                        if($requestBody['email'] !== $i['email'] && $requestBody['username'] !== $i['username']){
+                            $user->fullname = $requestBody['fullname'];
+                            $user->email = $requestBody['email'];
+                            $user->username = $requestBody['username'];
+                            $user->password = password_hash($requestBody['new_password'], PASSWORD_DEFAULT);
+                            $user->save();
+                            print_r($i['email']);
+                        }
+                        else{
+                            return Writer::jsonError($req, $resp, 401, 'Cet email ou pseudo existe déjà !');
+                        }
+                    }
+                }    
+            } catch (ModelNotFoundException $e) {
+                $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="lbs auth" ');
+                return Writer::jsonError($req, $resp, 401, 'Erreur authentification model');
+            } catch (\Exception $e) {
+                $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="lbs auth" ');
+                return Writer::jsonError($req, $resp, 401, 'Erreur PHP');
+            }    
+            
+            //configure the response headers
+            $resp = $resp->withStatus(201)
+                        ->withHeader('Content-Type', 'application/json; charset=utf-8');
+                        
+                        
+            return Writer::json_output($resp, 200, 'OK');
 
             return $resp;
         }
@@ -167,3 +223,6 @@ class AuthController {
     }
     
 }
+
+
+// change email : if it's same than preview && differnets than others: ok
