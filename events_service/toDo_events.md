@@ -1,15 +1,28 @@
-# fillable in model
+# TO DO in Events Service
 
-# controler dans chaque réception post ou depuis de la database
+- fillable in model
 
-# Hateos
+- controler dans chaque réception post ou depuis de la database
 
-## getEvent, getMessage
+- Hateos
 
-# pagination getAll
+- getEvent, getMessage
 
-# tokens
+- pagination getAll
 
-# CORS
+- tokens -> middleware ?
 
-# comment
+- CORS
+- creates : token container->middelware
+
+- Renomer Model sans s
+- comments
+- revoir headers, ressource. Location everywhere ?
+
+## Youssef
+
+- renommer author en member_id ?
+
+- format JSON Spot
+
+- Token event

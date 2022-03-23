@@ -4,7 +4,7 @@ namespace reu\events\app\bootstrap;
 
 use Illuminate\Database\Capsule\Manager;
 
-class lbsBootstrap
+class reunionouBootstrap
 {
 
     public static function startEloquent($file)
