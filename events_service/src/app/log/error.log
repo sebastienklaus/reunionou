@@ -41,3 +41,5 @@
 [2022-03-23T15:17:10.962142+00:00] lbs.log.ERROR: error | 500 | internal server error: syntax error, unexpected ''created_at'' (T_CONSTANT_ENCAPSED_STRING), expecting ']' | /var/www/src/app/controller/Messages_Controller.phpline: 140 [] []
 [2022-03-23T15:17:21.847949+00:00] lbs.log.ERROR: error | 500 | internal server error: syntax error, unexpected ''created_at'' (T_CONSTANT_ENCAPSED_STRING), expecting ']' | /var/www/src/app/controller/Messages_Controller.phpline: 140 [] []
 [2022-03-23T15:20:55.508546+00:00] lbs.log.ERROR: bad ressource : http://events.service.local:62010/events/30be9b14-dad3-442d-991c-53c05ee82e1e/messages [] []
+[2022-03-23T16:55:04.794399+00:00] lbs.log.ERROR: bad ressource : http://events.service.local:62010/members/fc7b0e34-9048-4314-ac9d-7d9dd835b5ae [] []
+[2022-03-23T16:59:10.842699+00:00] lbs.log.ERROR: bad ressource : http://events.service.local:62010/events/30be9b14-dad3-442d-991c-53c05ee82e1e/members [] []

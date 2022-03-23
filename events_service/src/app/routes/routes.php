@@ -48,7 +48,10 @@ $app->post('/messages[/]', Messages_Controller::class . ':createMessage')
 
 // Members
 
-//todo members by id : post put
+//todo members by id : delete put
+
+$app->post('/members[/]', Messages_Controller::class . ':createMember')
+    ->setName('createMessage');// todo validator
 
 $app->get('/members/{id}[/]', Members_Controller::class . ':getMember')
     ->setName('getMember');
@@ -56,5 +59,5 @@ $app->get('/members/{id}[/]', Members_Controller::class . ':getMember')
 $app->get('/events/{id}/members[/]', Members_Controller::class . ':getMembersByEvent')
     ->setName('getMembersByEvent');
 
-
+// GetMember avec pseudo
     // post delete
