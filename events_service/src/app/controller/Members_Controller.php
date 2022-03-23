@@ -99,7 +99,7 @@ class Members_Controller
 
             $resp = Writer::json_output($resp, 201)
                 ->withAddedHeader('application-header', 'reuninou') // 201 : created
-                ->withHeader("Location", $pathForMessage);
+                ->withHeader("Location", $pathForMember);
 
             $resp->getBody()->write(json_encode($datas_resp));
 

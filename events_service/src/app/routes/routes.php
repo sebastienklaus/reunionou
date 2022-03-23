@@ -11,6 +11,8 @@ use reu\events\app\middleware\Token;
 $validators = EventValidator::create_validators();
 // Events
 
+// delte event : delete assocaited tables
+
 $app->post('/events[/]', Events_Controller::class . ':createEvent')
     ->setName('createEvent')
     ->add(new Validation($validators));
@@ -51,7 +53,7 @@ $app->post('/messages[/]', Messages_Controller::class . ':createMessage')
 //todo members by id : delete put
 
 $app->post('/members[/]', Messages_Controller::class . ':createMember')
-    ->setName('createMessage');// todo validator
+    ->setName('createMember');// todo validator
 
 $app->get('/members/{id}[/]', Members_Controller::class . ':getMember')
     ->setName('getMember');
