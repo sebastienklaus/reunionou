@@ -61,6 +61,7 @@ class Messages_Controller
         //     }
         // };
 
+      
 
         try {
             
@@ -74,13 +75,8 @@ class Messages_Controller
 
             $new_message->content = filter_var($message_req['content'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $new_message->member_id = filter_var($message_req['member_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $new_message->event_it = filter_var($message_req['event_it'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            //! FILTE POUR SPOT : SPOT JSON DOIT ETRE OK
-            $new_message->spot = $message_req['spot'];
-            // Création de la date  de livraison
-            $date_message = new DateTime($message_req['date']);
-            $new_message->date = $date_message->format('Y-m-d H:i:s');
-
+            $new_message->event_id = filter_var($message_req['event_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $new_message->media = filter_var($message_req['media'], FILTER_SANITIZE_FULL_SPECIAL_CHARS); //?to do verification json ?
 
             $new_message->save();
 
@@ -93,13 +89,13 @@ class Messages_Controller
             $datas_resp = [
                 "type" => "ressource",
                 "message" => [
-                    "title" => $new_message->title,
-                    "description" => $new_message->description,
-                    "author" => $new_message->author,
-                    "spot" => $new_message->spot,
-                    "date" => $new_message->date,
-                    "created_at" => $new_message->created_at,
-                    "updated_at" => $new_message->updated_at
+                    "id" => $new_message->id,
+                    "content" => $new_message->content,
+                    "member_id" => $new_message->member_id,
+                    "event_id" => $new_message->event_id,
+                    "media" => $new_message->media,
+                    "updated_at" => $new_message->updated_at->format('Y-m-d H:i:s'),
+                    "created_at" => $new_message->created_at->format('Y-m-d H:i:s'),
                 ]
             ];
 
@@ -115,7 +111,7 @@ class Messages_Controller
             return Writer::json_error($resp, 404, 'Ressource not found : message ID = ' . $new_message->id);
         } catch (\Exception $th) {
             //todo : log Error
-            return Writer::json_error($resp, 500, 'Server Error : Can\'t create message');
+            return Writer::json_error($resp, 500, 'Server Error : Can\'t create message ' . $th->getMessage());
         }
         //
     }
@@ -127,7 +123,7 @@ class Messages_Controller
         try {
             
             //* Modification TD4.2
-            $message = Messages::select(['id', 'content', 'author', 'media', 'event_id', 'created_at', 'updated_at'])
+            $message = Messages::select(['id', 'content', 'member_id', 'event_id', 'media', 'created_at', 'updated_at'])
             ->where('id', '=', $id_message)
             ->firstOrFail();
 
@@ -136,11 +132,11 @@ class Messages_Controller
             $message_resp = [
                 'id' => $message->id,
                 'content' => $message->content,
-                'author' => $message->author,
-                'media' => $message->media,
+                'member_id' => $message->member_id,
                 'event_id' => $message->event_id,
-                'created_at' => $message->created_at,
-                'updated_at' => $message->updated_at
+                'media' => $message->media,
+                'updated_at' => $message->updated_at->format('Y-m-d H:i:s'),
+                'created_at' => $message->created_at->format('Y-m-d H:i:s')
             ];
 
             // Récupération de la route events                            
@@ -208,13 +204,13 @@ class Messages_Controller
         $messages_resp = [];
         foreach ($messages as $message) {
             $messages_resp[] = [
-                'id' => $message->id,
+             'id' => $message->id,
                 'content' => $message->content,
-                'author' => $message->author,
+                'member_id' => $message->member_id,
+                'event_id' => $message->event_id,
                 'media' => $message->media,
-                'event_id' => $message->event_id, //? to be or not to be ?
-                'created_at' => $message->created_at,
-                'updated_at' => $message->updated_at
+                'updated_at' => $message->updated_at->format('Y-m-d H:i:s'),
+                'created_at' => $message->created_at->format('Y-m-d H:i:s')
             ];
         }
 

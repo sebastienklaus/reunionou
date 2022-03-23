@@ -19,6 +19,8 @@
 - comments
 - revoir headers, ressource. Location everywhere ?
 
+- /post message, post members, delete members, repasser sur le reste
+
 ## Youssef
 
 - renommer author en member_id ?
