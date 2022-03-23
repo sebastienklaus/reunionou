@@ -13,6 +13,7 @@
                     type="email"
                     required
                     placeholder="Email"
+                    v-model="email"
                 />
             </div>
             <div class="field">
@@ -23,6 +24,7 @@
                     type="password"
                     required
                     placeholder="Mot de passe"
+                    v-model="password"
                 />
             </div>
             <div class="field">
@@ -38,10 +40,32 @@
 <script>
 export default {
     data() {
-        return {};
+        return {
+            email: "test@mail.fr",
+            password: "hellomalek",
+        };
     },
     methods: {
         validation() {
+            this.$usersApi
+                .post(
+                    "auth",
+                    {},
+                    {
+                        auth: {
+                            username: this.email,
+                            password: this.password,
+                        },
+                    }
+                )
+                .then((response) => {
+                    console.log(response);
+                    
+                    // this.$store.commit("setToken", response.data.token);
+                    // this.$store.commit("setMember", response.data.member);
+                    // this.$router.push("/");
+                })
+                .catch((err) => console.log(err));
         },
     },
 };
