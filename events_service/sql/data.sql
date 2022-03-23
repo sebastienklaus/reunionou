@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS events (
     `heure` TIME,
     `created_at` DATETIME,
     `updated_at` DATETIME
-);
+) DEFAULT CHARSET=utf8mb4_general_cli;
 
 INSERT INTO events VALUES
     ('0447ff47-e257-4bfc-b1a6-913a2c6cbd79','Princess Ka''iulani','In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.','/users/adcac5ad-206a-449c-8f40-aacb32750c47','{"name":"Zoombox","latitude":117.9483319,"longitude":-8.3501717}','2021-07-02 00:00:00','12:35','2021-09-07 11:18:26','2021-05-13 10:26:33'),

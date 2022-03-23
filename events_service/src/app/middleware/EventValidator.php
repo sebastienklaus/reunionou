@@ -46,7 +46,8 @@ class EventValidator
             //     'heure' => V::date('H:i')
             // ],
             'date' => V::date('d-m-Y H:i'),
-            'lieu' => v::stringType()->notEmpty(),
+            'lieu' => v::stringType()->notEmpty()
         ];
     }
 }
+
