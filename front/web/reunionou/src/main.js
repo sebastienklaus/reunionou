@@ -8,7 +8,6 @@ Vue.prototype.$usersApi = axios.create({
     baseURL: "http://docketu.iutnc.univ-lorraine.fr:62011/",
 });
 
-
 Vue.config.productionTip = false;
 
 new Vue({

@@ -47,25 +47,30 @@ export default {
     },
     methods: {
         validation() {
-            this.$usersApi
-                .post(
-                    "auth",
-                    {},
-                    {
-                        auth: {
-                            username: this.email,
-                            password: this.password,
-                        },
-                    }
-                )
-                .then((response) => {
-                    console.log(response);
-                    
-                    // this.$store.commit("setToken", response.data.token);
-                    // this.$store.commit("setMember", response.data.member);
-                    // this.$router.push("/");
-                })
-                .catch((err) => console.log(err));
+            // this.$usersApi
+            //     .post(
+            //         "auth",
+            //         {},
+            //         {
+            //             auth: {
+            //                 username: this.email,
+            //                 password: this.password,
+            //             },
+            //         }
+            //     )
+            //     .then((response) => {
+            //         console.log(response); //TODO see what it can be done after login (get user data or JWT data)
+            this.$store.commit(
+                "setToken",
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+            );
+            this.$store.commit("setUser", { username: "hello", id: "idid" });
+            this.$router.push("/");
+            //         // this.$store.commit("setToken", response.data.token);
+            //         // this.$store.commit("setMember", response.data.member);
+            //         // this.$router.push("/");
+            //     })
+            //     .catch((err) => console.log(err));
         },
     },
 };
