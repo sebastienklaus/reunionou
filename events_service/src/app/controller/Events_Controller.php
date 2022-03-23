@@ -104,8 +104,8 @@ class Events_Controller
                     "author" => $new_event->author,
                     "spot" => $new_event->spot,
                     "date" => $new_event->date,
-                    "created_at" => $new_event->created_at,
-                    "updated_at" => $new_event->updated_at
+                    "created_at" => $new_event->created_at->format('Y-m-d H:i:s'),
+                    "updated_at" => $new_event->updated_at->format('Y-m-d H:i:s')
                 ]
             ];
 
@@ -188,8 +188,8 @@ class Events_Controller
                     "author" => $new_event->author,
                     "spot" => $new_event->spot,
                     "date" => $new_event->date,
-                    "created_at" => $new_event->created_at,
-                    "updated_at" => $new_event->updated_at
+                    "created_at" => $new_event->created_at->format('Y-m-d H:i:s'),
+                    "updated_at" => $new_event->updated_at->format('Y-m-d H:i:s')
                 ]
             ];
 
@@ -230,8 +230,8 @@ class Events_Controller
                 'author' => $event->author,
                 'spot' => $event->spot,
                 'date' => $event->date,
-                'created_at' => $event->created_at,
-                'updated_at' => $event->updated_at
+                'created_at' => $event->created_at->format('Y-m-d H:i:s'),
+                'updated_at' => $event->updated_at->format('Y-m-d H:i:s')
             ];
 
             // Récupération de la route events                            
@@ -306,8 +306,8 @@ class Events_Controller
                 'author' => $event->author,
                 'spot' => $event->spot,
                 'date' => $event->date,
-                'created_at' => $event->created_at,
-                'updated_at' => $event->updated_at //?rajouter un link avec pathfor ?
+                'created_at' => $event->created_at->format('Y-m-d H:i:s'),
+                'updated_at' => $event->updated_at->format('Y-m-d H:i:s') //?rajouter un link avec pathfor ?
             ]; //TODO rajouter self dans chaque event
         }
 

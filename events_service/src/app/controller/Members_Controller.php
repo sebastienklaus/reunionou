@@ -87,7 +87,7 @@ class Members_Controller
 
             $datas_resp = [
                 "type" => "ressource",
-                "message" => [
+                "member" => [
                     "id" => $new_member->id,
                     "user_id" => $new_member->user_id,
                     "event_id" => $new_member->event_id,
@@ -114,6 +114,90 @@ class Members_Controller
         //
     }
 
+        // Créer un event
+        public function updateMember(Request $req, Response $resp, array $args): Response
+        {
+    
+            // Récupération du body de la requête
+            $member_req = $req->getParsedBody();
+            
+            
+            // if ($req->getAttribute('has_errors')) {
+    
+            //     $errors = $req->getAttribute('errors');
+    
+            //     //? à mettre ailleurs ? Container ? Utils ? Maiddleware ? Errors ? Faire fonction + générique
+            //     if (isset($errors['title'])) {
+            //         $this->container->get('logger.error')->error("error input message title");
+            //         return Writer::json_error($resp, 403, '"title" : invalid input, string expected');
+            //     }
+            //     if (isset($errors['description'])) {
+            //         $this->container->get('logger.error')->error("error mail message description");
+            //         return Writer::json_error($resp, 403, '"description" : invalid input, text format expected');
+            //     }
+            //     if (isset($errors['author'])) {
+            //         $this->container->get('logger.error')->error("error input author UUID");
+            //         return Writer::json_error($resp, 403, '"author" : invalid input. d-m-Y format expected : uuid');
+            //     }
+            //     // if (isset($errors['spot'])) {
+            //     //     $this->container->get('logger.error')->error("error input livraison heure");
+            //     //     return Writer::json_error($resp, 403, '"heure" : invalid input. H:i format expected');
+            //     // }
+            //     if (isset($errors['date'])) {
+            //         ($this->container->get('logger.error'))->error("error input date message");
+            //         return Writer::json_error($resp, 403, '"date" : invalid input. date exepected : d-m-y H:m:i');
+            //     }
+            // };
+    
+          
+    
+            try {
+                
+                // Création d'un message via le model
+                $member = Members::Select(['id', 'user_id', 'event_id', 'pseudo', 'updated_at', 'created_at'])->findOrFail($args['id']);;
+                
+    
+                $member->user_id = filter_var($member_req['user_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                $member->event_id = filter_var($member_req['event_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                $member->pseudo = filter_var($member_req['pseudo'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    
+                $member->save();
+    
+                // Récupération du path pour le location dans header
+                $pathForMember = $this->container->router->pathFor(
+                    'getMember',
+                    ['id' => $member->id]
+                );
+    
+                $datas_resp = [
+                    "type" => "ressource",
+                    "member" => [
+                        "id" => $member->id,
+                        "user_id" => $member->user_id,
+                        "event_id" => $member->event_id,
+                        "pseudo" => $member->pseudo,
+                        "updated_at" => $member->updated_at->format('Y-m-d H:i:s'),
+                        "created_at" => $member->created_at->format('Y-m-d H:i:s'),
+                    ]
+                ];
+    
+                $resp = Writer::json_output($resp, 200)
+                    ->withAddedHeader('application-header', 'reuninou') // 201 : created
+                    ->withHeader("Location", $pathForMember);
+    
+                $resp->getBody()->write(json_encode($datas_resp));
+    
+                return $resp;
+            } catch (ModelNotFoundException $e) {
+                //todo: logError
+                return Writer::json_error($resp, 404, 'Ressource not found : member ID = ' . $member->id);
+            } catch (\Exception $th) {
+                //todo : log Error
+                return Writer::json_error($resp, 500, 'Server Error : Can\'t update member ' . $th->getMessage());
+            }
+            //
+        }
+
     public function getMember(Request $req, Response $resp, array $args): Response
     {
         $id_member = $args['id'];
@@ -132,8 +216,8 @@ class Members_Controller
                 'user_id' => $member->user_id,
                 'event_id' => $member->event_id, //? to be or not to be ?
                 'pseudo' => $member->pseudo,
-                'created_at' => $member->created_at,
-                'updated_at' => $member->updated_at
+                'created_at' => $member->created_at->format('Y-m-d H:i:s'),
+                'updated_at' => $member->updated_at->format('Y-m-d H:i:s')
             ];
 
             // Récupération de la route member                          
