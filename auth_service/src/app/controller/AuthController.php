@@ -152,6 +152,7 @@ class AuthController {
                     $newUser->email = $requestBody['email'];
                     $newUser->username = $requestBody['username'];
                     $newUser->password = password_hash($requestBody['password'], PASSWORD_DEFAULT);
+                    $newUser->is_admin = 0;
                     $newUser->save();
                 }    
             } catch (ModelNotFoundException $e) {
@@ -230,8 +231,7 @@ class AuthController {
     
     public function getUser(Request $req, Response $resp, $args): Response {
         $userID = $args['id'];
-        try {
-            
+        try { 
             $user = User::select(['id', 'fullname','email', 'username', 'refresh_token'])->findOrFail($userID);
 
             return Writer::json_output($resp, 200, $user);
