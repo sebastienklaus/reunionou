@@ -236,6 +236,3 @@ class AuthController {
     }
     
 }
-
-
-// change email : if it's same than preview && differnets than others: ok
