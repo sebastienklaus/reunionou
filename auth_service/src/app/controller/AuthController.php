@@ -93,10 +93,16 @@ class AuthController {
             $tokenstring = sscanf($h, "Bearer %s")[0] ;
             $token = JWT::decode($tokenstring, new Key($secret,'HS512' ) );
 
+
+            $user = User::select()->where('email', '=', $token->upr->email)->first();
+
             //le tableau de data retourné est formé
             $data = [
+                'user_id' => $user->id,
+                'user_fullname' => $user->fullname,
                 'user_mail' => $token->upr->email,
                 'user_username' => $token->upr->username,
+                'user_token' => $user->refresh_token
             ];
 
             return Writer::json_output($resp, 200, $data);

@@ -32,7 +32,7 @@ class Middleware {
     }
 
 
-    public function corsHeaders(Request $req,Response $resp,callable $next ): Response {
+    public static function corsHeaders(Request $req,Response $resp,callable $next ): Response {
 
     if (! $req->hasHeader('Origin'))
         return Writer::jsonError($req, $resp, 401, "missing Origin Header (cors)");
