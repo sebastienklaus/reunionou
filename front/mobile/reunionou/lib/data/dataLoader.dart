@@ -1,32 +1,35 @@
-import 'dart:convert';
-import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import '../models/user.dart';
 import 'DatabaseHandler.dart';
 import 'package:uuid/uuid.dart';
 import 'package:username_generator/username_generator.dart';
 
-class DataLoader {
+class DataLoader extends ChangeNotifier {
   late DatabaseHandler handler;
 
   //late User _user;
-  late User _user;
+  var _user;
 
   //Get current _user
-  User getUser() {
+  getUser() {
+    print('get');
     print(_user);
     return _user;
   }
 
-  //set current _user
-  void setUser(User user) {
+  //set current user
+  setUser(user) {
     _user = user;
+    print('set');
+    print(_user);
+    notifyListeners();
   }
 
   //Authentificate user
   Future<bool> authentificate(String email, String password) async {
     //Call authentificate api here
     if (1 == 1) {
-      _user = const User(
+      _user = User(
         id: "54q6s5d4qsd",
         email: "malek@gmail.com",
         fullname: "malek bk",
@@ -34,13 +37,14 @@ class DataLoader {
         type: "user",
         token: "3qs4d6q5s4fvd6s5v165165aze1d",
       );
-
+      setUser(_user);
       handler = await DatabaseHandler();
 
       //In case of success store user to db
       handler.initializeDB().whenComplete(() async {
         await handler.insertUser(_user);
       });
+      notifyListeners();
       return true;
     } else {
       return false;
@@ -57,11 +61,13 @@ class DataLoader {
       //In case of success store user to db
       _user = User(
         id: id,
-        email: "malek@gmail.com",
         fullname: fullname,
         username: generator.generate(fullname),
         type: "guest",
       );
+      setUser(_user);
+
+      notifyListeners();
       handler.initializeDB().whenComplete(() async {
         await handler.insertUser(_user);
       });
@@ -79,10 +85,12 @@ class DataLoader {
       //Check db status (empty/not)
       bool dbCheck = await handler.dbIsEmptyOrNot();
       if (!dbCheck) {
-        handler.getUser().then((user) {
+        var user = await handler.getUser();
+        if (user is User) {
           setUser(user);
-        });
-        return handler.getUser();
+          notifyListeners();
+          return _user;
+        }
       } else {
         return false;
       }
@@ -95,7 +103,8 @@ class DataLoader {
   logout() async {
     try {
       handler = DatabaseHandler();
-      handler.delUser();
+      await handler.delUser();
+      notifyListeners();
     } catch (e) {
       print(e.toString());
     }

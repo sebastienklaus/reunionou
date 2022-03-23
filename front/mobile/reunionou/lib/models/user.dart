@@ -1,13 +1,13 @@
 class User {
-  final String id;
-  final String fullname;
-  final String username;
-  final String type;
-  final String? email;
-  final String? token;
+  String id;
+  String fullname;
+  String username;
+  String type;
+  String? email;
+  String? token;
 
 //Constructor
-  const User({
+  User({
     required this.id,
     required this.fullname,
     required this.username,
