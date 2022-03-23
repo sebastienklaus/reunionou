@@ -17,6 +17,11 @@ class _LoginScreenState extends State<UserLoginScreen> {
   Widget build(BuildContext context) {
     final email = TextEditingController();
     final password = TextEditingController();
+
+    //Just for testing
+    email.text = "test@mail.fr";
+    password.text = "hellomalek";
+
     final _formKey = GlobalKey<FormState>();
     return WillPopScope(
       onWillPop: () async => false,
@@ -215,14 +220,13 @@ class _LoginScreenState extends State<UserLoginScreen> {
                                             .showSnackBar(
                                           const SnackBar(
                                             content: Text(
-                                              "Welcome back",
+                                              "Content de te revoir :)",
                                               style: TextStyle(
                                                 color: Color.fromARGB(
-                                                    255, 31, 31, 31),
+                                                    255, 255, 255, 255),
                                               ),
                                             ),
-                                            backgroundColor: Color.fromARGB(
-                                                143, 148, 251, 1),
+                                            backgroundColor: Colors.green,
                                           ),
                                         );
                                         Navigator.pushNamed(
@@ -233,8 +237,8 @@ class _LoginScreenState extends State<UserLoginScreen> {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
                                           const SnackBar(
-                                            content:
-                                                Text("Authentification failed"),
+                                            content: Text(
+                                                "Authentification échouée :("),
                                             backgroundColor: Colors.red,
                                           ),
                                         );
