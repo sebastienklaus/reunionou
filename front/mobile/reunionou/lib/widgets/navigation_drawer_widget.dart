@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:reunionou/screens/home.dart';
-import 'package:reunionou/screens/user_login.dart';
+import 'package:reunionou/models/user.dart';
 import '../data/dataLoader.dart';
 
 class NavigationDrawerWidget extends StatelessWidget {
   final padding = const EdgeInsets.symmetric(horizontal: 10);
 
-  const NavigationDrawerWidget({Key? key}) : super(key: key);
+  User? user;
+
+  NavigationDrawerWidget({User? this.user, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,13 +18,13 @@ class NavigationDrawerWidget extends StatelessWidget {
         padding: padding,
         children: <Widget>[
           DrawerHeader(
-            child: Image.asset("assets/logo.png"),
+            child: Image.asset("assets/images/light-1.png"),
           ),
           const SizedBox(height: 16),
           buildMenuItem(
-              text: DataLoader().getUser().fullname,
+              text: user!.fullname,
               icon: Icons.logout,
-              onClicked: () => selectedItem(context, 3)),
+              onClicked: () => selectedItem(context, 1)),
           const SizedBox(height: 16),
           buildMenuItem(
               text: 'Accueil',
@@ -52,27 +53,31 @@ class NavigationDrawerWidget extends StatelessWidget {
   selectedItem(BuildContext context, int i) async {
     switch (i) {
       case 0:
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
-        ));
+        Navigator.pushNamed(
+          context,
+          '/home',
+        );
         break;
 
       case 1:
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
-        ));
+        Navigator.pushNamed(
+          context,
+          '/home',
+        );
         break;
 
       case 2:
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
-        ));
+        Navigator.pushNamed(
+          context,
+          '/home',
+        );
         break;
       case 3:
         await DataLoader().logout();
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const UserLoginScreen(),
-        ));
+        Navigator.pushNamed(
+          context,
+          '/userLogin',
+        );
         break;
     }
   }

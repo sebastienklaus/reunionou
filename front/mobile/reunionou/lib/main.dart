@@ -4,33 +4,40 @@ import 'package:reunionou/screens/guest_login.dart';
 import 'package:reunionou/screens/home.dart';
 import 'package:reunionou/screens/user_login.dart';
 import 'package:provider/provider.dart';
-import 'data/datProvider.dart';
 import 'data/dataLoader.dart';
+import 'models/user.dart';
 
 Future<void> main() async {
-  var pataProider = DataProider();
+  var dataCollection = DataLoader();
   runApp(
     ChangeNotifierProvider(
-      create: (context) => pataProider,
-      child: const MyApp(),
+      create: (context) => dataCollection,
+      child: MyApp(dataCollection: dataCollection),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({DataLoader? this.dataCollection, Key? key}) : super(key: key);
+  DataLoader? dataCollection;
 
   @override
   Widget build(BuildContext context) {
     Widget initHome;
+    var user = null;
     return OverlaySupport(
       child: FutureBuilder(
-        future: DataLoader().checkAuthSession(),
+        future: dataCollection!.checkAuthSession(),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if (snapshot.data == null || snapshot.data == false) {
             initHome = const UserLoginScreen();
           } else {
-            initHome = const HomeScreen();
+            if (snapshot.data is User) {
+              initHome = HomeScreen(user: snapshot.data);
+              user = snapshot.data;
+            } else {
+              initHome = const HomeScreen();
+            }
           }
           return MaterialApp(
             title: 'Reunionou',
@@ -42,7 +49,10 @@ class MyApp extends StatelessWidget {
             routes: {
               UserLoginScreen.route: (context) => const UserLoginScreen(),
               GuestLoginScreen.route: (context) => const GuestLoginScreen(),
-              HomeScreen.route: (context) => const HomeScreen(),
+              HomeScreen.route: (context) => Consumer<DataLoader>(
+                      builder: (context, dataCollection, child) {
+                    return HomeScreen(user: dataCollection.getUser());
+                  }),
             },
             home: initHome,
           );

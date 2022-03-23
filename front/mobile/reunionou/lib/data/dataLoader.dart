@@ -1,25 +1,18 @@
-import 'dart:convert';
-import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import '../models/user.dart';
 import 'DatabaseHandler.dart';
 import 'package:uuid/uuid.dart';
 import 'package:username_generator/username_generator.dart';
 
-class DataLoader {
+class DataLoader extends ChangeNotifier {
   late DatabaseHandler handler;
 
   //late User _user;
   late User _user;
 
   //Get current _user
-  User getUser() {
-    print(_user);
+  getUser() {
     return _user;
-  }
-
-  //set current _user
-  void setUser(User user) {
-    _user = user;
   }
 
   //Authentificate user
@@ -41,6 +34,7 @@ class DataLoader {
       handler.initializeDB().whenComplete(() async {
         await handler.insertUser(_user);
       });
+      notifyListeners();
       return true;
     } else {
       return false;
@@ -62,6 +56,8 @@ class DataLoader {
         username: generator.generate(fullname),
         type: "guest",
       );
+      notifyListeners();
+
       handler.initializeDB().whenComplete(() async {
         await handler.insertUser(_user);
       });
@@ -79,10 +75,12 @@ class DataLoader {
       //Check db status (empty/not)
       bool dbCheck = await handler.dbIsEmptyOrNot();
       if (!dbCheck) {
-        handler.getUser().then((user) {
-          setUser(user);
-        });
-        return handler.getUser();
+        var user = await handler.getUser();
+        if (user is User) {
+          _user = user;
+          notifyListeners();
+          return _user;
+        }
       } else {
         return false;
       }

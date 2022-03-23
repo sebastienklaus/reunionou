@@ -145,7 +145,7 @@ class _LoginScreenState extends State<UserLoginScreen> {
                                             controller: email,
                                             validator: (email) {
                                               if (email!.isEmpty ||
-                                                  EmailValidator.validate(
+                                                  !EmailValidator.validate(
                                                       email)) {
                                                 return 'Veuillez insérer un email valide';
                                               }
