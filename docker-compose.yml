@@ -96,3 +96,21 @@ services:
       - "8080:8080"
     networks:
       - d.net
+
+
+  api.backoffice:
+    image: 'canals/php:latest'
+    environment:
+      - VHOST_DOCROOT=/var/www/public
+    ports:
+      - '62015:80'
+    volumes:
+      - './backoffice_service/public:/var/www/pub'
+      - './backoffice_service/src:/var/www/src'
+      - './backoffice_service/log:/var/log/app'
+    working_dir: /var/www/src
+    networks:
+      - d.net
+    depends_on:
+      - mysql.events
+      - mysql.users

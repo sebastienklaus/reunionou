@@ -118,7 +118,7 @@ class Events_Controller
             return $resp;
         } catch (ModelNotFoundException $e) {
             //todo: logError
-            return Writer::json_error($resp, 404, 'Ressource not found : event ID = ' . $new_evente->id);
+            return Writer::json_error($resp, 404, 'Ressource not found : event ID = ' . $new_event->id);
         } catch (\Exception $th) {
             //todo : log Error
             return Writer::json_error($resp, 500, 'Server Error : Can\'t create event');

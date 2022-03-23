@@ -1,52 +1,79 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import '../models/user.dart';
 import 'DatabaseHandler.dart';
 import 'package:uuid/uuid.dart';
 import 'package:username_generator/username_generator.dart';
+import 'package:dio/dio.dart';
 
 class DataLoader extends ChangeNotifier {
-  late DatabaseHandler handler;
+  /// Links
+  //Authentification link
+  String _authUri = "http://docketu.iutnc.univ-lorraine.fr:62011/auth";
+  String _authCheckUri = "http://docketu.iutnc.univ-lorraine.fr:62011/check";
 
+  //Handler
+  late DatabaseHandler handler;
   //late User _user;
   var _user;
 
   //Get current _user
   getUser() {
-    print('get');
-    print(_user);
     return _user;
   }
 
   //set current user
   setUser(user) {
     _user = user;
-    print('set');
-    print(_user);
     notifyListeners();
   }
 
   //Authentificate user
   Future<bool> authentificate(String email, String password) async {
-    //Call authentificate api here
-    if (1 == 1) {
-      _user = User(
-        id: "54q6s5d4qsd",
-        email: "malek@gmail.com",
-        fullname: "malek bk",
-        username: "malekbk",
-        type: "user",
-        token: "3qs4d6q5s4fvd6s5v165165aze1d",
+    //Call authentificate api
+    try {
+      String basicAuth =
+          'Basic ' + base64Encode(utf8.encode('$email:$password'));
+      var rep_auth = await Dio().post(
+        _authUri,
+        options: Options(
+          headers: <String, String>{'authorization': basicAuth},
+        ),
       );
-      setUser(_user);
-      handler = await DatabaseHandler();
+      if (rep_auth.statusCode == 200) {
+        //Authentificate success -> get user
+        final String token = rep_auth.data['refresh-token'];
+        var rep_check = await Dio().get(
+          _authCheckUri,
+          options: Options(
+            headers: {
+              'Authorization': 'Bearer ' + token,
+            },
+          ),
+        );
+        if (rep_check.statusCode == 200) {
+          _user = User(
+            id: rep_check.data['user_id'],
+            email: rep_check.data['user_mail'],
+            fullname: rep_check.data['user_fullname'],
+            username: rep_check.data['user_mail'],
+            type: "user",
+            token: rep_check.data['user_token'],
+          );
+          setUser(_user);
+          handler = DatabaseHandler();
 
-      //In case of success store user to db
-      handler.initializeDB().whenComplete(() async {
-        await handler.insertUser(_user);
-      });
-      notifyListeners();
-      return true;
-    } else {
+          //In case of success store user to db
+          handler.initializeDB().whenComplete(() async {
+            await handler.insertUser(_user);
+          });
+          notifyListeners();
+          return true;
+        }
+      }
+      return false;
+    } catch (e) {
       return false;
     }
   }
@@ -95,7 +122,7 @@ class DataLoader extends ChangeNotifier {
         return false;
       }
     } catch (e) {
-      print(e.toString());
+      return false;
     }
   }
 
