@@ -232,7 +232,7 @@ class AuthController {
         $userID = $args['id'];
         try {
             
-            $user = User::findOrFail($userID);
+            $user = User::select(['id', 'fullname','email', 'username', 'refresh_token'])->findOrFail($userID);
 
             //le tableau de data retourné
             $data = [
