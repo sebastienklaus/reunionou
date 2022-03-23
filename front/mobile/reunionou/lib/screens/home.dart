@@ -18,12 +18,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    print(widget.user);
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        endDrawer: NavigationDrawerWidget(user: widget.user),
+        endDrawer: NavigationDrawerWidget(),
         appBar: AppBar(
           title: const Text('Home page'),
           centerTitle: true,

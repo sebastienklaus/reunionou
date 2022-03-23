@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:reunionou/models/user.dart';
 import '../data/dataLoader.dart';
 
@@ -7,10 +8,11 @@ class NavigationDrawerWidget extends StatelessWidget {
 
   User? user;
 
-  NavigationDrawerWidget({User? this.user, Key? key}) : super(key: key);
+  NavigationDrawerWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    user = context.read<DataLoader>().getUser();
     return Drawer(
         child: Material(
       color: const Color.fromRGBO(143, 148, 251, 1),
@@ -73,7 +75,7 @@ class NavigationDrawerWidget extends StatelessWidget {
         );
         break;
       case 3:
-        await DataLoader().logout();
+        await context.read<DataLoader>().logout();
         Navigator.pushNamed(
           context,
           '/userLogin',

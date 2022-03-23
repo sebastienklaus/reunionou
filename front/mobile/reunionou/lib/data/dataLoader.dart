@@ -8,18 +8,28 @@ class DataLoader extends ChangeNotifier {
   late DatabaseHandler handler;
 
   //late User _user;
-  late User _user;
+  var _user;
 
   //Get current _user
   getUser() {
+    print('get');
+    print(_user);
     return _user;
+  }
+
+  //set current user
+  setUser(user) {
+    _user = user;
+    print('set');
+    print(_user);
+    notifyListeners();
   }
 
   //Authentificate user
   Future<bool> authentificate(String email, String password) async {
     //Call authentificate api here
     if (1 == 1) {
-      _user = const User(
+      _user = User(
         id: "54q6s5d4qsd",
         email: "malek@gmail.com",
         fullname: "malek bk",
@@ -27,7 +37,7 @@ class DataLoader extends ChangeNotifier {
         type: "user",
         token: "3qs4d6q5s4fvd6s5v165165aze1d",
       );
-
+      setUser(_user);
       handler = await DatabaseHandler();
 
       //In case of success store user to db
@@ -51,13 +61,13 @@ class DataLoader extends ChangeNotifier {
       //In case of success store user to db
       _user = User(
         id: id,
-        email: "malek@gmail.com",
         fullname: fullname,
         username: generator.generate(fullname),
         type: "guest",
       );
-      notifyListeners();
+      setUser(_user);
 
+      notifyListeners();
       handler.initializeDB().whenComplete(() async {
         await handler.insertUser(_user);
       });
@@ -77,7 +87,7 @@ class DataLoader extends ChangeNotifier {
       if (!dbCheck) {
         var user = await handler.getUser();
         if (user is User) {
-          _user = user;
+          setUser(user);
           notifyListeners();
           return _user;
         }
@@ -93,7 +103,8 @@ class DataLoader extends ChangeNotifier {
   logout() async {
     try {
       handler = DatabaseHandler();
-      handler.delUser();
+      await handler.delUser();
+      notifyListeners();
     } catch (e) {
       print(e.toString());
     }

@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'data/dataLoader.dart';
 import 'models/user.dart';
 
-Future<void> main() async {
+void main() {
   var dataCollection = DataLoader();
   runApp(
     ChangeNotifierProvider(
@@ -18,13 +18,12 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({DataLoader? this.dataCollection, Key? key}) : super(key: key);
+  MyApp({this.dataCollection, Key? key}) : super(key: key);
   DataLoader? dataCollection;
 
   @override
   Widget build(BuildContext context) {
     Widget initHome;
-    var user = null;
     return OverlaySupport(
       child: FutureBuilder(
         future: dataCollection!.checkAuthSession(),
@@ -34,7 +33,6 @@ class MyApp extends StatelessWidget {
           } else {
             if (snapshot.data is User) {
               initHome = HomeScreen(user: snapshot.data);
-              user = snapshot.data;
             } else {
               initHome = const HomeScreen();
             }
@@ -49,10 +47,8 @@ class MyApp extends StatelessWidget {
             routes: {
               UserLoginScreen.route: (context) => const UserLoginScreen(),
               GuestLoginScreen.route: (context) => const GuestLoginScreen(),
-              HomeScreen.route: (context) => Consumer<DataLoader>(
-                      builder: (context, dataCollection, child) {
-                    return HomeScreen(user: dataCollection.getUser());
-                  }),
+              HomeScreen.route: (context) =>
+                  HomeScreen(user: context.read<DataLoader>().getUser()),
             },
             home: initHome,
           );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../animations/loginAnimation.dart';
 import 'package:email_validator/email_validator.dart';
 import '../data/dataLoader.dart';
@@ -202,9 +203,10 @@ class _LoginScreenState extends State<UserLoginScreen> {
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
-                              onPressed: () {
+                              onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
-                                  var rep = DataLoader()
+                                  var rep = await context
+                                      .read<DataLoader>()
                                       .authentificate(email.text, password.text)
                                       .then(
                                     (rep) {
