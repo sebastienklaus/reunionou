@@ -138,6 +138,17 @@ class AuthController {
                     return Writer::jsonError($req, $resp, 401, 'Les mots de passes ne sont pas identiques');
                 }
                 else {
+
+                    $checkEmail = User::select('username', 'email')->get();
+                        
+                    foreach ($checkEmail as $i) {
+                        if($requestBody['email'] !== $i['email'] && $requestBody['username'] !== $i['username']){
+                            continue;
+                        }
+                        else{
+                            return Writer::jsonError($req, $resp, 401, 'Cet email ou pseudo existe déjà !');
+                        }
+                    }
                     //creation of a new user
                     $newUser = new User();
                     $newUser->id = $idUser;
@@ -160,7 +171,8 @@ class AuthController {
             $resp = $resp->withStatus(201)
                         ->withHeader('Content-Type', 'application/json; charset=utf-8');
             
-
+            
+            return Writer::json_output($resp, 200, 'Successful creation !');
             return $resp;
         }
 
@@ -190,17 +202,18 @@ class AuthController {
                         
                     foreach ($checkEmail as $i) {
                         if($requestBody['email'] !== $i['email'] && $requestBody['username'] !== $i['username']){
-                            $user->fullname = $requestBody['fullname'];
-                            $user->email = $requestBody['email'];
-                            $user->username = $requestBody['username'];
-                            $user->password = password_hash($requestBody['new_password'], PASSWORD_DEFAULT);
-                            $user->save();
-                            print_r($i['email']);
+                            continue;
                         }
                         else{
                             return Writer::jsonError($req, $resp, 401, 'Cet email ou pseudo existe déjà !');
                         }
                     }
+                    $user->fullname = $requestBody['fullname'];
+                    $user->email = $requestBody['email'];
+                    $user->username = $requestBody['username'];
+                    $user->password = password_hash($requestBody['new_password'], PASSWORD_DEFAULT);
+                    $user->save();
+
                 }    
             } catch (ModelNotFoundException $e) {
                 $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="lbs auth" ');
@@ -215,7 +228,7 @@ class AuthController {
                         ->withHeader('Content-Type', 'application/json; charset=utf-8');
                         
                         
-            return Writer::json_output($resp, 200, 'OK');
+            return Writer::json_output($resp, 200, 'Successful update !');
 
             return $resp;
         }
