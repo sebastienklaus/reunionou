@@ -18,7 +18,9 @@ services:
       - ./events_service/src:/var/www/src
     working_dir: /var/www/src
     networks:
-      - d.net
+      d.net:
+        aliases:
+          - localhost
     links:
       - mysql.events:db
 
@@ -32,7 +34,9 @@ services:
       - ./auth_service/src:/var/www/src
     working_dir: /var/www/src
     networks:
-      - d.net
+      d.net:
+        aliases:
+          - localhost
     links:
       - mysql.users:db
 
@@ -99,18 +103,14 @@ services:
 
 
   api.backoffice:
-    image: 'canals/php:latest'
-    environment:
-      - VHOST_DOCROOT=/var/www/public
+    image: canals/php:latest
     ports:
-      - '62015:80'
+      - "62015:80"
     volumes:
-      - './backoffice_service/public:/var/www/pub'
-      - './backoffice_service/src:/var/www/src'
-      - './backoffice_service/log:/var/log/app'
+      - ./backoffice_service/public:/var/www/html
+      - ./backoffice_service/src:/var/www/src
     working_dir: /var/www/src
     networks:
-      - d.net
-    depends_on:
-      - mysql.events
-      - mysql.users
+      d.net:
+        aliases:
+          - localhost
