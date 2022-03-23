@@ -25,7 +25,7 @@ class NavigationDrawerWidget extends StatelessWidget {
           const SizedBox(height: 16),
           buildMenuItem(
               text: user!.fullname,
-              icon: Icons.logout,
+              icon: Icons.circle,
               onClicked: () => selectedItem(context, 1)),
           const SizedBox(height: 16),
           buildMenuItem(
