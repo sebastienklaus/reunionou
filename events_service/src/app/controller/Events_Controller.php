@@ -40,32 +40,35 @@ class Events_Controller
         $event_req = $req->getParsedBody();
         
         
-        // if ($req->getAttribute('has_errors')) {
+        if ($req->getAttribute('has_errors')) {
 
-        //     $errors = $req->getAttribute('errors');
+            $errors = $req->getAttribute('errors');
 
-        //     //? à mettre ailleurs ? Container ? Utils ? Maiddleware ? Errors ? Faire fonction + générique
-        //     if (isset($errors['title'])) {
-        //         $this->container->get('logger.error')->error("error input event title");
-        //         return Writer::json_error($resp, 403, '"title" : invalid input, string expected');
-        //     }
-        //     if (isset($errors['description'])) {
-        //         $this->container->get('logger.error')->error("error mail event description");
-        //         return Writer::json_error($resp, 403, '"description" : invalid input, text format expected');
-        //     }
-        //     if (isset($errors['user_id'])) {
-        //         $this->container->get('logger.error')->error("error input user_id UUID");
-        //         return Writer::json_error($resp, 403, '"user_id" : invalid input. d-m-Y format expected : uuid');
-        //     }
-        //     // if (isset($errors['location'])) {
-        //     //     $this->container->get('logger.error')->error("error input livraison heure");
-        //     //     return Writer::json_error($resp, 403, '"heure" : invalid input. H:i format expected');
-        //     // }
-        //     if (isset($errors['date'])) {
-        //         ($this->container->get('logger.error'))->error("error input date event");
-        //         return Writer::json_error($resp, 403, '"date" : invalid input. date exepected : d-m-y H:m:i');
-        //     }
-        // };
+            if (isset($errors['title'])) {
+                $this->container->get('logger.error')->error("error input event title");
+                return Writer::json_error($resp, 403, '"title" : invalid input, string expected');
+            }
+            if (isset($errors['description'])) {
+                $this->container->get('logger.error')->error("error mail event description");
+                return Writer::json_error($resp, 403, '"description" : invalid input, text format expected');
+            }
+            if (isset($errors['user_id'])) {
+                $this->container->get('logger.error')->error("error input user_id UUID");
+                return Writer::json_error($resp, 403, '"user_id" : invalid input. invalid input, valid format expected : uuid');
+            }
+            if (isset($errors['location'])) {
+                $this->container->get('logger.error')->error("error input livraison location");
+                return Writer::json_error($resp, 403, '"location" : invalid input, valid format expected');
+            }
+            if (isset($errors['date'])) {
+                ($this->container->get('logger.error'))->error("error input date date");
+                return Writer::json_error($resp, 403, '"date" : invalid input, format exepected : Y-m-d');
+            }
+            if (isset($errors['heure'])) {
+                ($this->container->get('logger.error'))->error("error input date heure");
+                return Writer::json_error($resp, 403, '"heure" : invalid input. format exepected : H:m:i');
+            }
+        };
 
 
         try {
@@ -149,15 +152,19 @@ class Events_Controller
             }
             if (isset($errors['user_id'])) {
                 $this->container->get('logger.error')->error("error input user_id UUID");
-                return Writer::json_error($resp, 403, '"user_id" : invalid input. d-m-Y format expected : uuid');
+                return Writer::json_error($resp, 403, '"user_id" : invalid input. invalid input, valid format expected : uuid');
             }
-            // if (isset($errors['location'])) {
-            //     $this->container->get('logger.error')->error("error input livraison heure");
-            //     return Writer::json_error($resp, 403, '"heure" : invalid input. H:i format expected');
-            // }
+            if (isset($errors['location'])) {
+                $this->container->get('logger.error')->error("error input livraison location");
+                return Writer::json_error($resp, 403, '"location" : invalid input, valid format expected');
+            }
             if (isset($errors['date'])) {
-                ($this->container->get('logger.error'))->error("error input date event");
-                return Writer::json_error($resp, 403, '"date" : invalid input. date exepected : d-m-y H:m:i');
+                ($this->container->get('logger.error'))->error("error input date date");
+                return Writer::json_error($resp, 403, '"date" : invalid input, format exepected : Y-m-d');
+            }
+            if (isset($errors['heure'])) {
+                ($this->container->get('logger.error'))->error("error input date heure");
+                return Writer::json_error($resp, 403, '"heure" : invalid input. format exepected : H:m:i');
             }
         };
 

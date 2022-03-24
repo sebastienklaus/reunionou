@@ -67,12 +67,13 @@ $app->post('/messages[/]', Messages_Controller::class . ':createMessage')
 //TODO delete membersByEventID
 
 $app->post('/members[/]', Members_Controller::class . ':createMember')
-    ->setName('createMember');// todo validator
+    ->setName('createMember')
+    ->add(new Validation($memberValidators));
 
 $app->put('/members/{id}[/]', Members_Controller::class . ':updateMember')
-    ->setName('updateMember');// todo validator //? USELESS 
+    ->setName('updateMember')
+    ->add(new Validation($memberValidators));
     
-
 $app->get('/members/{id}[/]', Members_Controller::class . ':getMember')
     ->setName('getMember');
     

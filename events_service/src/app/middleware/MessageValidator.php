@@ -14,7 +14,7 @@ class MessageValidator
             'content' => v::stringType()->notEmpty(),
             'member_id' => v::noWhitespace()->length(1, 36),
             'event_id' => v::stringType()->notEmpty()->noWhitespace(),
-            'media' => v::stringType()
+            'media' => v::json()
         ];
     }
 }
