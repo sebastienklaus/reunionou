@@ -18,14 +18,13 @@ class Middleware {
     }
 
     // * ccheck d'authorization pour chaque requête effectué
-    public function checkAuth(Request $req, Response $resp, callable $next){
-        
+    public function checkAuth(Request $req, Response $resp, callable $next){  
         $client = new Client([
             'base_uri' => $this->container->get('settings')['auth_service'],
             'timeout' => 5.0
             ]);
 
-        $response = $client->request('GET', '/check', [
+        $response = $client->request('GET', '/checkAdmin', [
                 'headers'=> ['Authorization' => $req->getHeader('Authorization')]
             ]
         );
@@ -40,7 +39,7 @@ class Middleware {
 
     }
 
-
+    // * ajout des headers CORS pour l'utilisation des PAI cross-domain
     public static function corsHeaders(Request $req,Response $resp,callable $next ): Response {
         if (! $req->hasHeader('Origin'))
             return Writer::json_error($resp, 401, "missing Origin Header (cors)");
@@ -53,6 +52,29 @@ class Middleware {
                                 ->withHeader('Access-Control-Max-Age', 3600)
                                 ->withHeader('Access-Control-Allow-Credentials', 'true');
         return $response;
+    }
+
+    // * 
+    // * ccheck d'authorization pour chaque requête effectué
+    public function checkAdmin(Request $req, Response $resp, callable $next){  
+        $client = new Client([
+            'base_uri' => $this->container->get('settings')['auth_service'],
+            'timeout' => 5.0
+            ]);
+
+        $response = $client->request('POST', '/check', [
+                'headers'=> ['Authorization' => $req->getHeader('Authorization')]
+            ]
+        );
+
+        $body = json_decode($response->getBody());
+        var_dump($body);
+        // $req = $req->withAttribute('token', $req->getHeader('Authorization'));
+
+        $resp = $next($req,$resp);
+
+        return $resp;
+
     }
 
 }
