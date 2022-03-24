@@ -64,8 +64,10 @@ class AuthController {
             'iat' => time(),
             'exp' => time() + (3600 * 24 * 30), // validité = 30 jours
             'upr' => [
-                'email' => $user->email,
-                'username' => $user->username,
+                'user_id' => $user->id,
+                'user_fullname' => $user->fullname,
+                'user_email' => $user->email,
+                'user_username' => $user->username,
             ]],
             $secret, 'HS512');
 
@@ -94,18 +96,7 @@ class AuthController {
             $token = JWT::decode($tokenstring, new Key($secret,'HS512' ) );
 
 
-            $user = User::select(['id', 'fullname','refresh_token'])->where('email', '=', $token->upr->email)->first();
-
-            //le tableau de data retourné est formé
-            $data = [
-                'user_id' => $user->id,
-                'user_fullname' => $user->fullname,
-                'user_mail' => $token->upr->email,
-                'user_username' => $token->upr->username,
-                'user_token' => $user->refresh_token
-            ];
-
-            return Writer::json_output($resp, 200, $data);
+            return Writer::json_output($resp, 200, 'Vérification du token réussi');
         } 
         catch (ExpiredException $e) {
             return Writer::jsonError($req, $resp, 401, 'The token is expired');
