@@ -99,3 +99,11 @@
 [2022-03-24T14:28:45.966080+00:00] lbs.log.ERROR: bad ressource : http://events.service.local:62010/members/HARMand/events [] []
 [2022-03-24T14:43:26.697053+00:00] lbs.log.ERROR: bad ressource : http://events.service.local:62010/members/HARMand/events [] []
 >>>>>>> 06a507d4cc6b81886f2a31e1c03799bf68decae9
+[2022-03-24T16:37:34.810151+00:00] lbs.log.ERROR: bad ressource : http://events.service.local:62010/messages/e61acdb4-fa15-4569-ad13-688b3e766340 [] []
+[2022-03-24T22:44:02.525462+00:00] lbs.log.ERROR: bad ressource : http://events.service.local/events/6be89d60-4c10-4323-b2f1-26a8e80a45ef [] []
+[2022-03-24T22:44:38.778013+00:00] lbs.log.ERROR: bad ressource : http://events.service.local/members/adcac5ad-206a-449c-8f40-aacb32750c47 [] []
+[2022-03-24T22:45:19.850900+00:00] lbs.log.ERROR: bad ressource : http://events.service.local/members/adcac5ad-206a-449c-8f40-aacb32750c47 [] []
+[2022-03-24T22:54:09.664092+00:00] lbs.log.ERROR: error input event title [] []
+[2022-03-24T23:10:55.457789+00:00] lbs.log.ERROR: bad ressource : http://events.service.local:62010/messages/e61acdb4-fa15-4569-ad13-688b3e766340 [] []
+[2022-03-24T23:23:51.621400+00:00] lbs.log.ERROR: error input event content [] []
+[2022-03-24T23:24:34.614657+00:00] lbs.log.ERROR: error input event media [] []

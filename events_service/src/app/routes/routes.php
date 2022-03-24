@@ -89,4 +89,3 @@ $app->delete('/members/{id}[/]', Members_Controller::class . ':deleteMemberById'
     // post delete
 
 //TODO tout les events pour un members.user_id : nackoffice rajouter /user/id
-//TODO tous les event pour un pseudo

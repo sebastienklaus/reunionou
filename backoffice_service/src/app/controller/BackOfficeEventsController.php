@@ -93,7 +93,7 @@ class BackOfficeEventsController
 
     }
 
-        public function updateEvent(Request $req, Response $resp, $args): Response {
+    public function updateEvent(Request $req, Response $resp, $args): Response {
 
 
         $client = new \GuzzleHttp\Client([
@@ -113,8 +113,6 @@ class BackOfficeEventsController
                 'date' => $received_event['date'],
                 'heure' => $received_event['heure']
                 ]]  );
-                
-        var_dump($response);
 
         $resp = Writer::json_output($resp, $response->getStatusCode());
         $resp->getBody()->write($response->getBody());
@@ -122,6 +120,38 @@ class BackOfficeEventsController
 
     }
 
+    public function getEventByMemberPseudo(Request $req, Response $resp, $args): Response {
 
+
+        $client = new \GuzzleHttp\Client([
+            'base_uri' => $this->container->get('settings')['events_service'],
+            'timeout' => 5.0
+        ]);
+
+        $pseudo = $args['pseudo'];
+        $response = $client->request('GET', '/members/' . $pseudo . '/events/');
+
+        $resp = Writer::json_output($resp, $response->getStatusCode());
+        $resp->getBody()->write($response->getBody());
+        return $resp;
+
+    }
+
+    public function deleteEventById(Request $req, Response $resp, $args): Response {
+
+
+        $client = new \GuzzleHttp\Client([
+            'base_uri' => $this->container->get('settings')['events_service'],
+            'timeout' => 5.0
+        ]);
+
+        $id_event = $args['id'];
+        $response = $client->request('DELETE', '/events/' . $id_event);
+
+        $resp = Writer::json_output($resp, $response->getStatusCode());
+        $resp->getBody()->write($response->getBody());
+        return $resp;
+
+    }
 
 }
