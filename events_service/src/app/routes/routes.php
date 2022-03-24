@@ -5,19 +5,23 @@ use reu\events\app\controller\Events_Controller;
 use reu\events\app\controller\Messages_Controller;
 use reu\events\app\controller\Members_Controller;
 use reu\events\app\middleware\EventValidator;
+use reu\events\app\middleware\MessageValidator;
+use reu\events\app\middleware\MemberValidator;
 use reu\events\app\middleware\Token;
 
 
-$validators = EventValidator::create_validators();
+$eventValidators = EventValidator::create_validators();
+$messageValidators = MessageValidator::create_validators();
+$memberValidators = MemberValidator::create_validators();
 // Events
 
 $app->post('/events[/]', Events_Controller::class . ':createEvent')
     ->setName('createEvent')
-    ->add(new Validation($validators));
+    ->add(new Validation($eventValidators));
 
 $app->put('/events/{id}[/]', Events_Controller::class . ':updateEvent')
     ->setName('updateEvent')
-    ->add(new Validation($validators));
+    ->add(new Validation($eventValidators));
 
 
 $app->get('/events/{id}[/]', Events_Controller::class . ':getEvent')
@@ -42,7 +46,8 @@ $app->get('/events/{id}/messages[/]', Messages_Controller::class . ':getMessages
     ->setName('getMessagesByEvent');
 
 $app->post('/messages[/]', Messages_Controller::class . ':createMessage')
-    ->setName('createMessage');// todo validator
+    ->setName('createMessage')
+    ->add(new Validation($messageValidators));
 
 //todo ?? message by members. Dans ce cas, rajouter ce lien dans hateos dans getMember.
 

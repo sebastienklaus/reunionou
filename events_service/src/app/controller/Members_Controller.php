@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use reu\events\app\models\Events;
 use reu\events\app\models\Messages;
 use reu\events\app\models\Members;
+use reu\events\app\models\MemberValidator;
 
 use reu\events\app\utils\Writer;
 
