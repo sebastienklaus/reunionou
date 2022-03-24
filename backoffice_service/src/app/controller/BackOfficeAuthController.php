@@ -28,7 +28,9 @@ class BackOfficeAuthController
                 'headers'=> ['Authorization' => $req->getHeader('Authorization')]
 
         ]);
-        return $resp->withHeader('Content-Type', $response->getHeader('Content-Type'));
+        return $resp->withStatus($response->getStatusCode())
+                    ->withHeader('Content-Type', $response->getHeader('Content-Type'))
+                    ->withBody($response->getBody());
     }
 
 
