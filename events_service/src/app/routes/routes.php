@@ -5,21 +5,25 @@ use reu\events\app\controller\Events_Controller;
 use reu\events\app\controller\Messages_Controller;
 use reu\events\app\controller\Members_Controller;
 use reu\events\app\middleware\EventValidator;
+use reu\events\app\middleware\MessageValidator;
+use reu\events\app\middleware\MemberValidator;
 use reu\events\app\middleware\Token;
 
 
-$validators = EventValidator::create_validators();
+$eventValidators = EventValidator::create_validators();
+$messageValidators = MessageValidator::create_validators();
+$memberValidators = MemberValidator::create_validators();
 // Events
 
 // delte event : delete assocaited tables
 
 $app->post('/events[/]', Events_Controller::class . ':createEvent')
-    ->setName('createEvent');
-    // ->add(new Validation($validators));
+    ->setName('createEvent')
+    ->add(new Validation($eventValidators));
 
 $app->put('/events/{id}[/]', Events_Controller::class . ':updateEvent')
     ->setName('updateEvent')
-    ->add(new Validation($validators));
+    ->add(new Validation($eventValidators));
 
 
 $app->get('/events/{id}[/]', Events_Controller::class . ':getEvent')
@@ -51,7 +55,8 @@ $app->get('/events/{id}/messages[/]', Messages_Controller::class . ':getMessages
     ->setName('getMessagesByEvent');
 
 $app->post('/messages[/]', Messages_Controller::class . ':createMessage')
-    ->setName('createMessage');// todo validator
+    ->setName('createMessage')
+    ->add(new Validation($messageValidators));
 
     //todo deleteMessagesByEventID
   
@@ -62,12 +67,13 @@ $app->post('/messages[/]', Messages_Controller::class . ':createMessage')
 //TODO delete membersByEventID
 
 $app->post('/members[/]', Members_Controller::class . ':createMember')
-    ->setName('createMember');// todo validator
+    ->setName('createMember')
+    ->add(new Validation($memberValidators));
 
 $app->put('/members/{id}[/]', Members_Controller::class . ':updateMember')
-    ->setName('updateMember');// todo validator //? USELESS 
+    ->setName('updateMember')
+    ->add(new Validation($memberValidators));
     
-
 $app->get('/members/{id}[/]', Members_Controller::class . ':getMember')
     ->setName('getMember');
     

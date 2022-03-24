@@ -11,9 +11,10 @@ class User extends \Illuminate\Database\Eloquent\Model {
 
     protected $table      = 'users';  /* le nom de la table */
     protected $primaryKey = 'id';
-    public    $timestamps = false;    /* si vrai la table doit contenir
+    public    $timestamps = true;    /* si vrai la table doit contenir
                                         les deux colonnes updated_at,
                                         created_at */
+    public  $incrementing = false;
     public $keyType = 'string';
 
 

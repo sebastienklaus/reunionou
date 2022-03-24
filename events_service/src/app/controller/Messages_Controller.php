@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use reu\events\app\models\Events;
 use reu\events\app\models\Messages;
 use reu\events\app\models\Members;
+use reu\events\app\models\MessageValidator;
 
 use reu\events\app\utils\Writer;
 
@@ -34,32 +35,28 @@ class Messages_Controller
         $message_req = $req->getParsedBody();
         
         
-        // if ($req->getAttribute('has_errors')) {
+        if ($req->getAttribute('has_errors')) {
 
-        //     $errors = $req->getAttribute('errors');
-
-        //     //? à mettre ailleurs ? Container ? Utils ? Maiddleware ? Errors ? Faire fonction + générique
-        //     if (isset($errors['title'])) {
-        //         $this->container->get('logger.error')->error("error input message title");
-        //         return Writer::json_error($resp, 403, '"title" : invalid input, string expected');
-        //     }
-        //     if (isset($errors['description'])) {
-        //         $this->container->get('logger.error')->error("error mail message description");
-        //         return Writer::json_error($resp, 403, '"description" : invalid input, text format expected');
-        //     }
-        //     if (isset($errors['author'])) {
-        //         $this->container->get('logger.error')->error("error input author UUID");
-        //         return Writer::json_error($resp, 403, '"author" : invalid input. d-m-Y format expected : uuid');
-        //     }
-        //     // if (isset($errors['spot'])) {
-        //     //     $this->container->get('logger.error')->error("error input livraison heure");
-        //     //     return Writer::json_error($resp, 403, '"heure" : invalid input. H:i format expected');
-        //     // }
-        //     if (isset($errors['date'])) {
-        //         ($this->container->get('logger.error'))->error("error input date message");
-        //         return Writer::json_error($resp, 403, '"date" : invalid input. date exepected : d-m-y H:m:i');
-        //     }
-        // };
+            $errors = $req->getAttribute('errors');
+        
+            if (isset($errors['content'])) {
+                $this->container->get('logger.error')->error("error input event content");
+                return Writer::json_error($resp, 403, '"content" : invalid input, string expected');
+            }
+            if (isset($errors['member_id'])) {
+                $this->container->get('logger.error')->error("error input event member_id");
+                return Writer::json_error($resp, 403, '"member_id" : invalid input, valid member_id expected');
+            }
+            if (isset($errors['event_id'])) {
+                $this->container->get('logger.error')->error("error input event event_id");
+                return Writer::json_error($resp, 403, '"event_id" : invalid input, string expected');
+            }
+            if (isset($errors['media'])) {
+                $this->container->get('logger.error')->error("error input event media");
+                return Writer::json_error($resp, 403, '"media" : invalid input, valid JSON expected');
+            }
+            
+        };
 
       
 
@@ -94,8 +91,8 @@ class Messages_Controller
                     "member_id" => $new_message->member_id,
                     "event_id" => $new_message->event_id,
                     "media" => $new_message->media,
-                    "updated_at" => $new_message->updated_at->format('Y-m-d H:i:s'),
-                    "created_at" => $new_message->created_at->format('Y-m-d H:i:s'),
+                    "updated_at" => $new_message->updated_at->format('d-m-Y H:i:s'),
+                    "created_at" => $new_message->created_at->format('d-m-Y H:i:s'),
                 ]
             ];
 

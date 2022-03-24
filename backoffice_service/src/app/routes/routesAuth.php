@@ -12,3 +12,16 @@ $app->post('/auth[/]', BackOfficeAuthController::class . ':authenticate')
 $app->post('/users[/]', BackOfficeAuthController::class . ':createUser')
     ->setName('createUser');
 
+$app->get('/users[/]', BackOfficeAuthController::class . ':getUsers')
+    ->setName('getUsers');
+     
+$app->put('/users/{id}[/]', BackOfficeAuthController::class . ':updateUser')
+    ->setName('createUser');
+    
+$app->get('/users/{id}[/]', BackOfficeAuthController::class . ':getUserById')
+    ->setName('getUserById');
+
+$app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function($req, $res) {
+    $handler = $this->notFoundHandler; // handle using the default Slim page not found handler
+    return $handler($req, $res);
+});
