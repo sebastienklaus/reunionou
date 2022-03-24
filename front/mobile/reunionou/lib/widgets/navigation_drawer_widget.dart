@@ -30,19 +30,14 @@ class NavigationDrawerWidget extends StatelessWidget {
                 onClicked: () => selectedItem(context, 1)),
             const SizedBox(height: 16),
             buildMenuItem(
-                text: 'Accueil',
-                icon: Icons.home,
+                text: 'Mes événements',
+                icon: Icons.event,
                 onClicked: () => selectedItem(context, 0)),
             const SizedBox(height: 16),
             buildMenuItem(
                 text: 'Profile',
                 icon: Icons.person,
                 onClicked: () => selectedItem(context, 1)),
-            const SizedBox(height: 16),
-            buildMenuItem(
-                text: 'Paramètres',
-                icon: Icons.settings,
-                onClicked: () => selectedItem(context, 2)),
             const SizedBox(height: 16),
             buildMenuItem(
                 text: 'Se déconnecter',
@@ -68,8 +63,8 @@ class NavigationDrawerWidget extends StatelessWidget {
                 onClicked: () => selectedItem(context, 1)),
             const SizedBox(height: 16),
             buildMenuItem(
-                text: 'Accueil',
-                icon: Icons.home,
+                text: 'Mes événements',
+                icon: Icons.event,
                 onClicked: () => selectedItem(context, 0)),
             buildMenuItem(
                 text: 'Se déconnecter',
