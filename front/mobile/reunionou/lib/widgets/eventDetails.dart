@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reunionou/models/event.dart';
 import 'package:reunionou/widgets/spacer.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import 'map.dart';
 
 class EventDetails extends StatelessWidget {
@@ -66,15 +66,34 @@ class EventDetails extends StatelessWidget {
             const SpacerWidget(
               space: 15,
             ),
-            const Card(
-              margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+            Card(
+              margin:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
               elevation: 2.0,
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 30),
-                child: Text(
-                  "Get direction",
-                  style: TextStyle(
-                      letterSpacing: 2.0, fontWeight: FontWeight.w300),
+              child: InkWell(
+                onTap: () async {
+                  String cord = event.location[0]['latitude'].toString() +
+                      "," +
+                      event.location[0]['longitude'].toString();
+
+                  var url =
+                      'https://www.google.com/maps/search/?api=1&query=$cord';
+                  var urllaunchable = await canLaunch(
+                      url); //canLaunch is from url_launcher package
+                  if (urllaunchable) {
+                    await launch(
+                        url); //launch is from url_launcher package to launch URL
+                  } else {
+                    print("URL can't be launched.");
+                  }
+                },
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 30),
+                  child: Text(
+                    "Get direction",
+                    style: TextStyle(
+                        letterSpacing: 2.0, fontWeight: FontWeight.w300),
+                  ),
                 ),
               ),
             ),
