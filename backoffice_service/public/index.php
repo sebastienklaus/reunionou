@@ -2,7 +2,7 @@
 
 require_once  __DIR__ . '/../src/vendor/autoload.php';
 
-use reunionou\backoffice\app\controller\BackOfficeController as BackOfficeController;
+use reunionou\backoffice\app\controller\BackOfficeAuthController as BackOfficeAuthController;
 
 //Loading configs
 $settings = require_once __DIR__. '/../src/app/conf/settings.php';
@@ -14,7 +14,7 @@ $app = new \Slim\App(new \Slim\Container($app_config));
 
 // Set the differents routes
  
-$app->get('/auth[/]', BackOfficeController::class . ':authenticate')
+$app->post('/auth[/]', BackOfficeAuthController::class . ':authenticate')
     ->setName('authentification');
  
 
