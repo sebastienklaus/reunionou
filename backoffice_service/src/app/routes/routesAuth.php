@@ -18,3 +18,7 @@ $app->post('/auth[/]', BackOfficeAuthController::class . ':authenticate')
 $app->post('/users[/]', BackOfficeAuthController::class . ':createUser')
     ->setName('createUser');
 
+
+$app->put('/users/{id}[/]', BackOfficeAuthController::class . ':updateUser')
+    ->setName('createUser');
+
