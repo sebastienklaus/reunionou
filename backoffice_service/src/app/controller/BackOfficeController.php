@@ -6,7 +6,7 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use GuzzleHttp\Client as Client;
 
-class BackOfficeController
+class BackOfficeAuthController
 {
 
     private $container; // le conteneur de dépendences de l'application
