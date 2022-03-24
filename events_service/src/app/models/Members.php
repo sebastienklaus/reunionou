@@ -22,4 +22,5 @@ class Members extends \Illuminate\Database\Eloquent\Model
     {
         return $this->belongsTo('\reu\events\app\models\Events', 'event_id');
     }
+
 }

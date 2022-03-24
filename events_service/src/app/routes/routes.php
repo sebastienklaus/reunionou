@@ -24,7 +24,9 @@ $app->post('/events[/]', Events_Controller::class . ':createEvent')
 $app->put('/events/{id}[/]', Events_Controller::class . ':updateEvent')
     ->setName('updateEvent')
     ->add(new Validation($eventValidators));
-
+        
+$app->get('/members/{pseudo}/events[/]', Events_Controller::class . ':getEventbyMemberPseudo')
+    ->setName('getEventbyMemberPseudo');
 
 $app->get('/events/{id}[/]', Events_Controller::class . ':getEvent')
     ->setName('getEvent');
