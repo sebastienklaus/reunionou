@@ -97,10 +97,10 @@ class _GuestLoginScreenState extends State<GuestLoginScreen> {
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text(
-                                          "Se connecter en tant qu'invité",
+                                          "Lorem ipsum",
                                           style: TextStyle(
                                             color: Colors.white,
-                                            fontSize: 20,
+                                            fontSize: 17,
                                           ),
                                         ),
                                       ],
@@ -109,6 +109,13 @@ class _GuestLoginScreenState extends State<GuestLoginScreen> {
                                 )),
                           )
                         ],
+                      ),
+                    ),
+                    const Text(
+                      "Se connecter en tant qu'invité",
+                      style: TextStyle(
+                        color: Colors.deepPurple,
+                        fontSize: 20,
                       ),
                     ),
                     Padding(
@@ -173,7 +180,7 @@ class _GuestLoginScreenState extends State<GuestLoginScreen> {
                                   const Color.fromRGBO(143, 148, 251, 0.3),
                               child: const Center(
                                 child: Text(
-                                  "Continuez",
+                                  "Continuer",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),
@@ -191,10 +198,10 @@ class _GuestLoginScreenState extends State<GuestLoginScreen> {
                                             .showSnackBar(
                                           const SnackBar(
                                             content: Text(
-                                              "Welcome back",
+                                              "Content de te revoir :)",
                                               style: TextStyle(
                                                 color: Color.fromARGB(
-                                                    255, 31, 31, 31),
+                                                    255, 255, 255, 255),
                                               ),
                                             ),
                                             backgroundColor: Color.fromARGB(
@@ -209,8 +216,8 @@ class _GuestLoginScreenState extends State<GuestLoginScreen> {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
                                           const SnackBar(
-                                            content:
-                                                Text("Authentification failed"),
+                                            content: Text(
+                                                "Authentification échouée :("),
                                             backgroundColor: Colors.red,
                                           ),
                                         );
@@ -235,7 +242,9 @@ class _GuestLoginScreenState extends State<GuestLoginScreen> {
                                 child: Text(
                                   "Se connecter en tant qu'utilisateur",
                                   style: TextStyle(
-                                      color: Color.fromRGBO(143, 148, 251, 1)),
+                                    color: Color.fromRGBO(143, 148, 251, 1),
+                                    fontSize: 18,
+                                  ),
                                 ),
                               ),
                             ),

@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import '../animations/loginAnimation.dart';
 import '../models/event.dart';
 import '../widgets/commentsList.dart';
 import '../widgets/eventDetails.dart';
-import '../widgets/map.dart';
 import '../widgets/navigation_drawer_widget.dart';
 import '../widgets/organizerDetails.dart';
 import '../widgets/participantsList.dart';
-import '../widgets/spacer.dart';
 
 class EventPreviewScreen extends StatefulWidget {
   const EventPreviewScreen({
