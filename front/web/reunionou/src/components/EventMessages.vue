@@ -1,24 +1,28 @@
 <template>
     <div class="card has-background-link-light">
         <div class="card-content">
-            <div class="media">
-                <div class="media-content">
-                    <p v-for="member in this.members" :key="member.id">
-                        <span class="title is-6">
-                            <span class="has-text-link" v-if="member.is_guest"
-                                >{{ member.username }} (Guest)</span
-                            >
-                            <span class="has-text-link" v-else>{{
-                                member.username
-                            }}</span>
-                        </span>
-                        -
-                        <span class="has-text-info" v-if="member.status === -1">pas repondu</span>
-                        <span class="has-text-danger" v-else-if="member.status === 0">a dit non</span>
-                        <span class="has-text-success" v-else>sera présent</span>
-                    </p>
+            <p v-for="message in this.messages" :key="message.id">
+                <span class="title is-6 has-text-link">
+                    {{ message.created_at }} - username!
+                </span>
+                -
+                {{ message.content }}
+            </p>
+            <form @submit.prevent="send()" class="mt-4">
+                <div class="field">
+                    <textarea
+                        class="textarea is-link"
+                        v-model="message"
+                        rows="2"
+                        placeholder="Hello world"
+                    ></textarea>
                 </div>
-            </div>
+                <div class="field">
+                    <button type="submit" class="button is-link">
+                        Envoyer message
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </template>
@@ -27,63 +31,87 @@
 export default {
     data() {
         return {
-            members: [
+            message: "",
+            messages: [
                 {
-                    id: "f752fdfc-cc0d-4916-8d09-65a884a27247",
-                    username: "fwoolstenholmes1g",
-                    status: -1,
-                    is_guest: false,
-                    event_id: "9fc0c8f1-c4a0-40cb-9053-fa403b70ad18",
-                    created_at: "2021-12-13 00:53:35",
-                    updated_at: "2021-06-26 21:31:19",
+                    id: "a1ee6624-01b7-4c5d-8628-450e43a4378e",
+                    content:
+                        "Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero.",
+                    member_id: "7c8236f6-16f7-4322-bb71-c2cde9c4bee4",
+                    event_id: "e95302fb-a2b9-4602-8f45-f5ad0da0c76f",
+                    media: {
+                        img: "http://dummyimage.com/136x100.png/5fa2dd/ffffff",
+                        link: "http://dummyimage.com/212x100.png/dddddd/000000",
+                    },
+                    created_at: "2021-12-29 04:52:29",
+                    updated_at: "2021-12-03 00:52:25",
                 },
                 {
-                    id: "38516638-cdf4-496a-8783-fc45285269b0",
-                    username: "lvandrill28",
-                    status: -1,
-                    is_guest: false,
-                    event_id: "23dff0ed-a3e4-4a55-b26c-64a39523577a",
-                    created_at: "2021-04-01 03:46:02",
-                    updated_at: "2021-12-20 18:07:41",
+                    id: "474e0465-424b-46b2-b4a7-83e0e84a8e1d",
+                    content:
+                        "Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis. Duis consequat dui nec nisi volutpat eleifend.",
+                    member_id: "6fce731d-b79d-418c-8689-2a79b21efe27",
+                    event_id: "0f8b6cbe-a912-4410-9009-75543133a9c4",
+                    media: {
+                        img: "http://dummyimage.com/181x100.png/cc0000/ffffff",
+                        link: "http://dummyimage.com/142x100.png/dddddd/000000",
+                    },
+                    created_at: "2022-02-27 03:25:53",
+                    updated_at: "2021-07-22 18:09:22",
                 },
                 {
-                    id: "5ce25c68-b334-42a2-9fa8-71308f20be11",
-                    username: "mswin2i",
-                    status: 0,
-                    is_guest: false,
-                    event_id: "3fa3a722-7a10-429d-86a9-8af7a25d104d",
-                    created_at: "2022-01-10 08:03:18",
-                    updated_at: "2021-09-05 10:07:14",
+                    id: "b1a62a3c-9fb3-4d35-bbf0-b23d674f74de",
+                    content:
+                        "Aenean auctor gravida sem. Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio. Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo.",
+                    member_id: "00ff2bb1-fd5d-4ed1-b0f8-89a4f3b4c232",
+                    event_id: "2988b9d5-6472-4aa3-ac62-109df8f05952",
+                    media: {
+                        img: "http://dummyimage.com/132x100.png/cc0000/ffffff",
+                        link: "http://dummyimage.com/214x100.png/cc0000/ffffff",
+                    },
+                    created_at: "2021-09-03 06:58:07",
+                    updated_at: "2021-04-04 12:39:12",
                 },
                 {
-                    id: "f6a10d5d-539c-4340-b603-32cb11c4580e",
-                    username: "glamzed17",
-                    status: 0,
-                    is_guest: true,
-                    event_id: "bbbd366e-94b1-4197-beed-cb1fa94f39f5",
-                    created_at: "2022-01-22 07:21:34",
-                    updated_at: "2021-08-22 23:09:01",
+                    id: "a652730b-7be5-4aa9-bf36-e440dd7ad487",
+                    content:
+                        "Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus. Phasellus in felis. Donec semper sapien a libero.",
+                    member_id: "7d3ee899-a40d-4054-9e20-615474aa06ec",
+                    event_id: "aeeb1261-8aa2-43a1-9bfc-f02eda403d69",
+                    media: {
+                        img: "http://dummyimage.com/135x100.png/cc0000/ffffff",
+                        link: "http://dummyimage.com/143x100.png/dddddd/000000",
+                    },
+                    created_at: "2021-05-24 03:41:07",
+                    updated_at: "2021-07-25 05:49:57",
                 },
                 {
-                    id: "747fbc92-21ab-4df1-aa9f-745b76a09c60",
-                    username: "kglanvill18",
-                    status: 1,
-                    is_guest: true,
-                    event_id: "dcc070c2-383d-46c1-8562-313bc3962550",
-                    created_at: "2021-08-19 21:33:25",
-                    updated_at: "2022-02-10 14:52:29",
-                },
-                {
-                    id: "53c0d3fe-cdf7-4b87-bb32-899b33320f73",
-                    username: "ahardwin19",
-                    status: 1,
-                    is_guest: true,
-                    event_id: "30be9b14-dad3-442d-991c-53c05ee82e1e",
-                    created_at: "2021-10-14 10:09:25",
-                    updated_at: "2021-07-09 06:29:58",
+                    id: "1313dd8e-741b-49f7-9607-8619df91a787",
+                    content:
+                        "Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat. Curabitur gravida nisi at nibh. In hac habitasse platea dictumst.",
+                    member_id: "314fc1b2-a413-481e-b570-c9c2c52e9e07",
+                    event_id: "f61960c7-9817-4bc4-a02a-43af3ebb3d41",
+                    media: {
+                        img: "http://dummyimage.com/232x100.png/dddddd/000000",
+                        link: "http://dummyimage.com/119x100.png/dddddd/000000",
+                    },
+                    created_at: "2021-12-04 07:09:24",
+                    updated_at: "2021-08-07 07:23:28",
                 },
             ],
         };
+    },
+    methods: {
+        send() {
+            console.log(this.message);
+            /*this.$api.post('channels/' + this.$route.params.id + '/posts',{
+                member_id: this.member_id,
+                message: this.message
+            }).then(response => {
+                this.messages.push(response.data)
+                this.message = ""
+            })*/
+        },
     },
 };
 </script>

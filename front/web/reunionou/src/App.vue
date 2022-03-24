@@ -1,9 +1,6 @@
 <template>
     <div id="app">
-        <Navbar
-            :fullname="fullname"
-            @deconnect="deconnect"
-        />
+        <Navbar :username="this.$store.state.user.username" @deconnect="deconnect" />
         <section class="section">
             <div class="container">
                 <router-view />
@@ -20,15 +17,20 @@ import Navbar from "./components/Navbar.vue";
 export default {
     data() {
         return {
-            fullname: "false",
+            username: "false",
         };
     },
     components: {
         Navbar,
     },
-    mounted() {},
+    mounted() {
+    },
     methods: {
-        deconnect() {},
+        deconnect() {
+            this.$store.commit("setToken", null);
+            this.$store.commit("setUser", false);
+            this.$router.push("/login");
+        },
     },
 };
 </script>

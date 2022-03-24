@@ -20,7 +20,7 @@
             id="navbar"
             class="navbar-menu"
             v-bind:class="{ 'is-active': showNav }"
-            v-if="fullname"
+            v-if="username"
         >
             <div class="navbar-start">
                 <router-link class="navbar-item" to="/">Evenements</router-link>
@@ -34,7 +34,7 @@
                         Bonjour
                         <b
                             ><router-link to="/edit-profile">{{
-                                fullname
+                                username
                             }}</router-link></b
                         >
                     </p>
@@ -68,7 +68,7 @@
 
 <script>
 export default {
-    props: ["fullname"],
+    props: ["username"],
     data() {
         return {
             showNav: false,
