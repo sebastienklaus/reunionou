@@ -1,5 +1,5 @@
 # Atelier n°2 - Reunionou
- Project made by Sébastien Klaus, Malek Ben Khalifa, Youssef Bahi & Maxime Piscaglia
+ Project made by Sébastien Klaus, Armand Pérignon, Malek Ben Khalifa, Youssef Bahi & Maxime Piscaglia
 
 # Summary
 - [Architecture](#architecture)
