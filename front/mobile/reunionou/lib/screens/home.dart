@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../data/dataLoader.dart';
+import '../models/event.dart';
 import '../models/user.dart';
+import '../widgets/eventCard.dart';
 import '../widgets/navigation_drawer_widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -24,8 +28,34 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) => Scaffold(
         endDrawer: NavigationDrawerWidget(),
         appBar: AppBar(
-          title: const Text('Home page'),
+          title: const Text('Mes événements'),
           centerTitle: true,
+        ),
+        body: FutureBuilder(
+          future: context.read<DataLoader>().getEvents(),
+          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+            if (snapshot.data == null) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              return GridView.count(
+                primary: false,
+                padding: const EdgeInsets.all(20),
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                crossAxisCount: 2,
+                children: List.generate(
+                  snapshot.data.length,
+                  (index) {
+                    return Center(
+                      child: EventCard(eventItem: snapshot.data[index]),
+                    );
+                  },
+                ),
+              );
+            }
+          },
         ),
       );
 }
