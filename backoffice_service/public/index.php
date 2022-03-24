@@ -14,7 +14,7 @@ $app = new \Slim\App(new \Slim\Container($app_config));
 
 // Set the differents routes
  
-$app->get('/auth[/]', BackOfficeAuthController::class . ':authenticate')
+$app->post('/auth[/]', BackOfficeAuthController::class . ':authenticate')
     ->setName('authentification');
  
 
