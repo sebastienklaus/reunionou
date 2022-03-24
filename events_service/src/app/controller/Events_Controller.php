@@ -27,7 +27,32 @@ class Events_Controller
         $this->container = $container;
     }
 
-    
+    /**
+     * 
+     * @api {post} /event createEvent
+     * @apiName reunionou
+     * @apiGroup group
+     * @apiVersion  0.0.0
+     * 
+     * 
+     * @apiParam  {String} title description
+     * @apiParam  {String} description description
+     * @apiParam  {String} user_id description
+     * @apiParam  {json} location description
+     * @apiParam  {date} date description
+     * @apiParam  {date} heure description
+     * 
+     * @apiSuccess (201) {String} title description
+     * @apiSuccess (201) {String} description description
+     * @apiSuccess (201) {String} user_id description
+     * @apiSuccess (201) {json} location description
+     * @apiSuccess (201) {date} date description
+     * @apiSuccess (201) {date} heure description
+     * @apiSuccess (201) {date} created_at description
+     * @apiSuccess (201) {date} updated_at description
+     * 
+     * 
+     */
     public function createEvent(Request $req, Response $resp, array $args): Response
     {
 
