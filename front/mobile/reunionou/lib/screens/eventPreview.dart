@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../data/dataLoader.dart';
+import '../animations/loginAnimation.dart';
 import '../models/event.dart';
-import '../widgets/eventCard.dart';
+import '../widgets/commentsList.dart';
+import '../widgets/eventDetails.dart';
 import '../widgets/map.dart';
 import '../widgets/navigation_drawer_widget.dart';
+import '../widgets/organizerDetails.dart';
+import '../widgets/participantsList.dart';
+import '../widgets/spacer.dart';
 
 class EventPreviewScreen extends StatefulWidget {
   const EventPreviewScreen({
     Key? key,
-    required EventItem this.event,
+    required this.event,
   }) : super(key: key);
   static String get route => '/eventPreview';
   final EventItem event;
@@ -19,32 +22,48 @@ class EventPreviewScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<EventPreviewScreen> {
+  final commentaire = TextEditingController();
+
   @override
   void initState() {
     super.initState();
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 4,
+      child: Scaffold(
         endDrawer: NavigationDrawerWidget(),
         appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          bottom: const TabBar(
+            tabs: [
+              Tab(icon: Icon(Icons.event)),
+              Tab(icon: Icon(Icons.badge)),
+              Tab(icon: Icon(Icons.people)),
+              Tab(icon: Icon(Icons.comment))
+            ],
+          ),
           title: Text(widget.event.title),
           centerTitle: true,
         ),
-        body: Column(
-          children: <Widget>[
-            Card(
-              child: SizedBox(
-                height: 250,
-                child: MapWidget(
-                  event: widget.event,
-                ),
-              ),
+        body: TabBarView(
+          children: [
+            EventDetails(
+              event: widget.event,
             ),
-            Expanded(
-              child: Container(),
+            OrganizerDetails(
+              event: widget.event,
             ),
+            const ParticipantsList(),
+            const CommentsList(),
           ],
         ),
-      );
+      ),
+    );
+  }
 }
