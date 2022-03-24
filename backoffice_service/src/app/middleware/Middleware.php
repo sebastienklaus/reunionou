@@ -17,7 +17,7 @@ class Middleware {
         $this->container = $container;
     }
 
-    // * création d'un ID avec un UUID (utilisation de la librairie Ramsey\UUID)
+    // * ccheck d'authorization pour chaque requête effectué
     public function checkAuth(Request $req, Response $resp, callable $next){
         
         $client = new Client([
