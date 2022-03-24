@@ -1,8 +1,8 @@
 <template>
     <div>
-        <div class="columns is-mobile">
-            <div class="column">MAP</div>
-            <div class="column">
+        <div class="columns is-multiline is-mobile">
+            <div class="column is-half-tablet is-full-mobile">MAP</div>
+            <div class="column is-half-tablet is-full-mobile">
                 <h1 class="title has-text-centered">{{ event.title }}</h1>
                 <h3 class="m-3 title is-5 has-text-centered">
                     Date de l'evenement: {{ event.date }}
@@ -25,6 +25,11 @@
                     <h3 class="m-3 title is-5 has-text-centered">
                         Participants
                     </h3>
+                    <div class="field has-text-centered">
+                        <router-link :to="'/share-events/' + event.id" type="submit" class="button is-link is-small">
+                            Ajouter participant
+                        </router-link>
+                    </div>
                     <Participant />
                 </div>
             </div>
