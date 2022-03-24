@@ -14,8 +14,8 @@ $validators = EventValidator::create_validators();
 // delte event : delete assocaited tables
 
 $app->post('/events[/]', Events_Controller::class . ':createEvent')
-    ->setName('createEvent')
-    ->add(new Validation($validators));
+    ->setName('createEvent');
+    // ->add(new Validation($validators));
 
 $app->put('/events/{id}[/]', Events_Controller::class . ':updateEvent')
     ->setName('updateEvent')
@@ -28,13 +28,19 @@ $app->get('/events/{id}[/]', Events_Controller::class . ':getEvent')
 $app->get('/events[/]', Events_Controller::class . ':getAllEvent')    
     ->setName('getAllEvent');
 
-//TODO evetually : creator of event can delete his/her event
+$app->delete('/events/{id}[/]', Events_Controller::class . ':deleteEventById')
+    ->setName('deleteEventById');
+
+//TODO evetually : creator of event can delete his/her event (côté backoffice?)
+
+ // get event by id creator
+ // deleteEventExpired
     
 
     
 // Messages
 
-//todo : post (put ? delete ?)
+//todo : (put ? delete ?)
 
 $app->get('/messages/{id}[/]', Messages_Controller::class . ':getMessage')
     ->setName('getMessage');
@@ -46,20 +52,30 @@ $app->get('/events/{id}/messages[/]', Messages_Controller::class . ':getMessages
 $app->post('/messages[/]', Messages_Controller::class . ':createMessage')
     ->setName('createMessage');// todo validator
 
+    //todo deleteMessagesByEventID
+  
 //todo ?? message by members. Dans ce cas, rajouter ce lien dans hateos dans getMember.
 
 // Members
 
-//todo members by id : delete put
+//todo members by id : put seulement sur user_id ??
+//TODO delete membersByEventID
 
 $app->post('/members[/]', Members_Controller::class . ':createMember')
     ->setName('createMember');// todo validator
 
+$app->put('/members/{id}[/]', Members_Controller::class . ':updateMember')
+    ->setName('updateMember');// todo validator
+    
+
 $app->get('/members/{id}[/]', Members_Controller::class . ':getMember')
     ->setName('getMember');
-
+    
 $app->get('/events/{id}/members[/]', Members_Controller::class . ':getMembersByEvent')
     ->setName('getMembersByEvent');
+    
+$app->delete('/members/{id}[/]', Members_Controller::class . ':deleteMemberById')
+    ->setName('deleteMemberById');
 
 // GetMember avec pseudo
     // post delete

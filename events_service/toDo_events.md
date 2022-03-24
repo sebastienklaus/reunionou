@@ -18,12 +18,13 @@
 - Renomer Model sans s
 - comments
 - revoir headers, ressource. Location everywhere ?
+- verif validators post/put event members messages => members non member : null auto à coder
 
 - /post message, post members, delete members, repasser sur le reste
 
-## Youssef
+- rajouter dans hateos les liens self dans les getall dnas les foreach 
 
-- renommer author en member_id ?
+## Youssef
 
 - format JSON Spot
 
