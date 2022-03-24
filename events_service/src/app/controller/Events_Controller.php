@@ -27,7 +27,7 @@ class Events_Controller
         $this->container = $container;
     }
 
-    // Créer un event
+    
     public function createEvent(Request $req, Response $resp, array $args): Response
     {
 
@@ -322,8 +322,9 @@ class Events_Controller
                 'date' => $event->date,
                 'heure' => $event->heure,
                 'created_at' => $event->created_at->format('Y-m-d H:i:s'),
-                'updated_at' => $event->updated_at->format('Y-m-d H:i:s') //?rajouter un link avec pathfor ?
-            ]; //TODO rajouter self dans chaque event
+                'updated_at' => $event->updated_at->format('Y-m-d H:i:s'), //?rajouter un link avec pathfor ?
+                'href' => $this->container->router->pathFor('getEvent',['id' => $event->id])
+            ];
         }
 
         // Construction des donnés à retourner dans le body
