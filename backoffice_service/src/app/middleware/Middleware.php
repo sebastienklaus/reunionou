@@ -6,6 +6,7 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 use GuzzleHttp\Client as Client;
+use reunionou\backoffice\app\utils\Writer as Writer;
 
 class Middleware {
 
@@ -31,13 +32,27 @@ class Middleware {
 
         $body = json_decode($response->getBody());
 
-        $req = $req->withAttribute('user_level', $body->user_level);
         $req = $req->withAttribute('token', $req->getHeader('Authorization'));
 
         $resp = $next($req,$resp);
 
         return $resp;
 
+    }
+
+
+    public static function corsHeaders(Request $req,Response $resp,callable $next ): Response {
+        if (! $req->hasHeader('Origin'))
+            return Writer::json_error($resp, 401, "missing Origin Header (cors)");
+        
+        $response = $next($req,$resp);
+
+        $response = $response->withHeader('Access-Control-Allow-Origin', $req->getHeader('Origin'))
+                                ->withHeader('Access-Control-Allow-Methods', 'POST, PUT, GET, DELTE' )
+                                ->withHeader('Access-Control-Allow-Headers','Authorization, Content-Type' )
+                                ->withHeader('Access-Control-Max-Age', 3600)
+                                ->withHeader('Access-Control-Allow-Credentials', 'true');
+        return $response;
     }
 
 }
