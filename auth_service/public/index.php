@@ -22,11 +22,11 @@ $capsule->setAsGlobal();
 
 // Set the differents routes
 
-$app->options('/{routes:.+}', function ($request, $response, $args) {
-    return $response;
-});
+// $app->options('/{routes:.+}', function ($request, $response, $args) {
+//     return $response;
+// });
 
-$app->add(Middleware::class .':corsHeaders');
+// $app->add(Middleware::class .':corsHeaders');
  
 $app->post('/auth[/]', AuthController::class . ':authenticate')
     ->setName('authentification');
@@ -42,13 +42,22 @@ $app->post('/create[/]', AuthController::class . ':createAccount')
 $app->put('/update/{id}[/]', AuthController::class . ':updateAccount')
     ->setName('updateAccount');
 
-$app->get('/users/{id}[/]', AuthController::class . ':getUser')
-    ->setName('getUser');
 
 
-$app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function($req, $res) {
-        $handler = $this->notFoundHandler; // handle using the default Slim page not found handler
-        return $handler($req, $res);
-    });
+$app->get('/users[/]', AuthController::class . ':getUsers')
+    ->setName('getUsers');
+
+$app->get('/users/{id}[/]', AuthController::class . ':getUserByID')
+    ->setName('getUserByID');
+
+    
+    
+$app->get('/checkAdmin[/]', AuthController::class . ':checkAdmin')
+    ->setName('checkAdmin');
+
+// $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function($req, $res) {
+//         $handler = $this->notFoundHandler; // handle using the default Slim page not found handler
+//         return $handler($req, $res);
+//     });
 
 $app->run();

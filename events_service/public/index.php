@@ -8,6 +8,7 @@
 require_once  __DIR__ . '/../src/vendor/autoload.php';
 
 use reu\events\app\bootstrap\reunionouBootstrap;
+use reu\events\app\middleware\Middleware as Middleware;
 
 // video 3 contaeneur (de dépendance ?)
 // $config = [
@@ -36,9 +37,21 @@ $container = new \Slim\Container(array_merge(
 
 $app = new \Slim\App($container);
 
+// $app->options('/{routes:.+}', function ($request, $response, $args) {
+//     return $response;
+// });
+
+// $app->add(Middleware::class .':corsHeaders');
+
 reunionouBootstrap::startEloquent($container->settings['dbconf']);
 $container->get('logger.debug')->debug('eloquent started - routes register started');
 
 require_once __DIR__ . '/../src/app/routes/routes.php';
+
+// $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function($req, $res) {
+//     $handler = $this->notFoundHandler; 
+//     return $handler($req, $res);
+// });
+
 
 $app->run();
