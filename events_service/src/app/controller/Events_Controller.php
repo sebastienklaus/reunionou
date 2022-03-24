@@ -27,7 +27,7 @@ class Events_Controller
         $this->container = $container;
     }
 
-    // Créer un event
+    
     public function createEvent(Request $req, Response $resp, array $args): Response
     {
 
@@ -44,7 +44,6 @@ class Events_Controller
 
             $errors = $req->getAttribute('errors');
 
-            //? à mettre ailleurs ? Container ? Utils ? Maiddleware ? Errors ? Faire fonction + générique
             if (isset($errors['title'])) {
                 $this->container->get('logger.error')->error("error input event title");
                 return Writer::json_error($resp, 403, '"title" : invalid input, string expected');
@@ -53,17 +52,21 @@ class Events_Controller
                 $this->container->get('logger.error')->error("error mail event description");
                 return Writer::json_error($resp, 403, '"description" : invalid input, text format expected');
             }
-            if (isset($errors['author'])) {
-                $this->container->get('logger.error')->error("error input author UUID");
-                return Writer::json_error($resp, 403, '"author" : invalid input. d-m-Y format expected : uuid');
+            if (isset($errors['user_id'])) {
+                $this->container->get('logger.error')->error("error input user_id UUID");
+                return Writer::json_error($resp, 403, '"user_id" : invalid input. invalid input, valid format expected : uuid');
             }
-            // if (isset($errors['spot'])) {
-            //     $this->container->get('logger.error')->error("error input livraison heure");
-            //     return Writer::json_error($resp, 403, '"heure" : invalid input. H:i format expected');
-            // }
+            if (isset($errors['location'])) {
+                $this->container->get('logger.error')->error("error input livraison location");
+                return Writer::json_error($resp, 403, '"location" : invalid input, valid format expected');
+            }
             if (isset($errors['date'])) {
-                ($this->container->get('logger.error'))->error("error input date event");
-                return Writer::json_error($resp, 403, '"date" : invalid input. date exepected : d-m-y H:m:i');
+                ($this->container->get('logger.error'))->error("error input date date");
+                return Writer::json_error($resp, 403, '"date" : invalid input, format exepected : Y-m-d');
+            }
+            if (isset($errors['heure'])) {
+                ($this->container->get('logger.error'))->error("error input date heure");
+                return Writer::json_error($resp, 403, '"heure" : invalid input. format exepected : H:m:i');
             }
         };
 
@@ -80,12 +83,14 @@ class Events_Controller
 
             $new_event->title = filter_var($event_req['title'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $new_event->description = filter_var($event_req['description'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $new_event->author = filter_var($event_req['author'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            //! FILTE POUR SPOT : SPOT JSON DOIT ETRE OK
-            $new_event->spot = $event_req['spot'];
+            $new_event->user_id = filter_var($event_req['user_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            //! FILTE POUR location : location JSON DOIT ETRE OK
+            $new_event->location = $event_req['location'];
             // Création de la date  de livraison
             $date_event = new DateTime($event_req['date']);
-            $new_event->date = $date_event->format('Y-m-d H:i:s');
+            $new_event->date = $date_event->format('Y-m-d');
+            $heure_event = new DateTime($event_req['heure']);
+            $new_event->heure = $heure_event->format('H:i:s');
 
 
             $new_event->save();
@@ -101,11 +106,12 @@ class Events_Controller
                 "event" => [
                     "title" => $new_event->title,
                     "description" => $new_event->description,
-                    "author" => $new_event->author,
-                    "spot" => $new_event->spot,
+                    "user_id" => $new_event->user_id,
+                    "location" => $new_event->location,
                     "date" => $new_event->date,
-                    "created_at" => $new_event->created_at,
-                    "updated_at" => $new_event->updated_at
+                    "heure" => $new_event->heure,
+                    "created_at" => $new_event->created_at->format('Y-m-d H:i:s'),
+                    "updated_at" => $new_event->updated_at->format('Y-m-d H:i:s')
                 ]
             ];
 
@@ -144,32 +150,38 @@ class Events_Controller
                 $this->container->get('logger.error')->error("error mail event description");
                 return Writer::json_error($resp, 403, '"description" : invalid input, text format expected');
             }
-            if (isset($errors['author'])) {
-                $this->container->get('logger.error')->error("error input author UUID");
-                return Writer::json_error($resp, 403, '"author" : invalid input. d-m-Y format expected : uuid');
+            if (isset($errors['user_id'])) {
+                $this->container->get('logger.error')->error("error input user_id UUID");
+                return Writer::json_error($resp, 403, '"user_id" : invalid input. invalid input, valid format expected : uuid');
             }
-            // if (isset($errors['spot'])) {
-            //     $this->container->get('logger.error')->error("error input livraison heure");
-            //     return Writer::json_error($resp, 403, '"heure" : invalid input. H:i format expected');
-            // }
+            if (isset($errors['location'])) {
+                $this->container->get('logger.error')->error("error input livraison location");
+                return Writer::json_error($resp, 403, '"location" : invalid input, valid format expected');
+            }
             if (isset($errors['date'])) {
-                ($this->container->get('logger.error'))->error("error input date event");
-                return Writer::json_error($resp, 403, '"date" : invalid input. date exepected : d-m-y H:m:i');
+                ($this->container->get('logger.error'))->error("error input date date");
+                return Writer::json_error($resp, 403, '"date" : invalid input, format exepected : Y-m-d');
+            }
+            if (isset($errors['heure'])) {
+                ($this->container->get('logger.error'))->error("error input date heure");
+                return Writer::json_error($resp, 403, '"heure" : invalid input. format exepected : H:m:i');
             }
         };
 
         try {
 
-            $event = Events::Select(['id', 'title', 'description', 'author', 'spot', 'date'])->findOrFail($args['id']);
+            $event = Events::Select(['id', 'title', 'description', 'user_id', 'location', 'date'])->findOrFail($args['id']);
 
             $event->title = filter_var($received_event['title'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $event->description = filter_var($received_event['description'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $event->author = filter_var($received_event['author'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            //! FILTE POUR SPOT : SPOT JSON DOIT ETRE OK
-            $event->spot = $received_event['spot'];
+            $event->user_id = filter_var($received_event['user_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            //! FILTE POUR location : location JSON DOIT ETRE OK
+            $event->location = $received_event['location'];
             // Création de la date  de livraison
-            $date_event = new DateTime($received_event['date']);
-            $event->date = $date_event->format('Y-m-d H:i:s');
+            $date_event = new DateTime($event_req['date']);
+            $new_event->date = $date_event->format('Y-m-d');
+            $heure_event = new DateTime($event_req['heure']);
+            $new_event->heure = $heure_event->format('H:i:s');
 
 
             $event->save();
@@ -185,11 +197,12 @@ class Events_Controller
                 "event" => [
                     "title" => $new_event->title,
                     "description" => $new_event->description,
-                    "author" => $new_event->author,
-                    "spot" => $new_event->spot,
+                    "user_id" => $new_event->user_id,
+                    "location" => $new_event->location,
                     "date" => $new_event->date,
-                    "created_at" => $new_event->created_at,
-                    "updated_at" => $new_event->updated_at
+                    "heure" => $new_event->heure,
+                    "created_at" => $new_event->created_at->format('Y-m-d H:i:s'),
+                    "updated_at" => $new_event->updated_at->format('Y-m-d H:i:s')
                 ]
             ];
 
@@ -217,7 +230,7 @@ class Events_Controller
         
         try {
             
-            $event = Events::select(['id', 'title', 'description', 'author', 'spot', 'date', 'created_at', 'updated_at'])
+            $event = Events::select(['id', 'title', 'description', 'user_id', 'location', 'date', 'heure', 'created_at', 'updated_at'])
             ->where('id', '=', $id_event)
             ->firstOrFail();
 
@@ -227,11 +240,12 @@ class Events_Controller
                 'id' => $event->id,
                 'title' => $event->title,
                 'description' => $event->description,
-                'author' => $event->author,
-                'spot' => $event->spot,
+                'user_id' => $event->user_id,
+                'location' => $event->location,
                 'date' => $event->date,
-                'created_at' => $event->created_at,
-                'updated_at' => $event->updated_at
+                'heure' => $event->heure,
+                'created_at' => $event->created_at->format('Y-m-d H:i:s'),
+                'updated_at' => $event->updated_at->format('Y-m-d H:i:s')
             ];
 
             // Récupération de la route events                            
@@ -270,13 +284,66 @@ class Events_Controller
 
             //? Ressources imbriquées ? à priori non.
 
-            $resp = $resp->withStatus(200);
-            $resp = $resp->withHeader("Content-Type", "application/json;charset=utf-8");
+            $resp = Writer::json_output($resp, 200);
             
             $resp->getBody()->write(json_encode($datas_resp));
 
             return $resp;
         } catch (ModelNotFoundException $e) {
+
+            $clientError = $this->container->clientError;
+            return $clientError($req, $resp, 404, "Event not found");
+
+
+            // return Writer::json_error($resp, 404, "Alors j'ai bien regardé, j'ai pas trouvé ta commande");
+        }
+    }
+
+    public function getEventByMemberPseudo(Request $req, Response $resp, array $args): Response
+    {
+        $pseudo_member = $args['pseudo'];
+        
+        try {
+            $event_id_list = Members::select(['event_id'])
+                                    ->where('pseudo', '=', $pseudo_member)
+                                    ->get();
+
+            $events = Events::select(['id', 'title', 'description', 'user_id', 'location', 'date', 'heure', 'created_at', 'updated_at'])
+                        ->whereIn('id', $event_id_list)
+                        ->get();
+
+        //TODO Vérifier type de controle depuis réception base de donnée dans cours
+        //TODO étape filtrage à garder ou améliorer ?
+            $nbEvents = count($events);
+            $events_resp = [];
+            foreach ($events as $event) {
+                $events_resp[] = [
+                'id' => $event->id,
+                'title' => $event->title,
+                'description' => $event->description,
+                'user_id' => $event->user_id,
+                'location' => $event->location,
+                'date' => $event->date,
+                'heure' => $event->heure,
+                'created_at' => $event->created_at->format('Y-m-d H:i:s'),
+                'updated_at' => $event->updated_at->format('Y-m-d H:i:s'), //?rajouter un link avec pathfor ?
+                'href' => $this->container->router->pathFor('getEvent',['id' => $event->id])
+                ];
+            }
+
+        // Construction des donnés à retourner dans le body
+        $datas_resp = [
+            "type" => "collection",
+            "count" => $nbEvents,
+            "events" => $events_resp
+        ];
+
+        $resp = Writer::json_output($resp, 200);
+
+        $resp->getBody()->write(json_encode($datas_resp));
+
+        return $resp;
+    } catch (ModelNotFoundException $e) {
 
             $clientError = $this->container->clientError;
             return $clientError($req, $resp, 404, "Event not found");
@@ -292,7 +359,7 @@ class Events_Controller
         //todo: try catch
 
         // Récupérer les commandes depuis le model
-        $events = Events::select(['id', 'title', 'description', 'author', 'spot', 'date', 'created_at', 'updated_at'])
+        $events = Events::select(['id', 'title', 'description', 'user_id', 'location', 'date', 'heure', 'created_at', 'updated_at'])
                           ->get();
 
         //TODO Vérifier type de controle depuis réception base de donnée dans cours
@@ -304,11 +371,13 @@ class Events_Controller
                 'id' => $event->id,
                 'title' => $event->title,
                 'description' => $event->description,
-                'author' => $event->author,
-                'spot' => $event->spot,
+                'user_id' => $event->user_id,
+                'location' => $event->location,
                 'date' => $event->date,
-                'created_at' => $event->created_at,
-                'updated_at' => $event->updated_at //?rajouter un link avec pathfor ?
+                'heure' => $event->heure,
+                'created_at' => $event->created_at->format('Y-m-d H:i:s'),
+                'updated_at' => $event->updated_at->format('Y-m-d H:i:s'), //?rajouter un link avec pathfor ?
+                'href' => $this->container->router->pathFor('getEvent',['id' => $event->id])
             ];
         }
 
@@ -319,65 +388,37 @@ class Events_Controller
             "events" => $events_resp
         ];
 
-        $resp = $resp->withStatus(200);
-        $resp = $resp->withHeader("Content-Type", "application/json;charset=utf-8");
+        $resp = Writer::json_output($resp, 200);
 
         $resp->getBody()->write(json_encode($datas_resp));
 
         return $resp;
     }
 
-    // // Remplacer une commande. PUT, pas PATCH !!
-    // public function putCommande(Request $req, Response $resp, array $args): Response
-    // {
-
-    //     $commande_data = $req->getParsedBody();
-
-    //     $clientError = $this->container->clientError;
-
-    //     if (!isset($commande_data['nom_client'])) {
-    //         return $clientError($req, $resp, 400, "Missing 'nom_client");
-    //         // return Writer::json_error($resp, 400, "missing 'nom_client'");
-    //     };
-
-    //     if (!isset($commande_data['mail_client'])) {
-    //         return Writer::json_error($resp, 400, "missing 'mail_client'");
-    //     };
-
-    //     if (!isset($commande_data['livraison']['date'])) {
-    //         return Writer::json_error($resp, 400, "missing 'livraison(date)'");
-    //     };
-
-    //     if (!isset($commande_data['livraison']['heure'])) {
-    //         return Writer::json_error($resp, 400, "missing 'livraison(heure)'");
-    //     };
-
-    //     try {
-    //         // Récupérer la commande
-    //         $commande = Commande::Select(['id', 'nom', 'mail', 'livraison'])->findOrFail($args['id']);
-
-    //         $commande->nom = filter_var($commande_data['nom_client'], FILTER_SANITIZE_STRING);
-    //         $commande->mail = filter_var($commande_data['mail_client'], FILTER_SANITIZE_EMAIL);
-    //         $commande->livraison = DateTime::createFromFormat(
-    //             'Y-m-d H:i',
-    //             $commande_data['livraison']['date'] . ' ' .
-    //                 $commande_data['livraison']['heure']
-    //         );
-
-    //         $commande->save();
-
-    //         return Writer::json_output($resp, 204);
-    //     } catch (ModelNotFoundException $e) {
-    //         return Writer::json_error($resp, 404, "commande inconnue : {$args}");
-    //     } catch (\Exception $e) {
-    //         return Writer::json_error($resp, 500, $e->getMessage());
-    //     }
-
-
-
-
-
-
-    //     return $resp;
-    // }
+    public function deleteEventById(Request $req, Response $resp, array $args): Response
+    {
+        $id_event = $args['id'] ?? null;
+        try {
+            $event = Events::findOrFail($id_event);
+            if ($event->delete()) 
+            {
+                $datas_resp = [
+                    "type" => "event",
+                    "event" => $event,
+                    "response" => "event deleted",
+                ];
+            } else 
+            {
+                $datas_resp = [
+                    "type" => "event",
+                    "event" => $event,
+                    "response" => "event couldn't be deleted"
+                ];
+            }
+            $resp->getBody()->write(json_encode($datas_resp));
+            return writer::json_output($resp, 200);
+        } catch (ModelNotFoundException $e) {
+            return Writer::json_error($resp, 404, "event not found");
+        }
+    }
 }

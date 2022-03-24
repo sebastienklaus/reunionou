@@ -5,6 +5,7 @@ namespace reunionou\auth\app\middleware;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
+use reunionou\auth\app\error\Writer as Writer;
 
 use Ramsey\Uuid\Uuid;
 use \DavidePastore\Slim\Validation\Validation as Validation ;

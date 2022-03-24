@@ -9,6 +9,7 @@
                 <label for="fullname">Nom et Prenom</label>
                 <input
                     id="fullname"
+                    v-model="user.fullname"
                     class="input"
                     type="text"
                     required
@@ -19,6 +20,7 @@
                 <label for="email">Email</label>
                 <input
                     id="email"
+                    v-model="user.email"
                     class="input"
                     type="email"
                     required
@@ -29,6 +31,7 @@
                 <label for="username">Nom d'utilisateur</label>
                 <input
                     id="username"
+                    v-model="user.username"
                     class="input"
                     type="text"
                     required
@@ -39,6 +42,7 @@
                 <label for="password">Mot de passe</label>
                 <input
                     id="password"
+                    v-model="user.password"
                     class="input"
                     type="password"
                     required
@@ -49,6 +53,7 @@
                 <label for="confirm_password">Confirmer mot de passe</label>
                 <input
                     id="confirm_password"
+                    v-model="user.confirm_password"
                     class="input"
                     type="password"
                     required
@@ -68,10 +73,35 @@
 <script>
 export default {
     data() {
-        return {};
+        return {
+            user: {
+                fullname: "",
+                email: "",
+                username: "",
+                password: "",
+                confirm_password: "",
+            },
+        };
     },
     methods: {
         validation() {
+            if (this.password !== this.confirm_password) {
+                alert("Passwords does not match!");
+            } else {
+                // TODO: POST Create user
+                // this.$usersApi
+                //     .post(
+                //         "URI", //TODO URI
+                //         {}, //TODO BODY
+                //         {} //TODO HEADERS
+                //     )
+                //     .then((response) => {
+                //         console.log(response);
+                alert("User created");
+                this.$router.push("/login");
+                //     })
+                //     .catch((err) => console.log(err));
+            }
         },
     },
 };
