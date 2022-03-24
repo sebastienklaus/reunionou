@@ -106,7 +106,4 @@ class BackOfficeAuthController
                     ->withBody($response->getBody());
     }
 
-
-
-
 }
