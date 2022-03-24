@@ -6,7 +6,7 @@ return [
         
         //client(s) Guzzle
         'auth_service' => 'http://api.auth.local',
-        'events_service' => 'http://api.backoffice.local',
+        'events_service' => 'http://events.service.local',
 
         'debug.name' => 'lbs.log',
         'debug.log' => __DIR__ . '/../log/debug.log',

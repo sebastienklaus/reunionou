@@ -36,26 +36,19 @@ class BackOfficeEventsController
 
     public function getAllEvent(Request $req, Response $resp, $args): Response {
 
+
+
         $client = new \GuzzleHttp\Client([
-            'base_uri' => $this->container ->get('settings')['events_service'],
+            'base_uri' => $this->container->get('settings')['events_service'],
             'timeout' => 5.0
         ]);
 
-          if (!$req->hasHeader('Authorization')) {
-
-            $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="users_api api" ');
-            return Writer::json_error($resp, 401, 'No Authorization header present');
-        } else {
-            $response = $client->request('POST', '/events', [
-                'headers'=> ['Authorization' => $req->getHeader('Authorization')]
-            ]);
-            
-        }
-
+        $response = $client->request('GET', '/events');
 
         $resp = Writer::json_output($resp, $response->getStatusCode());
         $resp->getBody()->write($response->getBody());
         return $resp;
+
     }
 
 

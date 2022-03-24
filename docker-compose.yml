@@ -20,7 +20,7 @@ services:
     networks:
       d.net:
         aliases:
-          - api.events.local
+          - events.service.local
     links:
       - mysql.events:db
 
