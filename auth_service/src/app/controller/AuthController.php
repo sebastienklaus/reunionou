@@ -153,10 +153,10 @@ class AuthController {
                     $newUser->save();
                 }    
             } catch (ModelNotFoundException $e) {
-                $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="lbs auth" ');
+                $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="reunionou auth" ');
                 return Writer::jsonError($req, $resp, 401, 'Erreur authentification model');
             } catch (\Exception $e) {
-                $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="lbs auth" ');
+                $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="reunionou auth" ');
                 return Writer::jsonError($req, $resp, 401, 'Erreur PHP');
             }    
             
@@ -207,10 +207,10 @@ class AuthController {
 
                 }    
             } catch (ModelNotFoundException $e) {
-                $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="lbs auth" ');
+                $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="reunionou auth" ');
                 return Writer::jsonError($req, $resp, 401, 'Erreur authentification model');
             } catch (\Exception $e) {
-                $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="lbs auth" ');
+                $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="reunionou auth" ');
                 return Writer::jsonError($req, $resp, 401, 'Erreur PHP');
             }    
             
@@ -226,7 +226,30 @@ class AuthController {
 
     }
     
-    public function getUser(Request $req, Response $resp, $args): Response {
+    public function getUsers(Request $req, Response $resp, $args): Response {
+        try { 
+            $allUsers = User::select(['id', 'fullname'])->get();
+            $data = [];
+            foreach ($allUsers as $u) {
+                array_push($data, [
+                    'user_id' => $u->id,
+                    'user_fullname' => $u->fullname,
+                ]);
+            }
+
+            return Writer::json_output($resp, 200, $data);
+
+        } catch (ModelNotFoundException $e) {
+            $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="reunionou auth" ');
+            return Writer::jsonError($req, $resp, 401, 'Erreur model');
+        } catch (\Exception $e) {
+            $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="reunionou auth" ');
+            return Writer::jsonError($req, $resp, 401, 'Erreur PHP');
+        } 
+
+        return $resp;
+    }
+    public function getUserByID(Request $req, Response $resp, $args): Response {
         $userID = $args['id'];
         try { 
             $user = User::select(['id', 'fullname','email', 'username', 'token'])->findOrFail($userID);
@@ -234,13 +257,39 @@ class AuthController {
             return Writer::json_output($resp, 200, $user);
 
         } catch (ModelNotFoundException $e) {
-            $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="lbs auth" ');
+            $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="reunionou auth" ');
             return Writer::jsonError($req, $resp, 401, 'Erreur authentification model');
         } catch (\Exception $e) {
-            $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="lbs auth" ');
+            $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="reunionou auth" ');
             return Writer::jsonError($req, $resp, 401, 'Erreur PHP');
         } 
 
+        return $resp;
+    }
+
+
+    public function checkAdmin(Request $req, Response $resp, $args): Response {
+
+        if (!$req->hasHeader('Authorization')) {
+
+            $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="commande_api api" ');
+            return Writer::jsonError($req, $resp, 401, 'No Authorization header present');
+        };
+
+        $authstring = base64_decode(explode(" ", $req->getHeader('Authorization')[0])[1]);
+        list($email, $pass) = explode(':', $authstring);
+
+        try {
+            $admin = User::select('is_Admin')->where('email', '=', $email)->first();
+            return Writer::json_output($resp, 200, $admin);
+
+        } catch (ModelNotFoundException $e) {
+            $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="reunionou auth" ');
+            return Writer::jsonError($req, $resp, 401, 'Erreur authentification model');
+        } catch (\Exception $e) {
+            $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="reunionou auth" ');
+            return Writer::jsonError($req, $resp, 401, 'Erreur PHP');
+        }   
         return $resp;
     }
 }
