@@ -9,5 +9,5 @@ class EventItem {
   final String title;
   final String hour;
   final String date;
-  final String location;
+  final List location;
 }

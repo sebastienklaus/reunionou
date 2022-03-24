@@ -4,6 +4,7 @@ import 'package:reunionou/screens/home.dart';
 
 import '../data/dataLoader.dart';
 import '../models/event.dart';
+import '../screens/eventPreview.dart';
 
 class EventCard extends StatelessWidget {
   const EventCard({Key? key, required this.eventItem}) : super(key: key);
@@ -15,9 +16,10 @@ class EventCard extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        // print("zone");
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => HomeScreen()));
+            context,
+            MaterialPageRoute(
+                builder: (context) => EventPreviewScreen(event: eventItem)));
       },
       child: Container(
         child: Center(
@@ -29,7 +31,7 @@ class EventCard extends StatelessWidget {
                   style: const TextStyle(color: Colors.white, fontSize: 25),
                   textAlign: TextAlign.center),
               Text(
-                eventItem.location,
+                eventItem.location[0]['name'],
                 style: const TextStyle(color: Colors.white, fontSize: 17),
               ),
               Text(

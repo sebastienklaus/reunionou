@@ -160,19 +160,37 @@ class DataLoader extends ChangeNotifier {
       EventItem(
           id: "s5qd6+q5sdd",
           title: "Prqsdqs",
-          location: "Zoombox",
+          location: [
+            {
+              "name": "Yombu",
+              "latitude": 48.68353258919478,
+              "longitude": 6.152571620242472,
+            }
+          ],
           date: "07/02/2021",
           hour: "12:35"),
       EventItem(
           id: "s5qd6+q5sdd",
           title: "sd sdfani",
-          location: "Zoombox",
+          location: [
+            {
+              "name": "Photofeed",
+              "latitude": 48.68353258919478,
+              "longitude": 6.152571620242472
+            }
+          ],
           date: "07/02/2021",
           hour: "12:35"),
       EventItem(
           id: "s5qd6+q5sdd",
           title: "Princess Ka'iulani",
-          location: "Zoombox",
+          location: [
+            {
+              "name": "Yombu",
+              "latitude": 48.68353258919478,
+              "longitude": 6.152571620242472,
+            }
+          ],
           date: "07/02/2021",
           hour: "12:35"),
     ];
