@@ -29,12 +29,13 @@ $app->get('/events[/]', Events_Controller::class . ':getAllEvent')
     ->setName('getAllEvent');
 
 $app->delete('/events/{id}[/]', Events_Controller::class . ':deleteEventById')
-    ->setName('deleteEventById');
+    ->setName('deleteEventById'); //todo compléter : supprimer tout message et member associés
 
 //TODO evetually : creator of event can delete his/her event (côté backoffice?)
 
- // get event by id creator
- // deleteEventExpired
+ //TODO get event(s) by id creator
+
+ //TODO deleteEventExpired
     
 
     
@@ -58,14 +59,13 @@ $app->post('/messages[/]', Messages_Controller::class . ':createMessage')
 
 // Members
 
-//todo members by id : put seulement sur user_id ??
 //TODO delete membersByEventID
 
 $app->post('/members[/]', Members_Controller::class . ':createMember')
     ->setName('createMember');// todo validator
 
 $app->put('/members/{id}[/]', Members_Controller::class . ':updateMember')
-    ->setName('updateMember');// todo validator
+    ->setName('updateMember');// todo validator //? USELESS 
     
 
 $app->get('/members/{id}[/]', Members_Controller::class . ':getMember')
@@ -79,3 +79,6 @@ $app->delete('/members/{id}[/]', Members_Controller::class . ':deleteMemberById'
 
 // GetMember avec pseudo
     // post delete
+
+//TODO tout les events pour un members.user_id : nackoffice rajouter /user/id
+//TODO tous les event pour un pseudo

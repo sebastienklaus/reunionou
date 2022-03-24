@@ -101,7 +101,6 @@ services:
     networks:
       - d.net
 
-
   api.backoffice:
     image: canals/php:latest
     ports:
@@ -109,6 +108,7 @@ services:
     volumes:
       - ./backoffice_service/public:/var/www/html
       - ./backoffice_service/src:/var/www/src
+      - ./backoffice_service/log:/var/log/app
     working_dir: /var/www/src
     networks:
       d.net:
