@@ -129,6 +129,7 @@ class Events_Controller
             $datas_resp = [
                 "type" => "ressource",
                 "event" => [
+                    "id" => $new_event->id,
                     "title" => $new_event->title,
                     "description" => $new_event->description,
                     "user_id" => $new_event->user_id,
@@ -204,9 +205,9 @@ class Events_Controller
             $event->location = $received_event['location'];
             // Création de la date  de livraison
             $date_event = new DateTime($event_req['date']);
-            $new_event->date = $date_event->format('Y-m-d');
+            $event->date = $date_event->format('Y-m-d');
             $heure_event = new DateTime($event_req['heure']);
-            $new_event->heure = $heure_event->format('H:i:s');
+            $event->heure = $heure_event->format('H:i:s');
 
 
             $event->save();
@@ -220,14 +221,15 @@ class Events_Controller
             $datas_resp = [
                 "type" => "ressource",
                 "event" => [
-                    "title" => $new_event->title,
-                    "description" => $new_event->description,
-                    "user_id" => $new_event->user_id,
-                    "location" => $new_event->location,
-                    "date" => $new_event->date,
-                    "heure" => $new_event->heure,
-                    "created_at" => $new_event->created_at->format('Y-m-d H:i:s'),
-                    "updated_at" => $new_event->updated_at->format('Y-m-d H:i:s')
+                    "id" => $event->id,
+                    "title" => $event->title,
+                    "description" => $event->description,
+                    "user_id" => $event->user_id,
+                    "location" => $event->location,
+                    "date" => $event->date,
+                    "heure" => $event->heure,
+                    "created_at" => $event->created_at,
+                    "updated_at" => $event->updated_at
                 ]
             ];
 

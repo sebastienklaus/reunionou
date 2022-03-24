@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             title: 'Reunionou',
             theme: ThemeData(
-              primarySwatch: Colors.blue,
+              primarySwatch: Colors.deepPurple,
             ),
             debugShowCheckedModeBanner: false,
             initialRoute: '/',

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import '../models/event.dart';
 import '../models/user.dart';
 import 'DatabaseHandler.dart';
 import 'package:uuid/uuid.dart';
@@ -10,13 +11,21 @@ import 'package:dio/dio.dart';
 class DataLoader extends ChangeNotifier {
   /// Links
   //Authentification link
-  String _authUri = "http://docketu.iutnc.univ-lorraine.fr:62011/auth";
-  String _authCheckUri = "http://docketu.iutnc.univ-lorraine.fr:62011/check";
+  final String _authUri = "http://docketu.iutnc.univ-lorraine.fr:62011/auth";
+  final String _authCheckUri =
+      "http://docketu.iutnc.univ-lorraine.fr:62011/check";
 
+  //Card image uri
+  final String cardImgUri =
+      "https://media.istockphoto.com/photos/award-sparkling-background-picture-id1220754002?k=20&m=1220754002&s=170667a&w=0&h=vnj2Hm2FTsMfV47oznPMinqOGaBghQEj2vcOXlbZFRo=";
   //Handler
   late DatabaseHandler handler;
   //late User _user;
   var _user;
+
+  ///-----------------------------------------------------------------------------------------------------------------------------------///
+  ///********************************************************  User Methods  ***********************************************************///
+  ///-----------------------------------------------------------------------------------------------------------------------------------///
 
   //Get current _user
   getUser() {
@@ -135,5 +144,59 @@ class DataLoader extends ChangeNotifier {
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  ///-----------------------------------------------------------------------------------------------------------------------------------///
+  ///******************************************************  Events Methods  ***********************************************************///
+  ///-----------------------------------------------------------------------------------------------------------------------------------///
+
+  //Get events
+  Future<List<EventItem>> getEvents() async {
+    //Check db status (empty/not)
+    bool dbCheck = await handler.dbIsEmptyOrNot();
+
+    //Call events api
+    const List<EventItem> eventItems = <EventItem>[
+      EventItem(
+          id: "s5qd6+q5sdd",
+          title: "Prqsdqs",
+          description: "Lorem ipsum",
+          location: [
+            {
+              "name": "Yombu",
+              "latitude": 48.68353258919478,
+              "longitude": 6.152571620242472,
+            }
+          ],
+          date: "07/02/2021",
+          hour: "12:35"),
+      EventItem(
+          id: "s5qd6+q5sdd",
+          title: "sd sdfani",
+          description: "Lorem ipsum",
+          location: [
+            {
+              "name": "Photofeed",
+              "latitude": 48.68353258919478,
+              "longitude": 6.152571620242472
+            }
+          ],
+          date: "07/02/2021",
+          hour: "12:35"),
+      EventItem(
+          id: "s5qd6+q5sdd",
+          title: "Princess Ka'iulani",
+          description: "Lorem ipsum",
+          location: [
+            {
+              "name": "Yombu",
+              "latitude": 48.68353258919478,
+              "longitude": 6.152571620242472,
+            }
+          ],
+          date: "07/02/2021",
+          hour: "12:35"),
+    ];
+    return eventItems;
   }
 }
