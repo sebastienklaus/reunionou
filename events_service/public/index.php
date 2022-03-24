@@ -39,7 +39,6 @@ $app = new \Slim\App($container);
 reunionouBootstrap::startEloquent($container->settings['dbconf']);
 $container->get('logger.debug')->debug('eloquent started - routes register started');
 
-// Routes d'essais
 require_once __DIR__ . '/../src/app/routes/routes.php';
 
 $app->run();

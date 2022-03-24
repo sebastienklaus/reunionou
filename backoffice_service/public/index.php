@@ -11,11 +11,11 @@ $app_config = array_merge($settings);
 //Init Slim App
 $app = new \Slim\App(new \Slim\Container($app_config));
 
+require_once __DIR__ . '/../src/app/routes/routesAuth.php';
 
-// Set the differents routes
- 
-$app->post('/auth[/]', BackOfficeAuthController::class . ':authenticate')
-    ->setName('authentification');
- 
+require_once __DIR__ . '/../src/app/routes/routesEvents.php';
+
+
+
 
 $app->run();
