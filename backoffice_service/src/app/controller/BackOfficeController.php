@@ -26,7 +26,9 @@ class BackOfficeController
                 'base_uri' => $this->container->get('settings')['auth_service'],
                 'timeout' => 5.0,
                 ]);
-            $response = $client->request('GET', '/users/2bcb5856-7614-ae8-a531-513962950326');
+            $response = $client->request('GET', '/users/2bcb5856-7614-4ae8-a531-513962950326');
+            $json = json_decode($response->getBody()) ;
+            echo $response->getBody();
        } catch (\GuzzleHttp\Exception\ConnectException $e) {
             // Couldn't connect, handle it how you need
             echo $response->getStatusCode();
