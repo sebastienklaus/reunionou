@@ -82,8 +82,18 @@ class BackOfficeAuthController
                     ->withBody($response->getBody());
     }
 
+    public function getUsers(Request $req, Response $resp, array $args): Response {
+        
+        $client = new Client([
+            'base_uri' => $this->container->get('settings')['auth_service'],
+            'timeout' => 5.0,
+        ]);
+        $response = $client->request('GET', '/users');
 
-    
+        return $resp->withStatus($response->getStatusCode())
+                    ->withHeader('Content-Type', $response->getHeader('Content-Type'))
+                    ->withBody($response->getBody());
+    }
 
 
 
