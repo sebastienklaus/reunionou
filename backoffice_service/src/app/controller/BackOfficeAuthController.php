@@ -17,7 +17,6 @@ class BackOfficeAuthController
         $this->container = $container;
     }
 
-
     public function authenticate(Request $req, Response $resp, array $args): Response {
 
         $client = new Client([
@@ -32,7 +31,6 @@ class BackOfficeAuthController
                     ->withHeader('Content-Type', $response->getHeader('Content-Type'))
                     ->withBody($response->getBody());
     }
-
 
     public function createUser(Request $req, Response $resp, $args): Response {
         $body = $req->getParsedBody();
@@ -56,7 +54,6 @@ class BackOfficeAuthController
                     ->withHeader('Content-Type', $response->getHeader('Content-Type'))
                     ->withBody($response->getBody());
     }
-
 
     public function updateUser(Request $req, Response $resp, array $args): Response {
         $userID = $args['id'];
@@ -89,6 +86,20 @@ class BackOfficeAuthController
             'timeout' => 5.0,
         ]);
         $response = $client->request('GET', '/users');
+
+        return $resp->withStatus($response->getStatusCode())
+                    ->withHeader('Content-Type', $response->getHeader('Content-Type'))
+                    ->withBody($response->getBody());
+    }
+
+    public function getUserById(Request $req, Response $resp, array $args): Response {
+        $userID = $args['id'];
+
+        $client = new Client([
+            'base_uri' => $this->container->get('settings')['auth_service'],
+            'timeout' => 5.0,
+        ]);
+        $response = $client->request('GET', '/users/'. $userID);
 
         return $resp->withStatus($response->getStatusCode())
                     ->withHeader('Content-Type', $response->getHeader('Content-Type'))
