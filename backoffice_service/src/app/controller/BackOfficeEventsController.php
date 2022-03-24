@@ -36,8 +36,6 @@ class BackOfficeEventsController
 
     public function getAllEvent(Request $req, Response $resp, $args): Response {
 
-
-
         $client = new \GuzzleHttp\Client([
             'base_uri' => $this->container->get('settings')['events_service'],
             'timeout' => 5.0
@@ -50,6 +48,80 @@ class BackOfficeEventsController
         return $resp;
 
     }
+
+    public function getEvent(Request $req, Response $resp, $args): Response {
+
+
+        $client = new \GuzzleHttp\Client([
+            'base_uri' => $this->container->get('settings')['events_service'],
+            'timeout' => 5.0
+        ]);
+
+        $id_event = $args['id'];
+        $response = $client->request('GET', '/events/' . $id_event);
+
+        $resp = Writer::json_output($resp, $response->getStatusCode());
+        $resp->getBody()->write($response->getBody());
+        return $resp;
+
+    }
+
+    public function createEvent(Request $req, Response $resp, $args): Response {
+
+
+        $client = new \GuzzleHttp\Client([
+            'base_uri' => $this->container->get('settings')['events_service'],
+            'timeout' => 5.0
+        ]);
+
+        $received_event = $req->getParsedBody();
+
+        $response = $client->request('POST', '/events', [
+                'form_params'=> [
+                    'title' => $received_event['title'],
+                    'description' => $received_event['description'],
+                    'user_id' => $received_event['user_id'],
+                    'location' => $received_event['location'],
+                    'date' => $received_event['date'],
+                    'heure' => $received_event['heure']
+                ]]  );
+
+        $resp = Writer::json_output($resp, $response->getStatusCode());
+        
+        $resp->getBody()->write($response->getBody());
+        return $resp;
+
+    }
+
+        public function updateEvent(Request $req, Response $resp, $args): Response {
+
+
+        $client = new \GuzzleHttp\Client([
+            'base_uri' => $this->container->get('settings')['events_service'],
+            'timeout' => 5.0
+        ]);
+
+        $id_event = $args['id'];
+        $received_event = $req->getParsedBody();
+        
+        $response = $client->request('PUT', '/events/' . $id_event, [
+            'form_params'=> [
+                'title' => $received_event['title'],
+                'description' => $received_event['description'],
+                'user_id' => $received_event['user_id'],
+                'location' => $received_event['location'],
+                'date' => $received_event['date'],
+                'heure' => $received_event['heure']
+                ]]  );
+                
+        var_dump($response);
+
+        $resp = Writer::json_output($resp, $response->getStatusCode());
+        $resp->getBody()->write($response->getBody());
+        return $resp;
+
+    }
+
 
 
 }

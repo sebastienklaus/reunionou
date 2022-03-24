@@ -21,7 +21,3 @@ $app->put('/users/{id}[/]', BackOfficeAuthController::class . ':updateUser')
 $app->get('/users/{id}[/]', BackOfficeAuthController::class . ':getUserById')
     ->setName('getUserById');
 
-$app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function($req, $res) {
-    $handler = $this->notFoundHandler; // handle using the default Slim page not found handler
-    return $handler($req, $res);
-});
