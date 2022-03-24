@@ -27,7 +27,7 @@ class Events_Controller
         $this->container = $container;
     }
 
-    // Créer un event
+    
     public function createEvent(Request $req, Response $resp, array $args): Response
     {
 
@@ -301,6 +301,60 @@ class Events_Controller
         }
     }
 
+    public function getEventByMemberPseudo(Request $req, Response $resp, array $args): Response
+    {
+        $pseudo_member = $args['pseudo'];
+        
+        try {
+            $event_id_list = Members::select(['event_id'])
+                                    ->where('pseudo', '=', $pseudo_member)
+                                    ->get();
+
+            $events = Events::select(['id', 'title', 'description', 'user_id', 'location', 'date', 'heure', 'created_at', 'updated_at'])
+                        ->whereIn('id', $event_id_list)
+                        ->get();
+
+        //TODO Vérifier type de controle depuis réception base de donnée dans cours
+        //TODO étape filtrage à garder ou améliorer ?
+            $nbEvents = count($events);
+            $events_resp = [];
+            foreach ($events as $event) {
+                $events_resp[] = [
+                'id' => $event->id,
+                'title' => $event->title,
+                'description' => $event->description,
+                'user_id' => $event->user_id,
+                'location' => $event->location,
+                'date' => $event->date,
+                'heure' => $event->heure,
+                'created_at' => $event->created_at->format('Y-m-d H:i:s'),
+                'updated_at' => $event->updated_at->format('Y-m-d H:i:s'), //?rajouter un link avec pathfor ?
+                'href' => $this->container->router->pathFor('getEvent',['id' => $event->id])
+                ];
+            }
+
+        // Construction des donnés à retourner dans le body
+        $datas_resp = [
+            "type" => "collection",
+            "count" => $nbEvents,
+            "events" => $events_resp
+        ];
+
+        $resp = Writer::json_output($resp, 200);
+
+        $resp->getBody()->write(json_encode($datas_resp));
+
+        return $resp;
+    } catch (ModelNotFoundException $e) {
+
+            $clientError = $this->container->clientError;
+            return $clientError($req, $resp, 404, "Event not found");
+
+
+            // return Writer::json_error($resp, 404, "Alors j'ai bien regardé, j'ai pas trouvé ta commande");
+        }
+    }
+
     // // Toutes les commandes
     public function getAllEvent(Request $req, Response $resp): Response
     {
@@ -324,8 +378,9 @@ class Events_Controller
                 'date' => $event->date,
                 'heure' => $event->heure,
                 'created_at' => $event->created_at->format('Y-m-d H:i:s'),
-                'updated_at' => $event->updated_at->format('Y-m-d H:i:s') //?rajouter un link avec pathfor ?
-            ]; //TODO rajouter self dans chaque event
+                'updated_at' => $event->updated_at->format('Y-m-d H:i:s'), //?rajouter un link avec pathfor ?
+                'href' => $this->container->router->pathFor('getEvent',['id' => $event->id])
+            ];
         }
 
         // Construction des donnés à retourner dans le body

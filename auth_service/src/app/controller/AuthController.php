@@ -68,6 +68,7 @@ class AuthController {
                 'user_fullname' => $user->fullname,
                 'user_email' => $user->email,
                 'user_username' => $user->username,
+                'user_isAdmin' => $user->is_admin,
             ]],
             $secret, 'HS512');
 

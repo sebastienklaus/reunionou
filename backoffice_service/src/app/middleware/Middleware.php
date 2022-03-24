@@ -54,8 +54,7 @@ class Middleware {
         return $response;
     }
 
-    // * 
-    // * ccheck d'authorization pour chaque requête effectué
+    // * check d'authorization pour chaque requête effectué
     public function checkAdmin(Request $req, Response $resp, callable $next){  
         $client = new Client([
             'base_uri' => $this->container->get('settings')['auth_service'],

@@ -25,9 +25,12 @@ require_once __DIR__ . '/../src/app/routes/routesAuth.php';
 
 require_once __DIR__ . '/../src/app/routes/routesEvents.php';
 
+<<<<<<< HEAD
 // $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function($req, $res) {
 //     $handler = $this->notFoundHandler; 
 //     return $handler($req, $res);
 // });
+=======
+>>>>>>> 06a507d4cc6b81886f2a31e1c03799bf68decae9
 
 $app->run();

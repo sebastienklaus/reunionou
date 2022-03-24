@@ -68,6 +68,7 @@
 [2022-03-24T10:28:47.982657+00:00] lbs.log.ERROR: error input livraison location [] []
 [2022-03-24T10:29:02.689837+00:00] lbs.log.ERROR: error input date date [] []
 [2022-03-24T10:29:16.221689+00:00] lbs.log.ERROR: error input date heure [] []
+<<<<<<< HEAD
 [2022-03-24T14:49:35.216760+00:00] lbs.log.ERROR: error input event title [] []
 [2022-03-24T14:52:26.637486+00:00] lbs.log.ERROR: error input event title [] []
 [2022-03-24T14:53:13.652805+00:00] lbs.log.ERROR: error input event title [] []
@@ -92,3 +93,9 @@
 [2022-03-24T16:26:22.340998+00:00] lbs.log.ERROR: error input date date [] []
 [2022-03-24T16:26:50.804370+00:00] lbs.log.ERROR: error | 500 | internal server error: Call to a member function format() on null | /var/www/src/app/controller/Events_Controller.phpline: 206 [] []
 [2022-03-24T16:27:27.523764+00:00] lbs.log.ERROR: error | 500 | internal server error: Call to a member function format() on null | /var/www/src/app/controller/Events_Controller.phpline: 206 [] []
+=======
+[2022-03-24T11:26:56.516031+00:00] lbs.log.ERROR: POST http://events.service.local:62010/events/0e37cc70-1961-452a-bb0f-84585d6c12dc : bad method - PUT, GET, DELETE wanted [] []
+[2022-03-24T11:27:28.040894+00:00] lbs.log.ERROR: GET http://events.service.local:62010/events/events/0e37cc70-1961-452a-bb0f-84585d6c12dc : malformed uri [] []
+[2022-03-24T14:28:45.966080+00:00] lbs.log.ERROR: bad ressource : http://events.service.local:62010/members/HARMand/events [] []
+[2022-03-24T14:43:26.697053+00:00] lbs.log.ERROR: bad ressource : http://events.service.local:62010/members/HARMand/events [] []
+>>>>>>> 06a507d4cc6b81886f2a31e1c03799bf68decae9

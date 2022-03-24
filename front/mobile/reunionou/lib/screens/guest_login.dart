@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../animations/loginAnimation.dart';
 import 'package:email_validator/email_validator.dart';
 import '../data/dataLoader.dart';
+import '../widgets/spacer.dart';
 
 class GuestLoginScreen extends StatefulWidget {
   const GuestLoginScreen({Key? key}) : super(key: key);
@@ -16,7 +17,6 @@ class _GuestLoginScreenState extends State<GuestLoginScreen> {
   @override
   Widget build(BuildContext context) {
     final fullname = TextEditingController();
-    final password = TextEditingController();
     final _formKey = GlobalKey<FormState>();
     return WillPopScope(
       onWillPop: () async => false,
@@ -116,54 +116,54 @@ class _GuestLoginScreenState extends State<GuestLoginScreen> {
                       child: Column(
                         children: <Widget>[
                           FadeAnimation(
-                              1.8,
-                              Container(
-                                padding: const EdgeInsets.all(5),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                        color:
-                                            Color.fromRGBO(143, 148, 251, .2),
-                                        blurRadius: 20.0,
-                                        offset: Offset(0, 10))
-                                  ],
-                                ),
-                                child: Form(
-                                    key: _formKey,
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.all(8.0),
-                                          decoration: const BoxDecoration(
-                                            border: Border(
-                                              bottom: BorderSide(
-                                                  color: Colors.grey),
-                                            ),
+                            1.8,
+                            Container(
+                              padding: const EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: const [
+                                  BoxShadow(
+                                      color: Color.fromRGBO(143, 148, 251, .2),
+                                      blurRadius: 20.0,
+                                      offset: Offset(0, 10))
+                                ],
+                              ),
+                              child: Form(
+                                  key: _formKey,
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(8.0),
+                                        decoration: const BoxDecoration(
+                                          border: Border(
+                                            bottom:
+                                                BorderSide(color: Colors.grey),
                                           ),
-                                          child: TextFormField(
-                                            controller: fullname,
-                                            validator: (fullname) {
-                                              if (fullname!.isEmpty) {
-                                                return 'Veuillez insérer votre nom complete';
-                                              }
-                                              return null;
-                                            },
-                                            decoration: InputDecoration(
-                                              border: InputBorder.none,
-                                              hintText: "Votre nom complete",
-                                              hintStyle: TextStyle(
-                                                color: Colors.grey[400],
-                                              ),
+                                        ),
+                                        child: TextFormField(
+                                          controller: fullname,
+                                          validator: (fullname) {
+                                            if (fullname!.isEmpty) {
+                                              return 'Veuillez insérer votre nom complete';
+                                            }
+                                            return null;
+                                          },
+                                          decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            hintText: "Votre nom complete",
+                                            hintStyle: TextStyle(
+                                              color: Colors.grey[400],
                                             ),
                                           ),
                                         ),
-                                      ],
-                                    )),
-                              )),
-                          const SizedBox(
-                            height: 30,
+                                      ),
+                                    ],
+                                  )),
+                            ),
+                          ),
+                          const SpacerWidget(
+                            space: 30,
                           ),
                           FadeAnimation(
                             2,
@@ -221,8 +221,8 @@ class _GuestLoginScreenState extends State<GuestLoginScreen> {
                               },
                             ),
                           ),
-                          const SizedBox(
-                            height: 70,
+                          const SpacerWidget(
+                            space: 70,
                           ),
                           FadeAnimation(
                             1.5,
