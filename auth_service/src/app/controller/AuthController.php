@@ -249,10 +249,12 @@ class AuthController {
 
         return $resp;
     }
+
+
     public function getUserByID(Request $req, Response $resp, $args): Response {
         $userID = $args['id'];
         try { 
-            $user = User::select(['id', 'fullname','email', 'username', 'token'])->findOrFail($userID);
+            $user = User::select(['id', 'fullname','email', 'username', 'refresh_token'])->findOrFail($userID);
 
             return Writer::json_output($resp, 200, $user);
 
