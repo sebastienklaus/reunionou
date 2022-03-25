@@ -35,21 +35,51 @@ class Events_Controller
      * @apiVersion  1.0.0
      * 
      * 
-     * @apiParam  {String} title
-     * @apiParam  {String} description
-     * @apiParam  {String} user_id
-     * @apiParam  {json} location
-     * @apiParam  {date} date
-     * @apiParam  {date} heure
+     * @apiParam  {String} title Titre de l'event
+     * @apiParam  {String} description Description de l'event
+     * @apiParam  {String} user_id ID de l'utilisateur ayant créé l'event
+     * @apiParam  {json} location Lieu de l'event
+     * @apiParam  {date} date Date de l'event
+     * @apiParam  {date} heure Heure de l'event
+     *
+     * @apiParamExample Request-Example:
+     *{
+     *"title" : "Event_Name",
+     *"description" : "Event_Description",
+     *"user_id" : "/users/User_Id",
+     *"location" : {
+     *    "name":"Location_Name",
+     *    "latitude":00.00,
+     *    "longitude":00.00
+     *    },
+     *"date" : "2000-01-01",
+     *"heure" : "12:00"
+     *}
+     *  
+     * @apiSuccess (Success (201)) {String} title Titre de l'event
+     * @apiSuccess (Success (201)) {String} description Description de l'event
+     * @apiSuccess (Success (201)) {String} user_id ID de l'utilisateur ayant créé l'event
+     * @apiSuccess (Success (201)) {json} location Lieu de l'event
+     * @apiSuccess (Success (201)) {date} date Date de l'event
+     * @apiSuccess (Success (201)) {date} heure Heure de l'event
+     * @apiSuccess (Success (201)) {date} created_at Date de création de l'event
+     * @apiSuccess (Success (201)) {date} updated_at Date de la dernière modification de l'event
      * 
-     * @apiSuccess (201) {String} title
-     * @apiSuccess (201) {String} description
-     * @apiSuccess (201) {String} user_id
-     * @apiSuccess (201) {json} location
-     * @apiSuccess (201) {date} date
-     * @apiSuccess (201) {date} heure
-     * @apiSuccess (201) {date} created_at
-     * @apiSuccess (201) {date} updated_at
+     * @apiSuccessExample Success-Response:
+     *{
+     *"type": "ressource",
+     *"event": {
+     *    "id": "Event_Id",
+     *    "title": "Event_Name",
+     *    "description": "Event_Description",
+     *    "user_id": "/users/User_Id",
+     *    "location": "{\"name\":\"Location_Name\",\"latitude\":00.00,\"longitude\":00.00}",
+     *    "date": "2000-01-01",
+     *    "heure": "12:00:00",
+     *    "created_at": "Creation_Date",
+     *    "updated_at": "Creation_Date"
+     *    }
+     *}
      */
     public function createEvent(Request $req, Response $resp, array $args): Response
     {
@@ -171,14 +201,44 @@ class Events_Controller
      * @apiParam  {date} date
      * @apiParam  {date} heure
      * 
-     * @apiSuccess (201) {String} title
-     * @apiSuccess (201) {String} description
-     * @apiSuccess (201) {String} user_id
-     * @apiSuccess (201) {json} location
-     * @apiSuccess (201) {date} date
-     * @apiSuccess (201) {date} heure
+     * @apiParamExample Request-Example:
+     *{
+     *"title" : "Event_Name",
+     *"description" : "Event_Description",
+     *"user_id" : "/users/User_Id",
+     *"location" : {
+     *    "name":"Location_Name",
+     *    "latitude":00.00,
+     *    "longitude":00.00
+     *    },
+     *"date" : "2000-01-01",
+     *"heure" : "12:00"
+     *}
      * 
+     * @apiSuccess (Success (201)) {String} title Titre de l'event
+     * @apiSuccess (Success (201)) {String} description Description de l'event
+     * @apiSuccess (Success (201)) {String} user_id ID de l'utilisateur ayant créé l'event
+     * @apiSuccess (Success (201)) {json} location Lieu de l'event
+     * @apiSuccess (Success (201)) {date} date Date de l'event
+     * @apiSuccess (Success (201)) {date} heure Heure de l'event
+     * @apiSuccess (Success (201)) {date} created_at Date de création de l'event
+     * @apiSuccess (Success (201)) {date} updated_at Date de la dernière modification de l'event
      * 
+     * @apiSuccessExample Success-Response:
+     *{
+     *"type": "ressource",
+     *"event": {
+     *    "id": "Event_Id",
+     *    "title": "Event_Name",
+     *    "description": "Event_Description",
+     *    "user_id": "/users/User_Id",
+     *    "location": "{\"name\":\"Location_Name\",\"latitude\":00.00,\"longitude\":00.00}",
+     *    "date": "2000-01-01",
+     *    "heure": "12:00:00",
+     *    "created_at": "Creation_Date",
+     *    "updated_at": "Modification_Date"
+     *    }
+     *}
      */
     public function updateEvent(Request $req, Response $resp, array $args): Response
     {
@@ -279,17 +339,32 @@ class Events_Controller
      * @apiGroup Event
      * @apiVersion  1.0.0
      * 
-     * 
      * @apiParam  {id} id id de l'évènement
      * 
-     * @apiSuccess (200) {String} title
-     * @apiSuccess (200) {String} description
-     * @apiSuccess (200) {String} user_id
-     * @apiSuccess (200) {json} location
-     * @apiSuccess (200) {date} date
-     * @apiSuccess (200) {date} heure
+     * @apiSuccess (Success (200)) {String} title Titre de l'event
+     * @apiSuccess (Success (200)) {String} description Description de l'event
+     * @apiSuccess (Success (200)) {String} user_id ID de l'utilisateur ayant créé l'event
+     * @apiSuccess (Success (200)) {json} location Lieu de l'event
+     * @apiSuccess (Success (200)) {date} date Date de l'event
+     * @apiSuccess (Success (200)) {date} heure Heure de l'event
+     * @apiSuccess (Success (200)) {date} created_at Date de création de l'event
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification de l'event
      * 
-     * 
+     * @apiSuccessExample Success-Response:
+     *{
+     *"type": "ressource",
+     *"event": {
+     *    "id": "Event_Id",
+     *    "title": "Event_Name",
+     *    "description": "Event_Description",
+     *    "user_id": "/users/User_Id",
+     *    "location": "{\"name\":\"Location_Name\",\"latitude\":00.00,\"longitude\":00.00}",
+     *    "date": "2000-01-01",
+     *    "heure": "12:00:00",
+     *    "created_at": "Creation_Date",
+     *    "updated_at": "Modification_Date"
+     *    }
+     *}
      */
     public function getEvent(Request $req, Response $resp, array $args): Response
     {
@@ -374,17 +449,32 @@ class Events_Controller
      * @apiGroup Event
      * @apiVersion  1.0.0
      * 
+     * @apiParam  {pseudo} pseudo Pseudo du membre
      * 
-     * @apiParam  {pseudo} id pseudo du membre
+     * @apiSuccess (Success (200)) {String} title Titre de l'event
+     * @apiSuccess (Success (200)) {String} description Description de l'event
+     * @apiSuccess (Success (200)) {String} user_id ID de l'utilisateur ayant créé l'event
+     * @apiSuccess (Success (200)) {json} location Lieu de l'event
+     * @apiSuccess (Success (200)) {date} date Date de l'event
+     * @apiSuccess (Success (200)) {date} heure Heure de l'event
+     * @apiSuccess (Success (200)) {date} created_at Date de création de l'event
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification de l'event
      * 
-     * @apiSuccess (200) {String} title
-     * @apiSuccess (200) {String} description
-     * @apiSuccess (200) {String} user_id
-     * @apiSuccess (200) {json} location
-     * @apiSuccess (200) {date} date
-     * @apiSuccess (200) {date} heure
-     * 
-     * 
+     * @apiSuccessExample Success-Response:
+     *{
+     *"type": "ressource",
+     *"event": {
+     *    "id": "Event_Id",
+     *    "title": "Event_Name",
+     *    "description": "Event_Description",
+     *    "user_id": "/users/User_Id",
+     *    "location": "{\"name\":\"Location_Name\",\"latitude\":00.00,\"longitude\":00.00}",
+     *    "date": "2000-01-01",
+     *    "heure": "12:00:00",
+     *    "created_at": "Creation_Date",
+     *    "updated_at": "Modification_Date"
+     *    }
+     *}
      */
     public function getEventByMemberPseudo(Request $req, Response $resp, array $args): Response
     {
@@ -447,17 +537,32 @@ class Events_Controller
      * @apiGroup Event
      * @apiVersion  1.0.0
      * 
+     * @apiParam  {id} id ID de l'utilisateur
      * 
-     * @apiParam  {id} id id de l'utilisateur
+     * @apiSuccess (Success (200)) {String} title Titre de l'event
+     * @apiSuccess (Success (200)) {String} description Description de l'event
+     * @apiSuccess (Success (200)) {String} user_id ID de l'utilisateur ayant créé l'event
+     * @apiSuccess (Success (200)) {json} location Lieu de l'event
+     * @apiSuccess (Success (200)) {date} date Date de l'event
+     * @apiSuccess (Success (200)) {date} heure Heure de l'event
+     * @apiSuccess (Success (200)) {date} created_at Date de création de l'event
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification de l'event
      * 
-     * @apiSuccess (200) {String} title
-     * @apiSuccess (200) {String} description
-     * @apiSuccess (200) {String} user_id
-     * @apiSuccess (200) {json} location
-     * @apiSuccess (200) {date} date
-     * @apiSuccess (200) {date} heure
-     * 
-     * 
+     * @apiSuccessExample Success-Response:
+     *{
+     *"type": "ressource",
+     *"event": {
+     *    "id": "Event_Id",
+     *    "title": "Event_Name",
+     *    "description": "Event_Description",
+     *    "user_id": "/users/User_Id",
+     *    "location": "{\"name\":\"Location_Name\",\"latitude\":00.00,\"longitude\":00.00}",
+     *    "date": "2000-01-01",
+     *    "heure": "12:00:00",
+     *    "created_at": "Creation_Date",
+     *    "updated_at": "Modification_Date"
+     *    }
+     *}
      */
     public function getEventByUserId(Request $req, Response $resp, array $args): Response
     {
@@ -518,14 +623,30 @@ class Events_Controller
      * @apiGroup Event
      * @apiVersion  1.0.0
      * 
-     * @apiSuccess (200) {String} title
-     * @apiSuccess (200) {String} description
-     * @apiSuccess (200) {String} user_id
-     * @apiSuccess (200) {json} location
-     * @apiSuccess (200) {date} date
-     * @apiSuccess (200) {date} heure
+     * @apiSuccess (Success (200)) {String} title Titre de l'event
+     * @apiSuccess (Success (200)) {String} description Description de l'event
+     * @apiSuccess (Success (200)) {String} user_id ID de l'utilisateur ayant créé l'event
+     * @apiSuccess (Success (200)) {json} location Lieu de l'event
+     * @apiSuccess (Success (200)) {date} date Date de l'event
+     * @apiSuccess (Success (200)) {date} heure Heure de l'event
+     * @apiSuccess (Success (200)) {date} created_at Date de création de l'event
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification de l'event
      * 
-     * 
+     * @apiSuccessExample Success-Response:
+     *{
+     *"type": "ressource",
+     *"event": {
+     *    "id": "Event_Id",
+     *    "title": "Event_Name",
+     *    "description": "Event_Description",
+     *    "user_id": "/users/User_Id",
+     *    "location": "{\"name\":\"Location_Name\",\"latitude\":00.00,\"longitude\":00.00}",
+     *    "date": "2000-01-01",
+     *    "heure": "12:00:00",
+     *    "created_at": "Creation_Date",
+     *    "updated_at": "Modification_Date"
+     *    }
+     *}
      */
     public function getAllEvent(Request $req, Response $resp): Response
     {
