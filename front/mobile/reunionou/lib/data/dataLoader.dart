@@ -220,6 +220,7 @@ class DataLoader extends ChangeNotifier {
           id: "s5qd6+q5sdd",
           title: "Prqsdqs",
           description: "Lorem ipsum",
+          user_id: "Lorem ipsum",
           location: [
             {
               "name": "Yombu",
@@ -233,6 +234,7 @@ class DataLoader extends ChangeNotifier {
           id: "s5qd6+q5sdd",
           title: "sd sdfani",
           description: "Lorem ipsum",
+          user_id: "Lorem ipsum",
           location: [
             {
               "name": "Photofeed",
@@ -246,6 +248,7 @@ class DataLoader extends ChangeNotifier {
           id: "s5qd6+q5sdd",
           title: "Princess Ka'iulani",
           description: "Lorem ipsum",
+          user_id: "Lorem ipsum",
           location: [
             {
               "name": "Yombu",

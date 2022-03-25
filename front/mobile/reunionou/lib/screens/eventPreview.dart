@@ -5,6 +5,7 @@ import '../widgets/eventDetails.dart';
 import '../widgets/navigation_drawer_widget.dart';
 import '../widgets/organizerDetails.dart';
 import '../widgets/participantsList.dart';
+import '../widgets/updateEvent.dart';
 
 class EventPreviewScreen extends StatefulWidget {
   const EventPreviewScreen({
@@ -29,7 +30,7 @@ class _HomeScreenState extends State<EventPreviewScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 4,
+      length: 1 == 1 ? 5 : 4,
       child: Scaffold(
         endDrawer: NavigationDrawerWidget(),
         appBar: AppBar(
@@ -42,7 +43,8 @@ class _HomeScreenState extends State<EventPreviewScreen> {
               Tab(icon: Icon(Icons.event)),
               Tab(icon: Icon(Icons.badge)),
               Tab(icon: Icon(Icons.people)),
-              Tab(icon: Icon(Icons.comment))
+              Tab(icon: Icon(Icons.comment)),
+              if (1 == 1) Tab(icon: Icon(Icons.settings))
             ],
           ),
           title: Text(widget.event.title),
@@ -58,6 +60,7 @@ class _HomeScreenState extends State<EventPreviewScreen> {
             ),
             const ParticipantsList(),
             const CommentsList(),
+            if (1 == 1) UpdateEventScreen(event: widget.event),
           ],
         ),
       ),

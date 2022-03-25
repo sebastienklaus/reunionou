@@ -54,7 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           centerTitle: true,
         ),
         body: FutureBuilder(
-          future: context.read<DataLoader>().getEvents(),
+          future: context.read<DataLoader>().getUser(),
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             if (snapshot.data == null) {
               return const Center(
