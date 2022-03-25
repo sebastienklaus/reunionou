@@ -29,10 +29,10 @@ class Events_Controller
 
     /**
      * 
-     * @api {post} /event createEvent
-     * @apiName reunionou
+     * @api {POST} /events createEvent
+     * @apiName CreateEvent
      * @apiGroup Event
-     * @apiVersion  0.0.0
+     * @apiVersion  1.0.0
      * 
      * 
      * @apiParam  {String} title
@@ -50,19 +50,6 @@ class Events_Controller
      * @apiSuccess (201) {date} heure
      * @apiSuccess (201) {date} created_at
      * @apiSuccess (201) {date} updated_at
-     * 
-     * @apiParamExample  {type} Request-Example:
-     * {
-     *     property : value
-     * }
-     * 
-     * 
-     * @apiSuccessExample {type} Success-Response:
-     * {
-     *     property : value
-     * }
-     * 
-     * 
      */
     public function createEvent(Request $req, Response $resp, array $args): Response
     {
@@ -171,10 +158,10 @@ class Events_Controller
 
     /**
      * 
-     * @api {put} /event updateEvent
-     * @apiName reunionou
+     * @api {PUT} /events updateEvent
+     * @apiName UpdateEvent
      * @apiGroup Event
-     * @apiVersion  0.0.0
+     * @apiVersion  1.0.0
      * 
      * 
      * @apiParam  {String} title
@@ -190,10 +177,6 @@ class Events_Controller
      * @apiSuccess (201) {json} location
      * @apiSuccess (201) {date} date
      * @apiSuccess (201) {date} heure
-     * @apiSuccess (201) {date} created_at
-     * @apiSuccess (201) {date} updated_at
-     * 
-     * 
      * 
      * 
      */
@@ -289,7 +272,45 @@ class Events_Controller
         //
     }
 
-    
+    /**
+     * 
+     * @api {GET} /events/{id} getEventById
+     * @apiName GetEventById
+     * @apiGroup Event
+     * @apiVersion  1.0.0
+     * 
+     * 
+     * @apiParam  {id} id 'id de l'évènement'
+     * 
+     * @apiSuccess (200) {String} title
+     * @apiSuccess (200) {String} description
+     * @apiSuccess (200) {String} user_id
+     * @apiSuccess (200) {json} location
+     * @apiSuccess (200) {date} date
+     * @apiSuccess (200) {date} heure
+     * 
+     * 
+     */
+
+     /**
+     * 
+     * @api {GET} /events/{id} getEventById
+     * @apiName GetEventById
+     * @apiGroup Event
+     * @apiVersion  0.5.0
+     * 
+     * 
+     * @apiParam  {id} id 'id de l'évènement'
+     * 
+     * @apiSuccess (200) {String} title
+     * @apiSuccess (200) {String} description
+     * @apiSuccess (200) {String} user_id
+     * @apiSuccess (200) {json} location
+     * @apiSuccess (200) {date} date
+     * @apiSuccess (200) {date} heure
+     * 
+     * 
+     */
     public function getEvent(Request $req, Response $resp, array $args): Response
     {
         $id_event = $args['id'];
