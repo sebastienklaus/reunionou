@@ -13,8 +13,7 @@ class DataLoader extends ChangeNotifier {
   /// Links
   //Authentification link
   final String _authUri = "http://docketu.iutnc.univ-lorraine.fr:62015/auth";
-  final String _authCheckUri =
-      "http://docketu.iutnc.univ-lorraine.fr:62011/check";
+  final String _userAuth = "http://docketu.iutnc.univ-lorraine.fr:62015/users/";
 
   //Card image uri
   final String cardImgUri =
@@ -127,6 +126,69 @@ class DataLoader extends ChangeNotifier {
       } else {
         return false;
       }
+    } catch (e) {
+      return false;
+    }
+  }
+
+  //Update user
+  Future<bool> updateUser(
+    id,
+    fullname,
+    email,
+    username,
+    password,
+    newPassword,
+    confirmPassword,
+    token,
+  ) async {
+    //Call authentificate api
+    try {
+      var response = await Dio().put(_userAuth + id,
+          options: Options(
+            headers: <String, String>{'token': token, 'Origin': "flutter"},
+          ),
+          data: {
+            "fullname": fullname,
+            "email": email,
+            "username": username,
+            "old_password": password,
+            "new_password": newPassword,
+            "new_password_confirm": confirmPassword,
+          });
+      if (response.statusCode == 200) {
+        var refreshResp = await Dio().get(
+          _userAuth + id,
+          options: Options(
+            headers: <String, String>{'token': token, 'Origin': "flutter"},
+          ),
+        );
+        if (response.statusCode == 200) {
+          //Refresh user in local
+
+          handler = DatabaseHandler();
+          await handler.delUser();
+
+          _user = User(
+            id: id,
+            email: refreshResp.data['email'],
+            fullname: refreshResp.data['fullname'],
+            username: refreshResp.data['username'],
+            type: "user",
+            token: refreshResp.data['refresh_token'],
+          );
+
+          setUser(_user);
+          handler = DatabaseHandler();
+
+          handler.initializeDB().whenComplete(() async {
+            await handler.insertUser(_user);
+          });
+          notifyListeners();
+        }
+        return true;
+      }
+      return false;
     } catch (e) {
       return false;
     }

@@ -275,8 +275,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {}
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            context
+                                .read<DataLoader>()
+                                .updateUser(
+                                    widget.user!.id,
+                                    fullname.text,
+                                    email.text,
+                                    username.text,
+                                    password.text,
+                                    newPassword.text,
+                                    confirmPassword.text,
+                                    widget.user!.token)
+                                .then(
+                              (rep) {
+                                if (rep) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        "Profil mis à jour",
+                                        style: TextStyle(
+                                          color: Color.fromARGB(
+                                              255, 255, 255, 255),
+                                        ),
+                                      ),
+                                      backgroundColor: Colors.green,
+                                    ),
+                                  );
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                          "Oups quelque chose s'est mal passé"),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                }
+                              },
+                            );
+                          }
                         },
                       ),
                       const SpacerWidget(
