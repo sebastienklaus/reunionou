@@ -88,32 +88,40 @@ class _LoginScreenState extends State<UserLoginScreen> {
                           ),
                           Positioned(
                             child: FadeAnimation(
-                                1.6,
-                                Container(
-                                  margin: const EdgeInsets.only(top: 220),
-                                  child: Center(
-                                    child: Column(
-                                      children: const [
-                                        Text(
-                                          "Reunionou",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 40,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(
-                                          "Connexion",
-                                          style: TextStyle(
+                              1.6,
+                              Container(
+                                margin: const EdgeInsets.only(top: 220),
+                                child: Center(
+                                  child: Column(
+                                    children: const [
+                                      Text(
+                                        "Reunionou",
+                                        style: TextStyle(
                                             color: Colors.white,
-                                            fontSize: 20,
-                                          ),
+                                            fontSize: 40,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        "Lorem ipsum",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 17,
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
-                                )),
-                          )
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
+                      ),
+                    ),
+                    const Text(
+                      "Connexion",
+                      style: TextStyle(
+                        color: Colors.deepPurple,
+                        fontSize: 20,
                       ),
                     ),
                     Padding(
@@ -263,7 +271,9 @@ class _LoginScreenState extends State<UserLoginScreen> {
                                 child: Text(
                                   "Connectez-vous en tant qu'invité",
                                   style: TextStyle(
-                                      color: Color.fromRGBO(143, 148, 251, 1)),
+                                    color: Color.fromRGBO(143, 148, 251, 1),
+                                    fontSize: 18,
+                                  ),
                                 ),
                               ),
                             ),
