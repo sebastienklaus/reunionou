@@ -203,10 +203,13 @@ class AuthController {
                             return Writer::jsonError($req, $resp, 401, 'Cet email ou pseudo existe déjà !');
                         }
                     }
+                    if($requestBody['new_password']!=""){
+                        $user->password = password_hash($requestBody['new_password'], PASSWORD_DEFAULT);
+                    }
+                    
                     $user->fullname = $requestBody['fullname'];
                     $user->email = $requestBody['email'];
                     $user->username = $requestBody['username'];
-                    $user->password = password_hash($requestBody['new_password'], PASSWORD_DEFAULT);
                     $user->save();
 
                 }    

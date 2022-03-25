@@ -35,9 +35,8 @@ class BackOfficeAuthController
             return $resp->withStatus($response->getStatusCode())
                         ->withHeader('Content-Type', $response->getHeader('Content-Type'))
                         ->withBody($response->getBody());
-        } catch (ClientException $e) {
-
-            return Writer::json_error($resp,400, $e->getMessage());
+        } catch (ClientException $e) { 
+            // return Writer::json_error($resp,400, $e->get());
         } catch (ServerException $e) {
             return Writer::json_error($resp,500, "$e->getResponse()");
         }        
