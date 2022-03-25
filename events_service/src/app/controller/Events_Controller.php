@@ -31,25 +31,36 @@ class Events_Controller
      * 
      * @api {post} /event createEvent
      * @apiName reunionou
-     * @apiGroup group
+     * @apiGroup Event
      * @apiVersion  0.0.0
      * 
      * 
-     * @apiParam  {String} title description
-     * @apiParam  {String} description description
-     * @apiParam  {String} user_id description
-     * @apiParam  {json} location description
-     * @apiParam  {date} date description
-     * @apiParam  {date} heure description
+     * @apiParam  {String} title
+     * @apiParam  {String} description
+     * @apiParam  {String} user_id
+     * @apiParam  {json} location
+     * @apiParam  {date} date
+     * @apiParam  {date} heure
      * 
-     * @apiSuccess (201) {String} title description
-     * @apiSuccess (201) {String} description description
-     * @apiSuccess (201) {String} user_id description
-     * @apiSuccess (201) {json} location description
-     * @apiSuccess (201) {date} date description
-     * @apiSuccess (201) {date} heure description
-     * @apiSuccess (201) {date} created_at description
-     * @apiSuccess (201) {date} updated_at description
+     * @apiSuccess (201) {String} title
+     * @apiSuccess (201) {String} description
+     * @apiSuccess (201) {String} user_id
+     * @apiSuccess (201) {json} location
+     * @apiSuccess (201) {date} date
+     * @apiSuccess (201) {date} heure
+     * @apiSuccess (201) {date} created_at
+     * @apiSuccess (201) {date} updated_at
+     * 
+     * @apiParamExample  {type} Request-Example:
+     * {
+     *     property : value
+     * }
+     * 
+     * 
+     * @apiSuccessExample {type} Success-Response:
+     * {
+     *     property : value
+     * }
      * 
      * 
      */
@@ -94,7 +105,6 @@ class Events_Controller
                 return Writer::json_error($resp, 403, '"heure" : invalid input. format exepected : H:m:i');
             }
         };
-
 
         try {
             
@@ -158,6 +168,35 @@ class Events_Controller
         //
     }
 
+
+    /**
+     * 
+     * @api {put} /event updateEvent
+     * @apiName reunionou
+     * @apiGroup Event
+     * @apiVersion  0.0.0
+     * 
+     * 
+     * @apiParam  {String} title
+     * @apiParam  {String} description
+     * @apiParam  {String} user_id
+     * @apiParam  {json} location
+     * @apiParam  {date} date
+     * @apiParam  {date} heure
+     * 
+     * @apiSuccess (201) {String} title
+     * @apiSuccess (201) {String} description
+     * @apiSuccess (201) {String} user_id
+     * @apiSuccess (201) {json} location
+     * @apiSuccess (201) {date} date
+     * @apiSuccess (201) {date} heure
+     * @apiSuccess (201) {date} created_at
+     * @apiSuccess (201) {date} updated_at
+     * 
+     * 
+     * 
+     * 
+     */
     public function updateEvent(Request $req, Response $resp, array $args): Response
     {
 
