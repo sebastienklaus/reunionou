@@ -67,7 +67,8 @@ class Middleware {
         );
 
         $body = json_decode($response->getBody());
-        var_dump($body);
+
+        $req = $req->withAttribute('isAdmin', $body->is_Admin);
 
         $resp = $next($req,$resp);
 

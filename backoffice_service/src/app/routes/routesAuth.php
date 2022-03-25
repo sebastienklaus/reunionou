@@ -21,3 +21,7 @@ $app->put('/users/{id}[/]', BackOfficeAuthController::class . ':updateUser')
 $app->get('/users/{id}[/]', BackOfficeAuthController::class . ':getUserById')
     ->setName('getUserById');
 
+$app->post('/authAdmin[/]', BackOfficeAuthController::class . ':authenticateAdmin')
+    ->add(Middleware::class . ':checkAdmin')
+    ->setName('authentification');
+
