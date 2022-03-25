@@ -68,7 +68,6 @@ class Middleware {
 
         $body = json_decode($response->getBody());
         var_dump($body);
-        // $req = $req->withAttribute('token', $req->getHeader('Authorization'));
 
         $resp = $next($req,$resp);
 
