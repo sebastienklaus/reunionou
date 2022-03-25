@@ -79,6 +79,11 @@ $app->post('/members[/]', Members_Controller::class . ':createMember')
 $app->put('/members/{id}[/]', Members_Controller::class . ':updateMember')
     ->setName('updateMember')
     ->add(new Validation($memberValidators));
+
+
+$app->get('/users/{id}/members[/]', Members_Controller::class . ':getMembersByUserId')
+    ->setName('getMembersByUserId');
+    
     
 $app->get('/members/{id}[/]', Members_Controller::class . ':getMember')
     ->setName('getMember');
