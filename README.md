@@ -1,7 +1,9 @@
 # Atelier n°2 - Reunionou
- Project made by Sébastien Klaus, Malek Ben Khalifa, Youssef Bahi & Maxime Piscaglia
+
+Project made by Sébastien Klaus, Armand Pérignon, Malek Ben Khalifa, Youssef Bahi & Maxime Piscaglia
 
 # Summary
+
 - [Architecture](#architecture)
 - [API end-points](#api-end-points)
   - [Events/Messages Service](#eventsmessages-service)
@@ -9,7 +11,7 @@
     - [Backoffice](#backoffice)
   - [Auth Users Service](#auth-users-service)
 
-***
+---
 
 # Architecture
 
@@ -23,35 +25,34 @@
 - Web app : Vue.js
 - Mobile app : Flutter
 
-***
+---
 
 # API end-points
 
-## Events/Messages Service
+## Backoffice
 
-### Client
+### Events/Messages/Members Service
 
-<!-- - /signin/ : **POST** (gateway) -->
-- /events/{id} : **GET** - **PUT**
-- /events/ : **GET** - **POST** 
-- /events/{id}/messages : **GET**
-- /messages/{id} : **GET**
+- /members/{pseudo}/events : **GET**
+- /events/{id} : **GET** - **PUT** - **DELETE**
+- /events/ : **GET** - **POST**
 - /events/{id}/members : **GET**
-- /members/{id}/ : **GET** (gateway)
+- /members/{id} : **GET** - **PUT** - **DELETE**
+- /members/ : **POST**
+- /messages/{id} : **GET** - **PUT**
+- /messages/ : **POST**
+- /events/{id}/messages : **GET**
 
-### Backoffice
-
-- All routes in Client
-- /messages/{id} : **GET**
-- /users/{id} : **GET** - **POST** - **PUT** - **DELETE**
-- /users/ : **GET**
-
-***
+---
 
 ## Auth Users Service
 
-- /create/ : **POST**
+- /users/ : **GET** - **POST**
+- /users/{id} : **GET** - **PUT**
 - /auth/ : **POST**
-- /check/ : **GET**
-- /update/{id} : **PUT**
-- /users/{id} : **GET**
+
+---
+
+## Admin
+
+- /events/{id} : **DELETE**

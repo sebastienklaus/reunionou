@@ -27,7 +27,32 @@ class Events_Controller
         $this->container = $container;
     }
 
-    
+    /**
+     * 
+     * @api {post} /event createEvent
+     * @apiName reunionou
+     * @apiGroup group
+     * @apiVersion  0.0.0
+     * 
+     * 
+     * @apiParam  {String} title description
+     * @apiParam  {String} description description
+     * @apiParam  {String} user_id description
+     * @apiParam  {json} location description
+     * @apiParam  {date} date description
+     * @apiParam  {date} heure description
+     * 
+     * @apiSuccess (201) {String} title description
+     * @apiSuccess (201) {String} description description
+     * @apiSuccess (201) {String} user_id description
+     * @apiSuccess (201) {json} location description
+     * @apiSuccess (201) {date} date description
+     * @apiSuccess (201) {date} heure description
+     * @apiSuccess (201) {date} created_at description
+     * @apiSuccess (201) {date} updated_at description
+     * 
+     * 
+     */
     public function createEvent(Request $req, Response $resp, array $args): Response
     {
 
@@ -104,6 +129,7 @@ class Events_Controller
             $datas_resp = [
                 "type" => "ressource",
                 "event" => [
+                    "id" => $new_event->id,
                     "title" => $new_event->title,
                     "description" => $new_event->description,
                     "user_id" => $new_event->user_id,
@@ -170,7 +196,7 @@ class Events_Controller
 
         try {
 
-            $event = Events::Select(['id', 'title', 'description', 'user_id', 'location', 'date'])->findOrFail($args['id']);
+            $event = Events::Select(['id', 'title', 'description', 'user_id', 'location', 'date', 'heure'])->findOrFail($args['id']);
 
             $event->title = filter_var($received_event['title'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $event->description = filter_var($received_event['description'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -179,9 +205,9 @@ class Events_Controller
             $event->location = $received_event['location'];
             // Création de la date  de livraison
             $date_event = new DateTime($event_req['date']);
-            $new_event->date = $date_event->format('Y-m-d');
+            $event->date = $date_event->format('Y-m-d');
             $heure_event = new DateTime($event_req['heure']);
-            $new_event->heure = $heure_event->format('H:i:s');
+            $event->heure = $heure_event->format('H:i:s');
 
 
             $event->save();
@@ -195,14 +221,15 @@ class Events_Controller
             $datas_resp = [
                 "type" => "ressource",
                 "event" => [
-                    "title" => $new_event->title,
-                    "description" => $new_event->description,
-                    "user_id" => $new_event->user_id,
-                    "location" => $new_event->location,
-                    "date" => $new_event->date,
-                    "heure" => $new_event->heure,
-                    "created_at" => $new_event->created_at->format('Y-m-d H:i:s'),
-                    "updated_at" => $new_event->updated_at->format('Y-m-d H:i:s')
+                    "id" => $event->id,
+                    "title" => $event->title,
+                    "description" => $event->description,
+                    "user_id" => $event->user_id,
+                    "location" => $event->location,
+                    "date" => $event->date,
+                    "heure" => $event->heure,
+                    "created_at" => $event->created_at,
+                    "updated_at" => $event->updated_at
                 ]
             ];
 

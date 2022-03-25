@@ -8,7 +8,7 @@ use GuzzleHttp\Client as Client;
 
 use reunionou\backoffice\app\utils\Writer;
 
-class BackOfficeEventsController
+class BackOfficeMembersController
 {
 
     private $container; // le conteneur de dépendences de l'application
@@ -19,15 +19,16 @@ class BackOfficeEventsController
         $this->container = $container;
     }
 
+    public function getMember(Request $req, Response $resp, $args): Response {
 
-    public function getAllEvent(Request $req, Response $resp, $args): Response {
 
         $client = new \GuzzleHttp\Client([
             'base_uri' => $this->container->get('settings')['events_service'],
             'timeout' => 5.0
         ]);
 
-        $response = $client->request('GET', '/events');
+        $id_member = $args['id'];
+        $response = $client->request('GET', '/members/' . $id_member);
 
         $resp = Writer::json_output($resp, $response->getStatusCode());
         $resp->getBody()->write($response->getBody());
@@ -35,7 +36,7 @@ class BackOfficeEventsController
 
     }
 
-    public function getEvent(Request $req, Response $resp, $args): Response {
+    public function createMember(Request $req, Response $resp, $args): Response {
 
 
         $client = new \GuzzleHttp\Client([
@@ -43,33 +44,13 @@ class BackOfficeEventsController
             'timeout' => 5.0
         ]);
 
-        $id_event = $args['id'];
-        $response = $client->request('GET', '/events/' . $id_event);
+        $received_member = $req->getParsedBody();
 
-        $resp = Writer::json_output($resp, $response->getStatusCode());
-        $resp->getBody()->write($response->getBody());
-        return $resp;
-
-    }
-
-    public function createEvent(Request $req, Response $resp, $args): Response {
-
-
-        $client = new \GuzzleHttp\Client([
-            'base_uri' => $this->container->get('settings')['events_service'],
-            'timeout' => 5.0
-        ]);
-
-        $received_event = $req->getParsedBody();
-
-        $response = $client->request('POST', '/events', [
+        $response = $client->request('POST', '/members', [
                 'form_params'=> [
-                    'title' => $received_event['title'],
-                    'description' => $received_event['description'],
-                    'user_id' => $received_event['user_id'],
-                    'location' => $received_event['location'],
-                    'date' => $received_event['date'],
-                    'heure' => $received_event['heure']
+                    'pseudo' => $received_member['pseudo'],
+                    'event_id' => $received_member['event_id'],
+                    'user_id' => $received_member['user_id']
                 ]]  );
 
         $resp = Writer::json_output($resp, $response->getStatusCode());
@@ -79,7 +60,7 @@ class BackOfficeEventsController
 
     }
 
-    public function updateEvent(Request $req, Response $resp, $args): Response {
+    public function updateMember(Request $req, Response $resp, $args): Response {
 
 
         $client = new \GuzzleHttp\Client([
@@ -88,16 +69,13 @@ class BackOfficeEventsController
         ]);
 
         $id_event = $args['id'];
-        $received_event = $req->getParsedBody();
+        $received_member = $req->getParsedBody();
         
-        $response = $client->request('PUT', '/events/' . $id_event, [
+        $response = $client->request('PUT', '/members/' . $id_event, [
             'form_params'=> [
-                'title' => $received_event['title'],
-                'description' => $received_event['description'],
-                'user_id' => $received_event['user_id'],
-                'location' => $received_event['location'],
-                'date' => $received_event['date'],
-                'heure' => $received_event['heure']
+                'pseudo' => $received_member['pseudo'],
+                'event_id' => $received_member['event_id'],
+                'user_id' => $received_member['user_id']
                 ]]  );
 
         $resp = Writer::json_output($resp, $response->getStatusCode());
@@ -106,24 +84,7 @@ class BackOfficeEventsController
 
     }
 
-    public function getEventByMemberPseudo(Request $req, Response $resp, $args): Response {
-
-
-        $client = new \GuzzleHttp\Client([
-            'base_uri' => $this->container->get('settings')['events_service'],
-            'timeout' => 5.0
-        ]);
-
-        $pseudo = $args['pseudo'];
-        $response = $client->request('GET', '/members/' . $pseudo . '/events/');
-
-        $resp = Writer::json_output($resp, $response->getStatusCode());
-        $resp->getBody()->write($response->getBody());
-        return $resp;
-
-    }
-
-    public function deleteEventById(Request $req, Response $resp, $args): Response {
+    public function getMembersByEvent(Request $req, Response $resp, $args): Response {
 
 
         $client = new \GuzzleHttp\Client([
@@ -132,7 +93,26 @@ class BackOfficeEventsController
         ]);
 
         $id_event = $args['id'];
-        $response = $client->request('DELETE', '/events/' . $id_event);
+        $response = $client->request('GET', '/events/' . $id_event . '/members/');
+
+        $resp = Writer::json_output($resp, $response->getStatusCode());
+        $resp->getBody()->write($response->getBody());
+        return $resp;
+
+        // TODO : Récupérer href des membres
+
+    }
+
+    public function deleteMemberById(Request $req, Response $resp, $args): Response {
+
+
+        $client = new \GuzzleHttp\Client([
+            'base_uri' => $this->container->get('settings')['events_service'],
+            'timeout' => 5.0
+        ]);
+
+        $id_member = $args['id'];
+        $response = $client->request('DELETE', '/members/' . $id_member);
 
         $resp = Writer::json_output($resp, $response->getStatusCode());
         $resp->getBody()->write($response->getBody());
