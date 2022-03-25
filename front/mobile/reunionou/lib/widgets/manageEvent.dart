@@ -48,8 +48,8 @@ class _ManageEventScreenState extends State<ManageEventScreen> {
       location = TextEditingController(text: "");
       date = TextEditingController(text: widget.event!.date);
       hour = TextEditingController(text: widget.event!.hour);
-      long = widget.event!.location[0];
-      long = widget.event!.location[1];
+      lat = widget.event!.location[0]['latitude'];
+      long = widget.event!.location[0]['longitude'];
     }
   }
 
