@@ -27,31 +27,29 @@
 
 # API end-points
 
-## Events/Messages Service
+## Backoffice
 
-### Client
+### Events/Messages/Members Service
 
-<!-- - /signin/ : **POST** (gateway) -->
+- /members/{pseudo}/events : **GET**
 - /events/{id} : **GET** - **PUT**
 - /events/ : **GET** - **POST** 
-- /events/{id}/messages : **GET**
-- /messages/{id} : **GET**
 - /events/{id}/members : **GET**
-- /members/{id}/ : **GET** (gateway)
-
-### Backoffice
-
-- All routes in Client
+- /members/{id} : **GET** - **PUT** - **DELETE**
+- /members/ : **POST**
 - /messages/{id} : **GET**
-- /users/{id} : **GET** - **POST** - **PUT** - **DELETE**
-- /users/ : **GET**
+- /messages/ : **POST**
+- /events/{id}/messages : **GET**
 
 ***
 
 ## Auth Users Service
 
-- /create/ : **POST**
+- /users/ : **GET** - **POST**
+- /users/{id} : **GET** - **PUT**
 - /auth/ : **POST**
-- /check/ : **GET**
-- /update/{id} : **PUT**
-- /users/{id} : **GET**
+
+***
+
+## Admin 
+- /events/{id} : **DELETE**
