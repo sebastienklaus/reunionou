@@ -35,11 +35,12 @@ $app->get('/events[/]', Events_Controller::class . ':getAllEvent')
     ->setName('getAllEvent');
 
 $app->delete('/events/{id}[/]', Events_Controller::class . ':deleteEventById')
-    ->setName('deleteEventById'); //todo compléter : supprimer tout message et member associés
+    ->setName('deleteEventById');
 
-//TODO evetually : creator of event can delete his/her event (côté backoffice?)
+$app->get('/users/{id}/events[/]', Events_Controller::class . ':getEventbyUserId')
+    ->setName('getEventbyUserId');
 
- //TODO get event(s) by id creator
+ //TODO evetually : creator of event can delete his/her event (côté backoffice?)
 
  //TODO deleteEventExpired
     
@@ -47,7 +48,7 @@ $app->delete('/events/{id}[/]', Events_Controller::class . ':deleteEventById')
     
 // Messages
 
-//todo : (put ? delete ?)
+//todo : (put ?)
 
 $app->get('/messages/{id}[/]', Messages_Controller::class . ':getMessage')
     ->setName('getMessage');
@@ -69,8 +70,6 @@ $app->delete('/events/{id}/messages[/]', Messages_Controller::class . ':deleteMe
 //todo ?? message by members. Dans ce cas, rajouter ce lien dans hateos dans getMember.
 
 // Members
-
-//TODO delete membersByEventID
 
 $app->post('/members[/]', Members_Controller::class . ':createMember')
     ->setName('createMember')

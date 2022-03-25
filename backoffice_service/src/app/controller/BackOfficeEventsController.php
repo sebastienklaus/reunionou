@@ -123,6 +123,23 @@ class BackOfficeEventsController
 
     }
 
+    public function getEventByUserId(Request $req, Response $resp, $args): Response {
+
+
+        $client = new \GuzzleHttp\Client([
+            'base_uri' => $this->container->get('settings')['events_service'],
+            'timeout' => 5.0
+        ]);
+
+        $user_id = $args['id'];
+        $response = $client->request('GET', '/users/' . $user_id . '/events/');
+
+        $resp = Writer::json_output($resp, $response->getStatusCode());
+        $resp->getBody()->write($response->getBody());
+        return $resp;
+
+    }
+
     public function deleteEventById(Request $req, Response $resp, $args): Response {
 
 

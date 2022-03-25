@@ -20,3 +20,6 @@ $app->get('/members/{pseudo}/events[/]', BackOfficeEventsController::class . ':g
 
 $app->delete('/events/{id}[/]', BackOfficeEventsController::class . ':deleteEventById')
     ->setName('deleteEventById');
+
+$app->get('/users/{id}/events[/]', BackOfficeEventsController::class . ':getEventByUserId')
+    ->setName('getEventByUserId');
