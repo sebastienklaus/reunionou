@@ -67,7 +67,7 @@ class BackOfficeEventsController
                     'title' => $received_event['title'],
                     'description' => $received_event['description'],
                     'user_id' => $received_event['user_id'],
-                    'location' => $received_event['location'],
+                    'location' => json_encode($received_event['location']),
                     'date' => $received_event['date'],
                     'heure' => $received_event['heure']
                 ]]  );
@@ -95,7 +95,7 @@ class BackOfficeEventsController
                 'title' => $received_event['title'],
                 'description' => $received_event['description'],
                 'user_id' => $received_event['user_id'],
-                'location' => $received_event['location'],
+                'location' => json_encode($received_event['location']),
                 'date' => $received_event['date'],
                 'heure' => $received_event['heure']
                 ]]  );
