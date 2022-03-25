@@ -4,10 +4,13 @@ namespace reunionou\backoffice\app\controller;
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
+
+use reunionou\backoffice\app\utils\Writer as Writer;
+
+use GuzzleHttp\Psr7;
 use GuzzleHttp\Client as Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
-use reunionou\backoffice\app\utils\Writer as Writer;
 
 class BackOfficeAuthController
 {
@@ -36,9 +39,21 @@ class BackOfficeAuthController
                         ->withHeader('Content-Type', $response->getHeader('Content-Type'))
                         ->withBody($response->getBody());
         } catch (ClientException $e) { 
-            // return Writer::json_error($resp,400, $e->get());
+            $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+            $resp = $resp->withStatus(401)
+            ->withHeader('Content-Type', 'application/json; charset=utf-8');
+
+            $resp->getBody()->write($responseBodyAsString);
+
+            return $resp;
         } catch (ServerException $e) {
-            return Writer::json_error($resp,500, "$e->getResponse()");
+            $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+            $resp = $resp->withStatus(500)
+            ->withHeader('Content-Type', 'application/json; charset=utf-8');
+
+            $resp->getBody()->write($responseBodyAsString);
+
+            return $resp;
         }        
     }
 
