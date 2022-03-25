@@ -4,6 +4,12 @@
 - Retester Events par Members en créant members
 - Create member : UserID doit être nullable (pas empty)
 - Create Message: !! Attention au format d'input des media (idem avec location dans event)
+- try/catch dans methode des backofficecontroller (voir avec seb avant)
+  -vérifier code retour http
+- mAJ readme
+
+- pour un user, récupérer member
+- events par memberID
 
 - fillable in model
 

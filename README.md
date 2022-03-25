@@ -42,6 +42,7 @@ Project made by Sébastien Klaus, Armand Pérignon, Malek Ben Khalifa, Youssef B
 - /messages/{id} : **GET** - **PUT**
 - /messages/ : **POST**
 - /events/{id}/messages : **GET**
+- /users/{id}/members : **GET**
 
 ---
 

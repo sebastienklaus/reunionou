@@ -17,3 +17,6 @@ $app->get('/events/{id}/members[/]', BackOfficeMembersController::class . ':getM
     
 $app->delete('/members/{id}[/]', BackOfficeMembersController::class . ':deleteMemberById')
     ->setName('deleteMemberById');
+
+$app->get('/users/{id}/members[/]', BackOfficeMembersController::class . ':getMembersByUserId')
+    ->setName('getMembersByUserId');

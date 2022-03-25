@@ -120,4 +120,23 @@ class BackOfficeMembersController
 
     }
 
+    public function getMembersByUserId(Request $req, Response $resp, $args): Response {
+
+
+        $client = new \GuzzleHttp\Client([
+            'base_uri' => $this->container->get('settings')['events_service'],
+            'timeout' => 5.0
+        ]);
+
+        $id_user = $args['id'];
+        $response = $client->request('GET', '/users/' . $id_user . '/members/');
+
+        $resp = Writer::json_output($resp, $response->getStatusCode());
+        $resp->getBody()->write($response->getBody());
+        return $resp;
+
+        // TODO : Récupérer href des membres
+
+    }
+
 }
