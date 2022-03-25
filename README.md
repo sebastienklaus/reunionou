@@ -6,10 +6,10 @@ Project made by Sébastien Klaus, Armand Pérignon, Malek Ben Khalifa, Youssef B
 
 - [Architecture](#architecture)
 - [API end-points](#api-end-points)
-  - [Events/Messages Service](#eventsmessages-service)
-    - [Client](#client)
-    - [Backoffice](#backoffice)
-  - [Auth Users Service](#auth-users-service)
+  - [Backoffice](#backoffice)
+    - [Events/Messages Service](#eventsmessages-service)
+    - [Auth Users Service](#auth-users-service)
+  - [Admin](#admin)
 
 ---
 
