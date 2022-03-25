@@ -280,27 +280,7 @@ class Events_Controller
      * @apiVersion  1.0.0
      * 
      * 
-     * @apiParam  {id} id 'id de l'évènement'
-     * 
-     * @apiSuccess (200) {String} title
-     * @apiSuccess (200) {String} description
-     * @apiSuccess (200) {String} user_id
-     * @apiSuccess (200) {json} location
-     * @apiSuccess (200) {date} date
-     * @apiSuccess (200) {date} heure
-     * 
-     * 
-     */
-
-     /**
-     * 
-     * @api {GET} /events/{id} getEventById
-     * @apiName GetEventById
-     * @apiGroup Event
-     * @apiVersion  0.5.0
-     * 
-     * 
-     * @apiParam  {id} id 'id de l'évènement'
+     * @apiParam  {id} id id de l'évènement
      * 
      * @apiSuccess (200) {String} title
      * @apiSuccess (200) {String} description
@@ -387,6 +367,25 @@ class Events_Controller
         }
     }
 
+    /**
+     * 
+     * @api {GET} /members/{pseudo}/events getEventByMemberPseudo
+     * @apiName GetEventByMemberPseudo
+     * @apiGroup Event
+     * @apiVersion  1.0.0
+     * 
+     * 
+     * @apiParam  {pseudo} id pseudo du membre
+     * 
+     * @apiSuccess (200) {String} title
+     * @apiSuccess (200) {String} description
+     * @apiSuccess (200) {String} user_id
+     * @apiSuccess (200) {json} location
+     * @apiSuccess (200) {date} date
+     * @apiSuccess (200) {date} heure
+     * 
+     * 
+     */
     public function getEventByMemberPseudo(Request $req, Response $resp, array $args): Response
     {
         $pseudo_member = $args['pseudo'];
@@ -441,6 +440,25 @@ class Events_Controller
         }
     }
 
+    /**
+     * 
+     * @api {GET} /users/{id}/events getEventByUserId
+     * @apiName GetEventByUserId
+     * @apiGroup Event
+     * @apiVersion  1.0.0
+     * 
+     * 
+     * @apiParam  {id} id id de l'utilisateur
+     * 
+     * @apiSuccess (200) {String} title
+     * @apiSuccess (200) {String} description
+     * @apiSuccess (200) {String} user_id
+     * @apiSuccess (200) {json} location
+     * @apiSuccess (200) {date} date
+     * @apiSuccess (200) {date} heure
+     * 
+     * 
+     */
     public function getEventByUserId(Request $req, Response $resp, array $args): Response
     {
         $user_id = $args['id'];
@@ -493,7 +511,22 @@ class Events_Controller
         }
     }
 
-    // // Toutes les commandes
+    /**
+     * 
+     * @api {GET} /events getAllEvent
+     * @apiName GetAllEvent
+     * @apiGroup Event
+     * @apiVersion  1.0.0
+     * 
+     * @apiSuccess (200) {String} title
+     * @apiSuccess (200) {String} description
+     * @apiSuccess (200) {String} user_id
+     * @apiSuccess (200) {json} location
+     * @apiSuccess (200) {date} date
+     * @apiSuccess (200) {date} heure
+     * 
+     * 
+     */
     public function getAllEvent(Request $req, Response $resp): Response
     {
         //todo: try catch
