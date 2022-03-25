@@ -206,11 +206,29 @@ class AuthController {
                     if($requestBody['new_password']!=""){
                         $user->password = password_hash($requestBody['new_password'], PASSWORD_DEFAULT);
                     }
-                    
                     $user->fullname = $requestBody['fullname'];
                     $user->email = $requestBody['email'];
                     $user->username = $requestBody['username'];
+
+                    $secret = $this->container->settings['secret'];
+                    $token = JWT::encode(['iss' => 'http://docketu.iutnc.univ-lorraine.fr:62011/auth',
+                        'aud' => 'http://docketu.iutnc.univ-lorraine.fr:62014',
+                        'iat' => time(),
+                        'exp' => time() + (3600 * 24 * 30), // validité = 30 jours
+                        'upr' => [
+                            'user_id' => $user->id,
+                            'user_fullname' => $user->fullname,
+                            'user_email' => $user->email,
+                            'user_username' => $user->username,
+                            'user_isAdmin' => $user->is_admin,
+                        ]],
+                        $secret, 'HS512');
+
+                    
+                    $user->refresh_token = $token;
                     $user->save();
+
+
 
                 }    
             } catch (ModelNotFoundException $e) {
