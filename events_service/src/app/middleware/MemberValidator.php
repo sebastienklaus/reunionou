@@ -10,7 +10,7 @@ class MemberValidator
     public static function create_validators()
     {
         return [
-            'user_id' => v::noWhitespace()->length(1,64),
+            'user_id' => v::noWhitespace()->length(0,64),
             'event_id' => v::stringType()->notEmpty()->noWhitespace(),
             'pseudo' => v::stringType()->notEmpty()
         ];
