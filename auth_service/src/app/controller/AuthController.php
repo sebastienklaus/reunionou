@@ -184,12 +184,15 @@ class AuthController {
             var_dump($errors);
         } else {
             try {
+                $user = User::findOrFail($userID);
 
-                if ($requestBody['new_password'] !== $requestBody['new_password_confirm']) {
+                if (!password_verify($requestBody['old_password'], $user->password)){
+                    return Writer::jsonError($req, $resp, 401, 'L\'ancien mot de passe ne correpsond pas');
+                }
+                else if ($requestBody['new_password'] !== $requestBody['new_password_confirm']) {
                     return Writer::jsonError($req, $resp, 401, 'Les mots de passes ne sont pas identiques');
                 }
                 else {
-                    $user = User::findOrFail($userID);
                     $checkEmail = User::select('username', 'email')->where('id', '!=', $user->id)->get();
                         
                     foreach ($checkEmail as $i) {
