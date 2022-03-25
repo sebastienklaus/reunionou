@@ -335,5 +335,40 @@ class Members_Controller
         }
     }
 
+    public function deleteMembersByEvent(Request $req, Response $resp, array $args): Response
+    {
+        $id_event = $args['id'];
+        
+        try {
+            $event = Events::findOrFail($id_event);
+            $members = $event->members()->select()->get();
+            $nbMember = count($members);
+
+        $messages_resp = [];
+        // TODO : Faire en une seule requête
+        foreach ($members as $member) {
+                if ($member->delete())
+                {
+                    $datas_resp = [
+                        "type" => "member",
+                        "member" => $member,
+                        "response" => "member deleted"
+                    ];
+                } else
+                {
+                    $datas_resp = [
+                        "type" => "member",
+                        "member" => $member,
+                        "response" => "member couldn't be deleted"
+                    ];
+                }
+                $resp->getBody()->write(json_encode($datas_resp));
+            }
+            return writer::json_output($resp, 200); 
+        }catch (ModelNotFoundException $e) {
+            $clientError = $this->container->clientError;
+            return $clientError($req, $resp, 404, "Event not found");
+        }
+    }
     
 }

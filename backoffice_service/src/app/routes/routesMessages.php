@@ -11,3 +11,6 @@ $app->get('/events/{id}/messages[/]', BackOfficeMessagesController::class . ':ge
 
 $app->post('/messages[/]', BackOfficeMessagesController::class . ':createMessage')
     ->setName('createMessage');
+
+$app->delete('/messages/{id}[/]', BackOfficeMessagesController::class . ':deleteMessageById')
+    ->setName('deleteMessageById');

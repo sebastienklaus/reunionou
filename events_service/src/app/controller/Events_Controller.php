@@ -427,7 +427,9 @@ class Events_Controller
         $id_event = $args['id'] ?? null;
         try {
             $event = Events::findOrFail($id_event);
-            if ($event->delete()) 
+            $members = $event->members()->select()->get();
+            $messages = $event->messages()->select()->get();
+            if ($event->delete() && $members->delete() && $messages->delete()) 
             {
                 $datas_resp = [
                     "type" => "event",
@@ -442,6 +444,7 @@ class Events_Controller
                     "response" => "event couldn't be deleted"
                 ];
             }
+            // ! Fonctionne mais erreur HTML
             $resp->getBody()->write(json_encode($datas_resp));
             return writer::json_output($resp, 200);
         } catch (ModelNotFoundException $e) {

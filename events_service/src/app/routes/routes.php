@@ -60,7 +60,11 @@ $app->post('/messages[/]', Messages_Controller::class . ':createMessage')
     ->setName('createMessage')
     ->add(new Validation($messageValidators));
 
-    //todo deleteMessagesByEventID
+$app->delete('/messages/{id}[/]', Messages_Controller::class . ':deleteMessageById')
+    ->setName('deleteMessageById');
+
+$app->delete('/events/{id}/messages[/]', Messages_Controller::class . ':deleteMessagesByEvent')
+    ->setName('deleteMessagesByEvent');
   
 //todo ?? message by members. Dans ce cas, rajouter ce lien dans hateos dans getMember.
 
@@ -84,6 +88,9 @@ $app->get('/events/{id}/members[/]', Members_Controller::class . ':getMembersByE
     
 $app->delete('/members/{id}[/]', Members_Controller::class . ':deleteMemberById')
     ->setName('deleteMemberById');
+
+$app->delete('/events/{id}/members[/]', Members_Controller::class . ':deleteMembersByEvent')
+    ->setName('deleteMembersByEvent');
 
 // GetMember avec pseudo
     // post delete

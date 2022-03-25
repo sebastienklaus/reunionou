@@ -255,5 +255,67 @@ class Messages_Controller
         }
     }
 
-  
+    public function deleteMessageById(Request $req, Response $resp, array $args): Response
+    {
+        $id_message = $args['id'] ?? null;
+        try {
+            $message = Messages::findOrFail($id_message);
+            if ($message->delete())
+            {
+                $datas_resp = [
+                    "type" => "message",
+                    "message" => $message,
+                    "response" => "message deleted"
+                ];
+            } else
+            {
+                $datas_resp = [
+                    "type" => "message",
+                    "message" => $message,
+                    "response" => "message couldn't be deleted"
+                ];
+            }
+            $resp->getBody()->write(json_encode($datas_resp));
+            return writer::json_output($resp, 200);
+        } catch (ModelNotFoundException $e) {
+            return Writer::json_error($resp, 404, "message not found");
+        }
+    }
+
+    public function deleteMessagesByEvent(Request $req, Response $resp, array $args): Response
+    {
+        $id_event = $args['id'];
+        
+        try {
+            $event = Events::findOrFail($id_event);
+            $messages = $event->messages()->select()->get();
+            $nbMessage = count($messages);
+
+        $messages_resp = [];
+        // TODO : Faire en une seule requête
+        foreach ($messages as $message) {
+                if ($message->delete())
+                {
+                    $datas_resp = [
+                        "type" => "message",
+                        "message" => $message,
+                        "response" => "message deleted"
+                    ];
+                } else
+                {
+                    $datas_resp = [
+                        "type" => "message",
+                        "message" => $message,
+                        "response" => "message couldn't be deleted"
+                    ];
+                }
+                $resp->getBody()->write(json_encode($datas_resp));
+            }
+            return writer::json_output($resp, 200); 
+        }catch (ModelNotFoundException $e) {
+            $clientError = $this->container->clientError;
+            return $clientError($req, $resp, 404, "Event not found");
+        }
+    }
 }
+
