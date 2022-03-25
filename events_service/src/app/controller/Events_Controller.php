@@ -263,12 +263,13 @@ class Events_Controller
 
             //TODO Vérifier type de controle depuis réception base de donnée dans cours
             //TODO étape filtrage à garder ou améliorer ?
+
             $event_resp = [
                 'id' => $event->id,
                 'title' => $event->title,
                 'description' => $event->description,
                 'user_id' => $event->user_id,
-                'location' => $event->location,
+                'location' => json_decode($event->location),
                 'date' => $event->date,
                 'heure' => $event->heure,
                 'created_at' => $event->created_at->format('Y-m-d H:i:s'),
@@ -349,7 +350,7 @@ class Events_Controller
                 'title' => $event->title,
                 'description' => $event->description,
                 'user_id' => $event->user_id,
-                'location' => $event->location,
+                'location' => json_decode($event->location),
                 'date' => $event->date,
                 'heure' => $event->heure,
                 'created_at' => $event->created_at->format('Y-m-d H:i:s'),
@@ -401,7 +402,7 @@ class Events_Controller
                 'title' => $event->title,
                 'description' => $event->description,
                 'user_id' => $event->user_id,
-                'location' => $event->location,
+                'location' => json_decode($event->location),
                 'date' => $event->date,
                 'heure' => $event->heure,
                 'created_at' => $event->created_at->format('Y-m-d H:i:s'),
@@ -451,7 +452,7 @@ class Events_Controller
                 'title' => $event->title,
                 'description' => $event->description,
                 'user_id' => $event->user_id,
-                'location' => $event->location,
+                'location' => json_decode($event->location),
                 'date' => $event->date,
                 'heure' => $event->heure,
                 'created_at' => $event->created_at->format('Y-m-d H:i:s'),
