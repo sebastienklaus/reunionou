@@ -38,98 +38,129 @@ class BackOfficeAuthController
             return $resp->withStatus($response->getStatusCode())
                         ->withHeader('Content-Type', $response->getHeader('Content-Type'))
                         ->withBody($response->getBody());
-        } catch (ClientException $e) { 
+        } 
+        catch (ClientException $e) { 
             $responseBodyAsString = $e->getResponse()->getBody()->getContents();
-            $resp = $resp->withStatus(401)
-            ->withHeader('Content-Type', 'application/json; charset=utf-8');
-
-            $resp->getBody()->write($responseBodyAsString);
-
-            return $resp;
-        } catch (ServerException $e) {
+            return Writer::json_error_data($resp, 401, $responseBodyAsString);
+        } 
+        catch (ServerException $e) {
             $responseBodyAsString = $e->getResponse()->getBody()->getContents();
-            $resp = $resp->withStatus(500)
-            ->withHeader('Content-Type', 'application/json; charset=utf-8');
-
-            $resp->getBody()->write($responseBodyAsString);
-
-            return $resp;
+            return Writer::json_error_data($resp, 500, $responseBodyAsString);
         }        
     }
 
     public function createUser(Request $req, Response $resp, $args): Response {
         $body = $req->getParsedBody();
 
-        $client = new Client([
-            'base_uri' => $this->container->get('settings')['auth_service'],
-            'timeout' => 5.0,
-        ]);
-
-        $response = $client->request('POST', '/create', [
-                'form_params'=> [
-                    'fullname' => $body['fullname'],
-                    'email' => $body['email'],
-                    'username' => $body['username'],
-                    'password' => $body['password'],
-                    'password_confirm' => $body['password_confirm'],
-                ]
-
-        ]);
-        return $resp->withStatus($response->getStatusCode())
-                    ->withHeader('Content-Type', $response->getHeader('Content-Type'))
-                    ->withBody($response->getBody());
+        try {
+            $client = new Client([
+                'base_uri' => $this->container->get('settings')['auth_service'],
+                'timeout' => 5.0,
+            ]);
+    
+            $response = $client->request('POST', '/create', [
+                    'form_params'=> [
+                        'fullname' => $body['fullname'],
+                        'email' => $body['email'],
+                        'username' => $body['username'],
+                        'password' => $body['password'],
+                        'password_confirm' => $body['password_confirm'],
+                    ]
+            ]);
+            return $resp->withStatus($response->getStatusCode())
+                        ->withHeader('Content-Type', $response->getHeader('Content-Type'))
+                        ->withBody($response->getBody());
+        } 
+        catch (ClientException $e) { 
+            $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+            return Writer::json_error_data($resp, 401, $responseBodyAsString);
+        } 
+        catch (ServerException $e) {
+            $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+            return Writer::json_error_data($resp, 500, $responseBodyAsString);
+        } 
     }
 
     public function updateUser(Request $req, Response $resp, array $args): Response {
         $userID = $args['id'];
         $body = $req->getParsedBody();
+        
+        try {
+            $client = new Client([
+                'base_uri' => $this->container->get('settings')['auth_service'],
+                'timeout' => 5.0,
+            ]);
+    
+            $response = $client->request('PUT', '/update/'. $userID, [
+                    'form_params'=> [
+                        'fullname' => $body['fullname'],
+                        'email' => $body['email'],
+                        'username' => $body['username'],
+                        'old_password' => $body['old_password'],
+                        'new_password' => $body['new_password'],
+                        'new_password_confirm' => $body['new_password_confirm'],
+                    ]
+    
+            ]);
+            return $resp->withStatus($response->getStatusCode())
+                        ->withHeader('Content-Type', $response->getHeader('Content-Type'))
+                        ->withBody($response->getBody());
+        }
+        catch (ClientException $e) { 
+            $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+            return Writer::json_error_data($resp, 401, $responseBodyAsString);
+        } 
+        catch (ServerException $e) {
+            $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+            return Writer::json_error_data($resp, 500, $responseBodyAsString);
+        }
 
-        $client = new Client([
-            'base_uri' => $this->container->get('settings')['auth_service'],
-            'timeout' => 5.0,
-        ]);
-
-        $response = $client->request('PUT', '/update/'. $userID, [
-                'form_params'=> [
-                    'fullname' => $body['fullname'],
-                    'email' => $body['email'],
-                    'username' => $body['username'],
-                    'old_password' => $body['old_password'],
-                    'new_password' => $body['new_password'],
-                    'new_password_confirm' => $body['new_password_confirm'],
-                ]
-
-        ]);
-        return $resp->withStatus($response->getStatusCode())
-                    ->withHeader('Content-Type', $response->getHeader('Content-Type'))
-                    ->withBody($response->getBody());
+        
     }
 
     public function getUsers(Request $req, Response $resp, array $args): Response {
-        
-        $client = new Client([
-            'base_uri' => $this->container->get('settings')['auth_service'],
-            'timeout' => 5.0,
-        ]);
-        $response = $client->request('GET', '/users');
-
-        return $resp->withStatus($response->getStatusCode())
-                    ->withHeader('Content-Type', $response->getHeader('Content-Type'))
-                    ->withBody($response->getBody());
+        try {
+            $client = new Client([
+                'base_uri' => $this->container->get('settings')['auth_service'],
+                'timeout' => 5.0,
+            ]);
+            $response = $client->request('GET', '/users');
+    
+            return $resp->withStatus($response->getStatusCode())
+                        ->withHeader('Content-Type', $response->getHeader('Content-Type'))
+                        ->withBody($response->getBody());
+        }
+        catch (ClientException $e) { 
+            $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+            return Writer::json_error_data($resp, 401, $responseBodyAsString);
+        } 
+        catch (ServerException $e) {
+            $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+            return Writer::json_error_data($resp, 500, $responseBodyAsString);
+        }
     }
 
     public function getUserById(Request $req, Response $resp, array $args): Response {
         $userID = $args['id'];
 
-        $client = new Client([
-            'base_uri' => $this->container->get('settings')['auth_service'],
-            'timeout' => 5.0,
-        ]);
-        $response = $client->request('GET', '/users/'. $userID);
-
-        return $resp->withStatus($response->getStatusCode())
-                    ->withHeader('Content-Type', $response->getHeader('Content-Type'))
-                    ->withBody($response->getBody());
+        try {
+            $client = new Client([
+                'base_uri' => $this->container->get('settings')['auth_service'],
+                'timeout' => 5.0,
+            ]);
+            $response = $client->request('GET', '/users/'. $userID);
+    
+            return $resp->withStatus($response->getStatusCode())
+                        ->withHeader('Content-Type', $response->getHeader('Content-Type'))
+                        ->withBody($response->getBody());
+        }
+        catch (ClientException $e) { 
+            $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+            return Writer::json_error_data($resp, 401, $responseBodyAsString);
+        } 
+        catch (ServerException $e) {
+            $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+            return Writer::json_error_data($resp, 500, $responseBodyAsString);
+        }
     }
-
 }
