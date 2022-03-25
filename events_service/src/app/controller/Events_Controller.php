@@ -196,7 +196,7 @@ class Events_Controller
 
         try {
 
-            $event = Events::Select(['id', 'title', 'description', 'user_id', 'location', 'date'])->findOrFail($args['id']);
+            $event = Events::Select(['id', 'title', 'description', 'user_id', 'location', 'date', 'heure'])->findOrFail($args['id']);
 
             $event->title = filter_var($received_event['title'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $event->description = filter_var($received_event['description'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);

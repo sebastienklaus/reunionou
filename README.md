@@ -1,7 +1,9 @@
 # Atelier n°2 - Reunionou
- Project made by Sébastien Klaus, Armand Pérignon, Malek Ben Khalifa, Youssef Bahi & Maxime Piscaglia
+
+Project made by Sébastien Klaus, Armand Pérignon, Malek Ben Khalifa, Youssef Bahi & Maxime Piscaglia
 
 # Summary
+
 - [Architecture](#architecture)
 - [API end-points](#api-end-points)
   - [Events/Messages Service](#eventsmessages-service)
@@ -9,7 +11,7 @@
     - [Backoffice](#backoffice)
   - [Auth Users Service](#auth-users-service)
 
-***
+---
 
 # Architecture
 
@@ -23,7 +25,7 @@
 - Web app : Vue.js
 - Mobile app : Flutter
 
-***
+---
 
 # API end-points
 
@@ -32,16 +34,16 @@
 ### Events/Messages/Members Service
 
 - /members/{pseudo}/events : **GET**
-- /events/{id} : **GET** - **PUT**
-- /events/ : **GET** - **POST** 
+- /events/{id} : **GET** - **PUT** - **DELETE**
+- /events/ : **GET** - **POST**
 - /events/{id}/members : **GET**
 - /members/{id} : **GET** - **PUT** - **DELETE**
 - /members/ : **POST**
-- /messages/{id} : **GET**
+- /messages/{id} : **GET** - **PUT**
 - /messages/ : **POST**
 - /events/{id}/messages : **GET**
 
-***
+---
 
 ## Auth Users Service
 
@@ -49,7 +51,8 @@
 - /users/{id} : **GET** - **PUT**
 - /auth/ : **POST**
 
-***
+---
 
-## Admin 
+## Admin
+
 - /events/{id} : **DELETE**

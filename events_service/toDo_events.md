@@ -1,5 +1,10 @@
 # TO DO in Events Service
 
+- UPDATE DATE ET HEURE
+- Retester Events par Members en créant members
+- Create member : UserID doit être nullable (pas empty)
+- Create Message: !! Attention au format d'input des media (idem avec location dans event)
+
 - fillable in model
 
 - controler dans chaque réception post ou depuis de la database
@@ -22,7 +27,7 @@
 
 - /post message, post members, delete members, repasser sur le reste
 
-- rajouter dans hateos les liens self dans les getall dnas les foreach 
+- rajouter dans hateos les liens self dans les getall dnas les foreach
 
 ## Youssef
 
