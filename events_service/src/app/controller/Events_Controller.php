@@ -204,9 +204,9 @@ class Events_Controller
             //! FILTE POUR location : location JSON DOIT ETRE OK
             $event->location = $received_event['location'];
             // Création de la date  de livraison
-            $date_event = new DateTime($event_req['date']);
+            $date_event = new DateTime($received_event['date']);
             $event->date = $date_event->format('Y-m-d');
-            $heure_event = new DateTime($event_req['heure']);
+            $heure_event = new DateTime($received_event['heure']);
             $event->heure = $heure_event->format('H:i:s');
 
 
