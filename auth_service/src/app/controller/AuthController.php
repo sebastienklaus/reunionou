@@ -228,8 +228,7 @@ class AuthController {
                     $user->refresh_token = $token;
                     $user->save();
 
-
-
+                    return Writer::json_output($resp, 200, 'Successful update !');
                 }    
             } catch (ModelNotFoundException $e) {
                 $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="reunionou auth" ');
@@ -238,15 +237,6 @@ class AuthController {
                 $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="reunionou auth" ');
                 return Writer::jsonError($req, $resp, 401, 'Erreur PHP');
             }    
-            
-            //configure the response headers
-            $resp = $resp->withStatus(201)
-                        ->withHeader('Content-Type', 'application/json; charset=utf-8');
-                        
-                        
-            return Writer::json_output($resp, 200, 'Successful update !');
-
-            return $resp;
         }
 
     }
@@ -270,9 +260,7 @@ class AuthController {
         } catch (\Exception $e) {
             $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="reunionou auth" ');
             return Writer::jsonError($req, $resp, 401, 'Erreur PHP');
-        } 
-
-        return $resp;
+        }
     }
 
 
@@ -289,9 +277,7 @@ class AuthController {
         } catch (\Exception $e) {
             $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="reunionou auth" ');
             return Writer::jsonError($req, $resp, 401, 'Erreur PHP');
-        } 
-
-        return $resp;
+        }
     }
 
 
@@ -316,7 +302,6 @@ class AuthController {
         } catch (\Exception $e) {
             $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="reunionou auth" ');
             return Writer::jsonError($req, $resp, 401, 'Erreur PHP');
-        }   
-        return $resp;
+        }
     }
 }
