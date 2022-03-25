@@ -40,6 +40,7 @@ $app->post('/create[/]', AuthController::class . ':createAccount')
     ->setName('createAccount');
 
 $app->put('/update/{id}[/]', AuthController::class . ':updateAccount')
+    ->add(new Validation(Validators::validators_updateUser()))
     ->setName('updateAccount');
 
 

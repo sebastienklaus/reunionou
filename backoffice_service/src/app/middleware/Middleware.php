@@ -24,7 +24,7 @@ class Middleware {
             'timeout' => 5.0
             ]);
 
-        $response = $client->request('GET', '/checkAdmin', [
+        $response = $client->request('GET', '/check', [
                 'headers'=> ['Authorization' => $req->getHeader('Authorization')]
             ]
         );
@@ -61,14 +61,13 @@ class Middleware {
             'timeout' => 5.0
             ]);
 
-        $response = $client->request('POST', '/check', [
+        $response = $client->request('GET', '/checkAdmin', [
                 'headers'=> ['Authorization' => $req->getHeader('Authorization')]
             ]
         );
 
         $body = json_decode($response->getBody());
         var_dump($body);
-        // $req = $req->withAttribute('token', $req->getHeader('Authorization'));
 
         $resp = $next($req,$resp);
 

@@ -7,13 +7,13 @@ import 'DatabaseHandler.dart';
 import 'package:uuid/uuid.dart';
 import 'package:username_generator/username_generator.dart';
 import 'package:dio/dio.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 class DataLoader extends ChangeNotifier {
   /// Links
   //Authentification link
-  final String _authUri = "http://docketu.iutnc.univ-lorraine.fr:62011/auth";
-  final String _authCheckUri =
-      "http://docketu.iutnc.univ-lorraine.fr:62011/check";
+  final String _authUri = "http://docketu.iutnc.univ-lorraine.fr:62015/auth";
+  final String _userAuth = "http://docketu.iutnc.univ-lorraine.fr:62015/users/";
 
   //Card image uri
   final String cardImgUri =
@@ -42,44 +42,40 @@ class DataLoader extends ChangeNotifier {
   Future<bool> authentificate(String email, String password) async {
     //Call authentificate api
     try {
-      String basicAuth =
-          'Basic ' + base64Encode(utf8.encode('$email:$password'));
-      var rep_auth = await Dio().post(
+      String basicAuth = 'Basic ' +
+          base64Encode(
+            utf8.encode('$email:$password'),
+          );
+
+      var response = await Dio().post(
         _authUri,
         options: Options(
-          headers: <String, String>{'authorization': basicAuth},
+          headers: <String, String>{
+            'authorization': basicAuth,
+            'Origin': "flutter"
+          },
         ),
       );
-      if (rep_auth.statusCode == 200) {
-        //Authentificate success -> get user
-        final String token = rep_auth.data['refresh-token'];
-        var rep_check = await Dio().get(
-          _authCheckUri,
-          options: Options(
-            headers: {
-              'Authorization': 'Bearer ' + token,
-            },
-          ),
+      if (response.statusCode == 200) {
+        Map<String, dynamic> decodedToken =
+            JwtDecoder.decode(response.data['refresh-token']);
+        _user = User(
+          id: decodedToken['upr']['user_id'],
+          email: decodedToken['upr']['user_email'],
+          fullname: decodedToken['upr']['user_fullname'],
+          username: decodedToken['upr']['user_username'],
+          type: "user",
+          token: response.data['refresh-token'],
         );
-        if (rep_check.statusCode == 200) {
-          _user = User(
-            id: rep_check.data['user_id'],
-            email: rep_check.data['user_mail'],
-            fullname: rep_check.data['user_fullname'],
-            username: rep_check.data['user_mail'],
-            type: "user",
-            token: rep_check.data['user_token'],
-          );
-          setUser(_user);
-          handler = DatabaseHandler();
+        setUser(_user);
+        handler = DatabaseHandler();
 
-          //In case of success store user to db
-          handler.initializeDB().whenComplete(() async {
-            await handler.insertUser(_user);
-          });
-          notifyListeners();
-          return true;
-        }
+        //In case of success store user to db
+        handler.initializeDB().whenComplete(() async {
+          await handler.insertUser(_user);
+        });
+        notifyListeners();
+        return true;
       }
       return false;
     } catch (e) {
@@ -130,6 +126,69 @@ class DataLoader extends ChangeNotifier {
       } else {
         return false;
       }
+    } catch (e) {
+      return false;
+    }
+  }
+
+  //Update user
+  Future<bool> updateUser(
+    id,
+    fullname,
+    email,
+    username,
+    password,
+    newPassword,
+    confirmPassword,
+    token,
+  ) async {
+    //Call authentificate api
+    try {
+      var response = await Dio().put(_userAuth + id,
+          options: Options(
+            headers: <String, String>{'token': token, 'Origin': "flutter"},
+          ),
+          data: {
+            "fullname": fullname,
+            "email": email,
+            "username": username,
+            "old_password": password,
+            "new_password": newPassword,
+            "new_password_confirm": confirmPassword,
+          });
+      if (response.statusCode == 200) {
+        var refreshResp = await Dio().get(
+          _userAuth + id,
+          options: Options(
+            headers: <String, String>{'token': token, 'Origin': "flutter"},
+          ),
+        );
+        if (response.statusCode == 200) {
+          //Refresh user in local
+
+          handler = DatabaseHandler();
+          await handler.delUser();
+
+          _user = User(
+            id: id,
+            email: refreshResp.data['email'],
+            fullname: refreshResp.data['fullname'],
+            username: refreshResp.data['username'],
+            type: "user",
+            token: refreshResp.data['refresh_token'],
+          );
+
+          setUser(_user);
+          handler = DatabaseHandler();
+
+          handler.initializeDB().whenComplete(() async {
+            await handler.insertUser(_user);
+          });
+          notifyListeners();
+        }
+        return true;
+      }
+      return false;
     } catch (e) {
       return false;
     }
