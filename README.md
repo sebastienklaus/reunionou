@@ -19,11 +19,11 @@ Project made by Sébastien Klaus, Armand Pérignon, Malek Ben Khalifa, Youssef B
 <img src="mcd.drawio.png" alt="Reunionou structure" width="600"/>
 </p>
 
-- Database : MySQL + PhpMyAdmin
-- Backoffice : Slim with Server-side rendering
-- Backend : Slim
-- Web app : Vue.js
-- Mobile app : Flutter
+- Database : **MySQL + PhpMyAdmin**
+- Backoffice : **Vue.js**
+- Backend : **Slim**
+- Web app : **Vue.js**
+- Mobile app : **Flutter**
 
 ---
 
