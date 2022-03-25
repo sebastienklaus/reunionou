@@ -57,5 +57,15 @@ class _HomeScreenState extends State<HomeScreen> {
             }
           },
         ),
+        floatingActionButton: FloatingActionButton(
+          tooltip: "Ajouter un événement",
+          child: const Icon(Icons.add),
+          onPressed: () {
+            Navigator.pushNamed(
+              context,
+              '/addEvent',
+            );
+          },
+        ),
       );
 }

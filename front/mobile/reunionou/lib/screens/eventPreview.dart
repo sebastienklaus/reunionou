@@ -5,7 +5,8 @@ import '../widgets/eventDetails.dart';
 import '../widgets/navigation_drawer_widget.dart';
 import '../widgets/organizerDetails.dart';
 import '../widgets/participantsList.dart';
-import '../widgets/updateEvent.dart';
+import '../widgets/manageEvent.dart';
+import '../widgets/spacer.dart';
 
 class EventPreviewScreen extends StatefulWidget {
   const EventPreviewScreen({
@@ -60,7 +61,24 @@ class _HomeScreenState extends State<EventPreviewScreen> {
             ),
             const ParticipantsList(),
             const CommentsList(),
-            if (1 == 1) UpdateEventScreen(event: widget.event),
+            if (1 == 1)
+              Column(
+                children: [
+                  const SpacerWidget(space: 30),
+                  const Text(
+                    "Modifier l'événement",
+                    style: TextStyle(
+                        fontSize: 25.0,
+                        color: Colors.blueGrey,
+                        letterSpacing: 2.0,
+                        fontWeight: FontWeight.w400),
+                  ),
+                  Expanded(
+                    child: ManageEventScreen(
+                        event: widget.event, action: 'update'),
+                  ),
+                ],
+              )
           ],
         ),
       ),

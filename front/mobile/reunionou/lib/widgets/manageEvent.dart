@@ -1,38 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:reunionou/models/event.dart';
+import 'package:reunionou/widgets/map.dart';
 import '../widgets/spacer.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 
-class UpdateEventScreen extends StatefulWidget {
-  const UpdateEventScreen({
+class ManageEventScreen extends StatefulWidget {
+  const ManageEventScreen({
     Key? key,
+    this.action,
     this.event,
   }) : super(key: key);
-  static String get route => '/profile';
+  final String? action;
   final EventItem? event;
 
   @override
-  _UpdateEventScreenState createState() => _UpdateEventScreenState();
+  _ManageEventScreenState createState() => _ManageEventScreenState();
 }
 
-class _UpdateEventScreenState extends State<UpdateEventScreen> {
+class _ManageEventScreenState extends State<ManageEventScreen> {
   late final TextEditingController title;
   late final TextEditingController description;
   late final TextEditingController location;
   late final TextEditingController date;
   late final TextEditingController hour;
-
+  late Address address;
+  late double lat;
+  bool changedAdr = false;
+  late double long;
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-    title = TextEditingController(text: widget.event!.title);
-    description = TextEditingController(text: widget.event!.description);
-    location = TextEditingController(text: "");
-    date = TextEditingController(text: widget.event!.date);
-    hour = TextEditingController(text: widget.event!.hour);
+    if (widget.action == "add") {
+      title = TextEditingController(text: "");
+      description = TextEditingController(text: "");
+      location = TextEditingController(text: "");
+      date = TextEditingController(text: "");
+      hour = TextEditingController(text: "");
+      lat = 0;
+      long = 0;
+    } else {
+      title = TextEditingController(text: widget.event!.title);
+      description = TextEditingController(text: widget.event!.description);
+      location = TextEditingController(text: "");
+      date = TextEditingController(text: widget.event!.date);
+      hour = TextEditingController(text: widget.event!.hour);
+      long = widget.event!.location[0];
+      long = widget.event!.location[1];
+    }
   }
 
   @override
@@ -178,13 +196,73 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
                 const SpacerWidget(
                   space: 24,
                 ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Localisation",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    const SpacerWidget(
+                      space: 8,
+                    ),
+                    SizedBox(
+                      height: 400,
+                      child: MapWidget(
+                        lat: lat,
+                        long: long,
+                        changedAdr: changedAdr,
+                        getAddress: (Address address) {
+                          location.text = "${address.addressLine},";
+                          setState(() {
+                            address = address;
+                            changedAdr = false;
+                          });
+                        },
+                      ),
+                    ),
+                    const SpacerWidget(
+                      space: 10,
+                    ),
+                    TextFormField(
+                      controller: location,
+                      onChanged: (value) async {
+                        var address =
+                            await Geocoder.local.findAddressesFromQuery(value);
+                        setState(() {
+                          lat = address.first.coordinates.latitude;
+                          long = address.first.coordinates.longitude;
+                          changedAdr = true;
+                        });
+                      },
+                      validator: (location) {
+                        if (location!.isEmpty) {
+                          return "Veuillez insérer l'addresse d'événement";
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      maxLines: 2,
+                    ),
+                  ],
+                ),
+                const SpacerWidget(
+                  space: 24,
+                ),
                 RaisedButton(
                   color: const Color.fromRGBO(143, 148, 251, 1),
                   splashColor: const Color.fromRGBO(143, 148, 251, 0.3),
-                  child: const Center(
+                  child: Center(
                     child: Text(
-                      "Mise a jour",
-                      style: TextStyle(
+                      widget.action == "add"
+                          ? "Ajouter un événement"
+                          : "Mise a jour",
+                      style: const TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                   ),

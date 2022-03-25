@@ -21,7 +21,8 @@ class EventDetails extends StatelessWidget {
               child: SizedBox(
                 height: 250,
                 child: MapWidget(
-                  event: event,
+                  lat: event.location[0]['latitude'],
+                  long: event.location[0]['longitude'],
                 ),
               ),
             ),
