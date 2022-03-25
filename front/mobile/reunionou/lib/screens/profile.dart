@@ -21,8 +21,10 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   late final TextEditingController fullname;
   late final TextEditingController email;
+  late final TextEditingController username;
   late final TextEditingController password;
   late final TextEditingController newPassword;
+  late final TextEditingController confirmPassword;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -31,8 +33,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     fullname = TextEditingController(text: widget.user!.fullname);
     email = TextEditingController(text: widget.user!.email);
+    username = TextEditingController(text: widget.user!.username);
     password = TextEditingController(text: "");
     newPassword = TextEditingController(text: "");
+    confirmPassword = TextEditingController(text: "");
   }
 
   @override
@@ -130,6 +134,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
+                            "Votre pseudo",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          const SpacerWidget(
+                            space: 8,
+                          ),
+                          TextFormField(
+                            controller: username,
+                            validator: (username) {
+                              if (username!.isEmpty) {
+                                return 'Veuillez insérer un pseudo valide';
+                              }
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            maxLines: 1,
+                          ),
+                        ],
+                      ),
+                      const SpacerWidget(
+                        space: 24,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
                             "Votre mot de passe",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 16),
@@ -195,6 +230,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       const SpacerWidget(
                         space: 24,
                       ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Confirmer le nouveau mot de passe",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          const SpacerWidget(
+                            space: 8,
+                          ),
+                          TextFormField(
+                            controller: confirmPassword,
+                            obscureText: true,
+                            enableSuggestions: false,
+                            autocorrect: false,
+                            validator: (confirmPassword) {
+                              if (newPassword.text != confirmPassword) {
+                                return 'Veuillez confirmer le nouveau mot de passe';
+                              }
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            maxLines: 1,
+                          ),
+                        ],
+                      ),
+                      const SpacerWidget(
+                        space: 24,
+                      ),
                       RaisedButton(
                         color: const Color.fromRGBO(143, 148, 251, 1),
                         splashColor: const Color.fromRGBO(143, 148, 251, 0.3),
@@ -209,6 +278,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {}
                         },
+                      ),
+                      const SpacerWidget(
+                        space: 30,
                       ),
                     ],
                   ),
