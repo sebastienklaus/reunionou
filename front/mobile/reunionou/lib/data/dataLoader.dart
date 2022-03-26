@@ -411,7 +411,6 @@ class DataLoader extends ChangeNotifier {
 
   //Get members by status
   Iterable<Member> getMemberByStatus(status) {
-    notifyListeners();
     return participantsList.where((element) => element.status == status);
   }
 }

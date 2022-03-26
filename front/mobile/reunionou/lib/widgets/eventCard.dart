@@ -16,7 +16,6 @@ class EventCard extends StatelessWidget {
 
     return InkWell(
       onTap: () async {
-        await context.read<DataLoader>().getEventParticipants(eventItem.id);
         Navigator.push(
             context,
             MaterialPageRoute(
