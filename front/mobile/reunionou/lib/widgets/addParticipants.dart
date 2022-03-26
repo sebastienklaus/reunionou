@@ -3,15 +3,16 @@ import 'package:provider/provider.dart';
 import 'package:reunionou/models/event.dart';
 import '../data/dataLoader.dart';
 import '../models/user.dart';
+import '../screens/eventPreview.dart';
 import '../widgets/spacer.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class AddParticipantsWidget extends StatefulWidget {
   const AddParticipantsWidget({
     Key? key,
-    this.event_id,
+    this.event,
   }) : super(key: key);
-  final String? event_id;
+  final EventItem? event;
 
   @override
   _AddParticipantsWidgetState createState() => _AddParticipantsWidgetState();
@@ -87,11 +88,10 @@ class _AddParticipantsWidgetState extends State<AddParticipantsWidget> {
                   ),
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      print(widget.event_id);
                       context
                           .read<DataLoader>()
                           .addMember(
-                              widget.event_id, selecteUserId, participant.text)
+                              widget.event!.id, selecteUserId, participant.text)
                           .then(
                         (value) {
                           if (value) {
@@ -106,6 +106,11 @@ class _AddParticipantsWidgetState extends State<AddParticipantsWidget> {
                                 backgroundColor: Colors.green,
                               ),
                             );
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => EventPreviewScreen(
+                                        event: widget.event!)));
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(

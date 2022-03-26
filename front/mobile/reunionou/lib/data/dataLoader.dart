@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import '../models/event.dart';
+import '../models/member.dart';
 import '../models/user.dart';
 import 'DatabaseHandler.dart';
 import 'package:uuid/uuid.dart';
@@ -23,7 +24,8 @@ class DataLoader extends ChangeNotifier {
 
   //Members links
   final String _members = "http://docketu.iutnc.univ-lorraine.fr:62015/members";
-
+  final String _eventMembers =
+      "http://docketu.iutnc.univ-lorraine.fr:62015/events/{id}/members";
   //Card image uri
   final String cardImgUri =
       "https://media.istockphoto.com/photos/award-sparkling-background-picture-id1220754002?k=20&m=1220754002&s=170667a&w=0&h=vnj2Hm2FTsMfV47oznPMinqOGaBghQEj2vcOXlbZFRo=";
@@ -35,6 +37,9 @@ class DataLoader extends ChangeNotifier {
 
   //User events
   List<EventItem> myEvents = [];
+
+  //Participants list
+  List<Member> participantsList = [];
 
   ///-----------------------------------------------------------------------------------------------------------------------------------///
   ///********************************************************  User Methods  ***********************************************************///
@@ -354,6 +359,7 @@ class DataLoader extends ChangeNotifier {
       );
 
       if (response.statusCode == 201) {
+        await getEventParticipants(eventId);
         notifyListeners();
         return true;
       }
@@ -361,5 +367,50 @@ class DataLoader extends ChangeNotifier {
     } catch (e) {
       return false;
     }
+  }
+
+  //Get event members
+  Future<Object> getEventParticipants(String? eventId) async {
+    try {
+      var _newGetUserEvents = _eventMembers.replaceAll('{id}', eventId!);
+
+      //Call  api
+      var response = await Dio().get(
+        _newGetUserEvents,
+        options: Options(
+          headers: {
+            'token': _user.token,
+            'Origin': "flutter",
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        participantsList = [];
+        for (var member in response.data['member']) {
+          Member temp = Member(
+            id: member['id'],
+            user_id: member['user_id'],
+            event_id: member['event_id'],
+            pseudo: member['pseudo'],
+            status: "1",
+            created_at: member['created_at'],
+            updated_at: member['updated_at'],
+          );
+          //Add to participants list
+          participantsList.add(temp);
+        }
+        notifyListeners();
+      }
+
+      return participantsList;
+    } catch (e) {
+      throw ("Failed to fetch event members");
+    }
+  }
+
+  //Get members by status
+  Iterable<Member> getMemberByStatus(status) {
+    return participantsList.where((element) => element.status == status);
   }
 }
