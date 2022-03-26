@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:reunionou/models/event.dart';
 import 'package:reunionou/widgets/spacer.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../data/dataLoader.dart';
+import 'addParticipents.dart';
 import 'map.dart';
 
 class EventDetails extends StatelessWidget {
@@ -172,61 +175,66 @@ class EventDetails extends StatelessWidget {
               ),
             ),
             const SpacerWidget(
-              space: 50,
+              space: 30,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                RaisedButton(
-                  onPressed: () {},
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                  color: Colors.green,
-                  child: Ink(
-                    child: Container(
-                      constraints: const BoxConstraints(
-                        maxWidth: 100.0,
-                        maxHeight: 40.0,
+            event.user_id != context.read<DataLoader>().getUser().id
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      RaisedButton(
+                        onPressed: () {},
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                        color: Colors.green,
+                        child: Ink(
+                          child: Container(
+                            constraints: const BoxConstraints(
+                              maxWidth: 100.0,
+                              maxHeight: 40.0,
+                            ),
+                            alignment: Alignment.center,
+                            child: const Text(
+                              "Je participe",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12.0,
+                                  letterSpacing: 2.0,
+                                  fontWeight: FontWeight.w300),
+                            ),
+                          ),
+                        ),
                       ),
-                      alignment: Alignment.center,
-                      child: const Text(
-                        "Je participe",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12.0,
-                            letterSpacing: 2.0,
-                            fontWeight: FontWeight.w300),
+                      RaisedButton(
+                        onPressed: () {},
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                        color: Colors.red,
+                        child: Ink(
+                          child: Container(
+                            constraints: const BoxConstraints(
+                              maxWidth: 100.0,
+                              maxHeight: 40.0,
+                            ),
+                            alignment: Alignment.center,
+                            child: const Text(
+                              "Je refuse",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12.0,
+                                  letterSpacing: 2.0,
+                                  fontWeight: FontWeight.w300),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
+                  )
+                : Container(
+                    height: 400,
+                    child: AddParticipantsWidget(event_id: event.id),
                   ),
-                ),
-                RaisedButton(
-                  onPressed: () {},
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                  color: Colors.red,
-                  child: Ink(
-                    child: Container(
-                      constraints: const BoxConstraints(
-                        maxWidth: 100.0,
-                        maxHeight: 40.0,
-                      ),
-                      alignment: Alignment.center,
-                      child: const Text(
-                        "Je refuse",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12.0,
-                            letterSpacing: 2.0,
-                            fontWeight: FontWeight.w300),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
             const SpacerWidget(
               space: 30,
             ),
