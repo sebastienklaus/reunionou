@@ -35,11 +35,12 @@ $app->get('/events[/]', Events_Controller::class . ':getAllEvent')
     ->setName('getAllEvent');
 
 $app->delete('/events/{id}[/]', Events_Controller::class . ':deleteEventById')
-    ->setName('deleteEventById'); //todo compléter : supprimer tout message et member associés
+    ->setName('deleteEventById');
 
-//TODO evetually : creator of event can delete his/her event (côté backoffice?)
+$app->get('/users/{id}/events[/]', Events_Controller::class . ':getEventbyUserId')
+    ->setName('getEventbyUserId');
 
- //TODO get event(s) by id creator
+ //TODO evetually : creator of event can delete his/her event (côté backoffice?)
 
  //TODO deleteEventExpired
     
@@ -47,7 +48,7 @@ $app->delete('/events/{id}[/]', Events_Controller::class . ':deleteEventById')
     
 // Messages
 
-//todo : (put ? delete ?)
+//todo : (put ?)
 
 $app->get('/messages/{id}[/]', Messages_Controller::class . ':getMessage')
     ->setName('getMessage');
@@ -60,13 +61,15 @@ $app->post('/messages[/]', Messages_Controller::class . ':createMessage')
     ->setName('createMessage')
     ->add(new Validation($messageValidators));
 
-    //todo deleteMessagesByEventID
+$app->delete('/messages/{id}[/]', Messages_Controller::class . ':deleteMessageById')
+    ->setName('deleteMessageById');
+
+$app->delete('/events/{id}/messages[/]', Messages_Controller::class . ':deleteMessagesByEvent')
+    ->setName('deleteMessagesByEvent');
   
 //todo ?? message by members. Dans ce cas, rajouter ce lien dans hateos dans getMember.
 
 // Members
-
-//TODO delete membersByEventID
 
 $app->post('/members[/]', Members_Controller::class . ':createMember')
     ->setName('createMember')
@@ -75,6 +78,11 @@ $app->post('/members[/]', Members_Controller::class . ':createMember')
 $app->put('/members/{id}[/]', Members_Controller::class . ':updateMember')
     ->setName('updateMember')
     ->add(new Validation($memberValidators));
+
+
+$app->get('/users/{id}/members[/]', Members_Controller::class . ':getMembersByUserId')
+    ->setName('getMembersByUserId');
+    
     
 $app->get('/members/{id}[/]', Members_Controller::class . ':getMember')
     ->setName('getMember');
@@ -84,6 +92,9 @@ $app->get('/events/{id}/members[/]', Members_Controller::class . ':getMembersByE
     
 $app->delete('/members/{id}[/]', Members_Controller::class . ':deleteMemberById')
     ->setName('deleteMemberById');
+
+$app->delete('/events/{id}/members[/]', Members_Controller::class . ':deleteMembersByEvent')
+    ->setName('deleteMembersByEvent');
 
 // GetMember avec pseudo
     // post delete

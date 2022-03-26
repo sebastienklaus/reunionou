@@ -204,9 +204,9 @@ class Events_Controller
             //! FILTE POUR location : location JSON DOIT ETRE OK
             $event->location = $received_event['location'];
             // Création de la date  de livraison
-            $date_event = new DateTime($event_req['date']);
+            $date_event = new DateTime($received_event['date']);
             $event->date = $date_event->format('Y-m-d');
-            $heure_event = new DateTime($event_req['heure']);
+            $heure_event = new DateTime($received_event['heure']);
             $event->heure = $heure_event->format('H:i:s');
 
 
@@ -263,12 +263,13 @@ class Events_Controller
 
             //TODO Vérifier type de controle depuis réception base de donnée dans cours
             //TODO étape filtrage à garder ou améliorer ?
+
             $event_resp = [
                 'id' => $event->id,
                 'title' => $event->title,
                 'description' => $event->description,
                 'user_id' => $event->user_id,
-                'location' => $event->location,
+                'location' => json_decode($event->location),
                 'date' => $event->date,
                 'heure' => $event->heure,
                 'created_at' => $event->created_at->format('Y-m-d H:i:s'),
@@ -349,11 +350,63 @@ class Events_Controller
                 'title' => $event->title,
                 'description' => $event->description,
                 'user_id' => $event->user_id,
-                'location' => $event->location,
+                'location' => json_decode($event->location),
                 'date' => $event->date,
                 'heure' => $event->heure,
                 'created_at' => $event->created_at->format('Y-m-d H:i:s'),
                 'updated_at' => $event->updated_at->format('Y-m-d H:i:s'), //?rajouter un link avec pathfor ?
+                'href' => $this->container->router->pathFor('getEvent',['id' => $event->id])
+                ];
+            }
+
+        // Construction des donnés à retourner dans le body
+        $datas_resp = [
+            "type" => "collection",
+            "count" => $nbEvents,
+            "events" => $events_resp
+        ];
+
+        $resp = Writer::json_output($resp, 200);
+
+        $resp->getBody()->write(json_encode($datas_resp));
+
+        return $resp;
+    } catch (ModelNotFoundException $e) {
+
+            $clientError = $this->container->clientError;
+            return $clientError($req, $resp, 404, "Event not found");
+
+
+            // return Writer::json_error($resp, 404, "Alors j'ai bien regardé, j'ai pas trouvé ta commande");
+        }
+    }
+
+    public function getEventByUserId(Request $req, Response $resp, array $args): Response
+    {
+        $user_id = $args['id'];
+        
+        try {
+            $event_id_list = Events::select(['id'])
+                                    ->where('user_id', 'like', '%'.$user_id)
+                                    ->get();
+
+            $events = Events::select(['id', 'title', 'description', 'user_id', 'location', 'date', 'heure', 'created_at', 'updated_at'])
+                        ->whereIn('id', $event_id_list)
+                        ->get();
+
+            $nbEvents = count($events);
+            $events_resp = [];
+            foreach ($events as $event) {
+                $events_resp[] = [
+                'id' => $event->id,
+                'title' => $event->title,
+                'description' => $event->description,
+                'user_id' => $event->user_id,
+                'location' => json_decode($event->location),
+                'date' => $event->date,
+                'heure' => $event->heure,
+                'created_at' => $event->created_at->format('Y-m-d H:i:s'),
+                'updated_at' => $event->updated_at->format('Y-m-d H:i:s'),
                 'href' => $this->container->router->pathFor('getEvent',['id' => $event->id])
                 ];
             }
@@ -399,7 +452,7 @@ class Events_Controller
                 'title' => $event->title,
                 'description' => $event->description,
                 'user_id' => $event->user_id,
-                'location' => $event->location,
+                'location' => json_decode($event->location),
                 'date' => $event->date,
                 'heure' => $event->heure,
                 'created_at' => $event->created_at->format('Y-m-d H:i:s'),
@@ -427,7 +480,9 @@ class Events_Controller
         $id_event = $args['id'] ?? null;
         try {
             $event = Events::findOrFail($id_event);
-            if ($event->delete()) 
+            $members = $event->members()->select()->get();
+            $messages = $event->messages()->select()->get();
+            if ($event->delete() && $members->delete() && $messages->delete()) 
             {
                 $datas_resp = [
                     "type" => "event",
@@ -442,6 +497,7 @@ class Events_Controller
                     "response" => "event couldn't be deleted"
                 ];
             }
+            // ! Fonctionne mais erreur HTML
             $resp->getBody()->write(json_encode($datas_resp));
             return writer::json_output($resp, 200);
         } catch (ModelNotFoundException $e) {

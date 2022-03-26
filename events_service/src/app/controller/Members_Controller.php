@@ -335,5 +335,97 @@ class Members_Controller
         }
     }
 
+    public function deleteMembersByEvent(Request $req, Response $resp, array $args): Response
+    {
+        $id_event = $args['id'];
+        
+        try {
+            $event = Events::findOrFail($id_event);
+            $members = $event->members()->select()->get();
+            $nbMember = count($members);
+
+        $messages_resp = [];
+        // TODO : Faire en une seule requête
+        foreach ($members as $member) {
+                if ($member->delete())
+                {
+                    $datas_resp = [
+                        "type" => "member",
+                        "member" => $member,
+                        "response" => "member deleted"
+                    ];
+                } else
+                {
+                    $datas_resp = [
+                        "type" => "member",
+                        "member" => $member,
+                        "response" => "member couldn't be deleted"
+                    ];
+                }
+                $resp->getBody()->write(json_encode($datas_resp));
+            }
+            return writer::json_output($resp, 200); 
+        }catch (ModelNotFoundException $e) {
+            $clientError = $this->container->clientError;
+            return $clientError($req, $resp, 404, "Event not found");
+        }
+    }
+
+    public function getMembersByUserId(Request $req, Response $resp, array $args): Response
+    {
+        $id_user = $args['id'];
+        
+        try {
+            $user_members = Members::select()->where('user_id','like','%' . $id_user)->get();
+            $nbUser_Member = count($user_members);
+
+        $user_members_resp = [];
+        foreach ($user_members as $member) {
+
+            $pathForMember = $this->container->router->pathFor(
+                'getMember',
+                ['id' => $member->id]
+            );
+
+            $pathForEvent = $this->container->router->pathFor(
+                'getEvent',
+                ['id' => $member->event_id]
+            );
+
+            $user_members_resp[] = [
+                'id' => $member->id,
+                'user_id' => $member->user_id,
+                'event_id' => $member->event_id, //? to be or not to be ?
+                'pseudo' => $member->pseudo,
+                'created_at' => $member->created_at,
+                'updated_at' => $member->updated_at,
+                'links' => [
+                    "self" => ["href" => $pathForMember],
+                    "event" => ["href" => $pathForEvent]
+                ]
+            ]; // TODO rajouter lien self pour chaque member
+        }
+
+            // Création du body de la réponse
+            //? Renomer les keys ou laisser les noms issus de la DB ?
+            $datas_resp = [
+                "type" => "collection",
+                "count" => $nbUser_Member,
+                "member" => $user_members_resp,
+   
+            ];
+
+            $resp = Writer::json_output($resp, 200);
+            
+            $resp->getBody()->write(json_encode($datas_resp));
+
+            return $resp;
+        } catch (ModelNotFoundException $e) {
+
+            $clientError = $this->container->clientError;
+            return $clientError($req, $resp, 404, "userid not found");
+
+        }
+    }
     
 }

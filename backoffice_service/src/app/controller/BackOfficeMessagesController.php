@@ -80,4 +80,21 @@ class BackOfficeMessagesController
 
     }
 
+    public function deleteMessageById(Request $req, Response $resp, $args): Response {
+
+
+        $client = new \GuzzleHttp\Client([
+            'base_uri' => $this->container->get('settings')['events_service'],
+            'timeout' => 5.0
+        ]);
+
+        $id_message = $args['id'];
+        $response = $client->request('DELETE', '/messages/' . $id_message);
+
+        $resp = Writer::json_output($resp, $response->getStatusCode());
+        $resp->getBody()->write($response->getBody());
+        return $resp;
+
+    }
+
 }
