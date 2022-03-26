@@ -48,7 +48,9 @@ class _HomeScreenState extends State<EventPreviewScreen> {
               if (1 == 1) Tab(icon: Icon(Icons.settings))
             ],
           ),
-          title: Text(widget.event.title),
+          title: Text(widget.event.title.length > 15
+              ? widget.event.title.substring(0, 15) + "..."
+              : widget.event.title),
           centerTitle: true,
         ),
         body: TabBarView(

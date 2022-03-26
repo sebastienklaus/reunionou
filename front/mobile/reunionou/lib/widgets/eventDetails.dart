@@ -41,14 +41,18 @@ class EventDetails extends StatelessWidget {
               space: 10,
             ),
             Text(
-              event.date +
-                  "(" +
-                  event.hour +
-                  ")" +
-                  " at " +
-                  event.location[0]['name'],
+              event.date + "(" + event.hour + ")",
               style: const TextStyle(
-                  fontSize: 18.0,
+                  fontSize: 16.0,
+                  color: Colors.black45,
+                  letterSpacing: 2.0,
+                  fontWeight: FontWeight.w300),
+            ),
+            Text(
+              event.location[0]['name'],
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                  fontSize: 16.0,
                   color: Colors.black45,
                   letterSpacing: 2.0,
                   fontWeight: FontWeight.w300),
@@ -59,8 +63,8 @@ class EventDetails extends StatelessWidget {
             Text(
               event.description,
               style: const TextStyle(
-                  fontSize: 17.0,
-                  color: Colors.black45,
+                  fontSize: 18.0,
+                  color: Colors.black,
                   letterSpacing: 2.0,
                   fontWeight: FontWeight.w300),
             ),

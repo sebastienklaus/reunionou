@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import '../models/event.dart';
@@ -11,17 +12,25 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 
 class DataLoader extends ChangeNotifier {
   /// Links
-  //Authentification link
+  //Authentification links
   final String _authUri = "http://docketu.iutnc.univ-lorraine.fr:62015/auth";
   final String _userAuth = "http://docketu.iutnc.univ-lorraine.fr:62015/users/";
+
+  //Events links
+  final String _getUserEvents =
+      "http://docketu.iutnc.univ-lorraine.fr:62015/users/{id}/events";
 
   //Card image uri
   final String cardImgUri =
       "https://media.istockphoto.com/photos/award-sparkling-background-picture-id1220754002?k=20&m=1220754002&s=170667a&w=0&h=vnj2Hm2FTsMfV47oznPMinqOGaBghQEj2vcOXlbZFRo=";
   //Handler
   late DatabaseHandler handler;
+
   //late User _user;
   late User _user;
+
+  //User events
+  List<EventItem> myEvents = [];
 
   ///-----------------------------------------------------------------------------------------------------------------------------------///
   ///********************************************************  User Methods  ***********************************************************///
@@ -211,54 +220,43 @@ class DataLoader extends ChangeNotifier {
 
   //Get events
   Future<List<EventItem>> getEvents() async {
-    //Check db status (empty/not)
-    bool dbCheck = await handler.dbIsEmptyOrNot();
-
-    //Call events api
-    const List<EventItem> eventItems = <EventItem>[
-      EventItem(
-          id: "s5qd6+q5sdd",
-          title: "Prqsdqs",
-          description: "Lorem ipsum",
-          user_id: "Lorem ipsum",
-          location: [
-            {
-              "name": "Yombu",
-              "latitude": 48.68353258919478,
-              "longitude": 6.152571620242472,
-            }
-          ],
-          date: "07/02/2021",
-          hour: "12:35"),
-      EventItem(
-          id: "s5qd6+q5sdd",
-          title: "sd sdfani",
-          description: "Lorem ipsum",
-          user_id: "Lorem ipsum",
-          location: [
-            {
-              "name": "Photofeed",
-              "latitude": 48.68353258919478,
-              "longitude": 6.152571620242472
-            }
-          ],
-          date: "07/02/2021",
-          hour: "12:35"),
-      EventItem(
-          id: "s5qd6+q5sdd",
-          title: "Princess Ka'iulani",
-          description: "Lorem ipsum",
-          user_id: "Lorem ipsum",
-          location: [
-            {
-              "name": "Yombu",
-              "latitude": 48.68353258919478,
-              "longitude": 6.152571620242472,
-            }
-          ],
-          date: "07/02/2021",
-          hour: "12:35"),
-    ];
-    return eventItems;
+    try {
+      //Call authentificate api
+      var _getUserEvents = this._getUserEvents.replaceAll('{id}', _user.id);
+      var response = await Dio().get(
+        _getUserEvents,
+        options: Options(
+          headers: <String, String>{'Origin': "flutter"},
+        ),
+      );
+      if (response.statusCode == 200) {
+        myEvents = [];
+        for (var event in response.data['events']) {
+          //Add to myEvents
+          myEvents.add(
+            EventItem(
+              id: event['id'],
+              title: event['title'],
+              description: event['description'],
+              location: [
+                {
+                  "name": event['location']['name'],
+                  "latitude": double.parse(event['location']['latitude']),
+                  "longitude": double.parse(event['location']['longitude']),
+                }
+              ],
+              user_id: event['user_id'],
+              hour: event['heure'],
+              date: event['date'],
+              created_at: event['created_at'],
+              updated_at: event['updated_at'],
+            ),
+          );
+        }
+      }
+      return myEvents;
+    } catch (e) {
+      throw Exception('Failed to load events');
+    }
   }
 }

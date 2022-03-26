@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:reunionou/screens/home.dart';
+import 'package:reunionou/widgets/spacer.dart';
 
 import '../data/dataLoader.dart';
 import '../models/event.dart';
@@ -30,12 +30,21 @@ class EventCard extends StatelessWidget {
               Text(eventItem.title,
                   style: const TextStyle(color: Colors.white, fontSize: 25),
                   textAlign: TextAlign.center),
-              Text(
-                eventItem.location[0]['name'],
-                style: const TextStyle(color: Colors.white, fontSize: 17),
+              const SpacerWidget(
+                space: 15,
               ),
               Text(
-                eventItem.date + " " + eventItem.hour,
+                eventItem.date.toString() + " " + eventItem.hour.toString(),
+                style: const TextStyle(color: Colors.white),
+              ),
+              const SpacerWidget(
+                space: 15,
+              ),
+              Text(
+                eventItem.user_id ==
+                        "/users/" + context.read<DataLoader>().getUser().id
+                    ? "Organisateur"
+                    : eventItem.user_id.toString(),
                 style: const TextStyle(color: Colors.white),
               ),
             ],
