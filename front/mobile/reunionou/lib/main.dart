@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:reunionou/screens/addEvent.dart';
 import 'package:reunionou/screens/guest_login.dart';
 import 'package:reunionou/screens/home.dart';
 import 'package:reunionou/screens/profile.dart';
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
             routes: {
               UserLoginScreen.route: (context) => const UserLoginScreen(),
               GuestLoginScreen.route: (context) => const GuestLoginScreen(),
+              AddEventScreen.route: (context) => const AddEventScreen(),
               HomeScreen.route: (context) =>
                   HomeScreen(user: context.read<DataLoader>().getUser()),
               ProfileScreen.route: (context) =>
