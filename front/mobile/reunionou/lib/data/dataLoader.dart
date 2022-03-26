@@ -14,11 +14,15 @@ class DataLoader extends ChangeNotifier {
   /// Links
   //Authentification links
   final String _authUri = "http://docketu.iutnc.univ-lorraine.fr:62015/auth";
-  final String _userAuth = "http://docketu.iutnc.univ-lorraine.fr:62015/users/";
+  final String _usersUri = "http://docketu.iutnc.univ-lorraine.fr:62015/users/";
 
   //Events links
   final String _getUserEvents =
       "http://docketu.iutnc.univ-lorraine.fr:62015/users/{id}/events";
+  final String _addEvent = "http://docketu.iutnc.univ-lorraine.fr:62015/events";
+
+  //Members links
+  final String _members = "http://docketu.iutnc.univ-lorraine.fr:62015/members";
 
   //Card image uri
   final String cardImgUri =
@@ -140,6 +144,34 @@ class DataLoader extends ChangeNotifier {
     }
   }
 
+  //Get all users
+  Future<List<User>> getUsers() async {
+    try {
+      //Call api
+      var response = await Dio().get(
+        _usersUri,
+        options: Options(
+          headers: <String, String>{'Origin': "flutter"},
+        ),
+      );
+      List<User> users = [];
+      if (response.statusCode == 200) {
+        for (var user in response.data) {
+          if (_user.id != user['user_id']) {
+            var temp = User(
+              id: user['user_id'],
+              fullname: user['user_fullname'],
+            );
+            users.add(temp);
+          }
+        }
+      }
+      return users;
+    } catch (e) {
+      throw Exception('Failed to load users');
+    }
+  }
+
   //Update user
   Future<bool> updateUser(
     id,
@@ -153,7 +185,7 @@ class DataLoader extends ChangeNotifier {
   ) async {
     //Call authentificate api
     try {
-      var response = await Dio().put(_userAuth + id,
+      var response = await Dio().put(_usersUri + id,
           options: Options(
             headers: <String, String>{'token': token, 'Origin': "flutter"},
           ),
@@ -167,7 +199,7 @@ class DataLoader extends ChangeNotifier {
           });
       if (response.statusCode == 200) {
         var refreshResp = await Dio().get(
-          _userAuth + id,
+          _usersUri + id,
           options: Options(
             headers: <String, String>{'token': token, 'Origin': "flutter"},
           ),
@@ -232,31 +264,102 @@ class DataLoader extends ChangeNotifier {
       if (response.statusCode == 200) {
         myEvents = [];
         for (var event in response.data['events']) {
-          //Add to myEvents
-          myEvents.add(
-            EventItem(
-              id: event['id'],
-              title: event['title'],
-              description: event['description'],
-              location: [
-                {
-                  "name": event['location']['name'],
-                  "latitude": double.parse(event['location']['latitude']),
-                  "longitude": double.parse(event['location']['longitude']),
-                }
-              ],
-              user_id: event['user_id'],
-              hour: event['heure'],
-              date: event['date'],
-              created_at: event['created_at'],
-              updated_at: event['updated_at'],
-            ),
+          var temp = EventItem(
+            id: event['id'],
+            title: event['title'],
+            description: event['description'],
+            location: [
+              {
+                "name": event['location']['name'],
+                "latitude": event['location']['latitude'],
+                "longitude": event['location']['longitude'],
+              }
+            ],
+            user_id: event['user_id'],
+            hour: event['heure'],
+            date: event['date'],
+            created_at: event['created_at'],
+            updated_at: event['updated_at'],
           );
+          //Add to myEvents
+          myEvents.add(temp);
         }
       }
       return myEvents;
     } catch (e) {
       throw Exception('Failed to load events');
+    }
+  }
+
+  //Add event
+  Future<bool> addEvent(EventItem event) async {
+    //Call authentificate api
+    try {
+      var parsedEvent = {
+        "title": event.title,
+        "user_id": _user.id,
+        "description": event.description,
+        "location": event.location[0],
+        "heure": event.hour,
+        "date": event.date,
+      };
+
+      var response = await Dio().post(
+        _addEvent,
+        options: Options(
+          headers: {
+            'token': _user.token,
+            'Origin': "flutter",
+            'Content-Type': 'application/json',
+          },
+        ),
+        data: parsedEvent,
+      );
+
+      if (response.statusCode == 201) {
+        notifyListeners();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  ///-----------------------------------------------------------------------------------------------------------------------------------///
+  ///*****************************************************  Members Methods  ***********************************************************///
+  ///-----------------------------------------------------------------------------------------------------------------------------------///
+
+  //Add member to event
+  Future<bool> addMember(
+      String? eventId, String userId, String username) async {
+    //Call authentificate api
+    try {
+      var parsedMember = {
+        "event_id": eventId,
+        "user_id": userId,
+        "pseudo": username
+      };
+
+      var response = await Dio().post(
+        _members,
+        options: Options(
+          headers: {
+            'token': _user.token,
+            'Origin': "flutter",
+            'Content-Type': 'application/json',
+          },
+        ),
+        data: parsedMember,
+      );
+
+      if (response.statusCode == 201) {
+        notifyListeners();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
   }
 }

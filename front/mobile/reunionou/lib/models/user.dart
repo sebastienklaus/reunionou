@@ -1,8 +1,8 @@
 class User {
   String id;
   String fullname;
-  String username;
-  String type;
+  String? username;
+  String? type;
   String? email;
   String? token;
 
@@ -10,8 +10,8 @@ class User {
   User({
     required this.id,
     required this.fullname,
-    required this.username,
-    required this.type,
+    this.username,
+    this.type,
     this.email,
     this.token,
   });

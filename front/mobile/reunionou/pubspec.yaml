@@ -53,6 +53,7 @@ dependencies:
   jwt_decoder: ^2.0.1
   datetime_picker_formfield: ^2.0.0
   geocoder: ^0.2.1
+  flutter_typeahead: ^3.2.4
   
 
 
