@@ -41,10 +41,9 @@ class EventCard extends StatelessWidget {
                 space: 15,
               ),
               Text(
-                eventItem.user_id ==
-                        "/users/" + context.read<DataLoader>().getUser().id
+                eventItem.user_id == context.read<DataLoader>().getUser().id
                     ? "Organisateur"
-                    : eventItem.user_id.toString(),
+                    : "",
                 style: const TextStyle(color: Colors.white),
               ),
             ],

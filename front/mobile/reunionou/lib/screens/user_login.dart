@@ -19,8 +19,8 @@ class _LoginScreenState extends State<UserLoginScreen> {
     final password = TextEditingController();
 
     //Just for testing
-    email.text = "test@mail.fr";
-    password.text = "hellomalek";
+    email.text = "malek@mail.fr";
+    password.text = "password";
 
     final _formKey = GlobalKey<FormState>();
     return WillPopScope(

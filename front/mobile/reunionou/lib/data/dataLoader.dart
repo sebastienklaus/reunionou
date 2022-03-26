@@ -19,6 +19,7 @@ class DataLoader extends ChangeNotifier {
   //Events links
   final String _getUserEvents =
       "http://docketu.iutnc.univ-lorraine.fr:62015/users/{id}/events";
+  final String _addEvent = "http://docketu.iutnc.univ-lorraine.fr:62015/events";
 
   //Card image uri
   final String cardImgUri =
@@ -232,31 +233,65 @@ class DataLoader extends ChangeNotifier {
       if (response.statusCode == 200) {
         myEvents = [];
         for (var event in response.data['events']) {
-          //Add to myEvents
-          myEvents.add(
-            EventItem(
-              id: event['id'],
-              title: event['title'],
-              description: event['description'],
-              location: [
-                {
-                  "name": event['location']['name'],
-                  "latitude": double.parse(event['location']['latitude']),
-                  "longitude": double.parse(event['location']['longitude']),
-                }
-              ],
-              user_id: event['user_id'],
-              hour: event['heure'],
-              date: event['date'],
-              created_at: event['created_at'],
-              updated_at: event['updated_at'],
-            ),
+          var temp = EventItem(
+            id: event['id'],
+            title: event['title'],
+            description: event['description'],
+            location: [
+              {
+                "name": event['location']['name'],
+                "latitude": event['location']['latitude'],
+                "longitude": event['location']['longitude'],
+              }
+            ],
+            user_id: event['user_id'],
+            hour: event['heure'],
+            date: event['date'],
+            created_at: event['created_at'],
+            updated_at: event['updated_at'],
           );
+          //Add to myEvents
+          myEvents.add(temp);
         }
       }
       return myEvents;
     } catch (e) {
       throw Exception('Failed to load events');
+    }
+  }
+
+  //Add event
+  Future<bool> addEvent(EventItem event) async {
+    //Call authentificate api
+    try {
+      var parsedEvent = {
+        "title": event.title,
+        "user_id": _user.id,
+        "description": event.description,
+        "location": event.location[0],
+        "heure": event.hour,
+        "date": event.date,
+      };
+
+      var response = await Dio().post(
+        _addEvent,
+        options: Options(
+          headers: {
+            'token': _user.token,
+            'Origin': "flutter",
+            'Content-Type': 'application/json',
+          },
+        ),
+        data: parsedEvent,
+      );
+
+      if (response.statusCode == 201) {
+        notifyListeners();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
   }
 }

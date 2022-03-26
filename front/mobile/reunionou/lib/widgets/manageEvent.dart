@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:provider/provider.dart';
 import 'package:reunionou/models/event.dart';
 import 'package:reunionou/widgets/map.dart';
+import '../data/dataLoader.dart';
 import '../widgets/spacer.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
@@ -170,7 +172,7 @@ class _ManageEventScreenState extends State<ManageEventScreen> {
                       space: 8,
                     ),
                     DateTimeField(
-                      format: DateFormat("HH:mm:ss"),
+                      format: DateFormat("HH:mm"),
                       controller: hour,
                       validator: (hour) {
                         if (hour == null) {
@@ -214,10 +216,12 @@ class _ManageEventScreenState extends State<ManageEventScreen> {
                         long: long,
                         changedAdr: changedAdr,
                         getAddress: (Address address) {
-                          location.text = "${address.addressLine},";
+                          location.text = "${address.addressLine}";
                           setState(() {
                             address = address;
                             changedAdr = false;
+                            lat = address.coordinates.latitude;
+                            long = address.coordinates.longitude;
                           });
                         },
                       ),
@@ -267,7 +271,53 @@ class _ManageEventScreenState extends State<ManageEventScreen> {
                     ),
                   ),
                   onPressed: () async {
-                    if (_formKey.currentState!.validate()) {}
+                    if (_formKey.currentState!.validate()) {
+                      if (widget.action == "add") {
+                        EventItem newEvent = EventItem(
+                          title: title.text,
+                          description: description.text,
+                          location: [
+                            {
+                              "name": location.text,
+                              "latitude": lat,
+                              "longitude": long,
+                            }
+                          ],
+                          date: date.text,
+                          hour: hour.text,
+                        );
+                        context
+                            .read<DataLoader>()
+                            .addEvent(newEvent)
+                            .then((value) {
+                          if (value) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  "événement créé avec succès",
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 255, 255, 255),
+                                  ),
+                                ),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                            Navigator.pushNamed(
+                              context,
+                              '/home',
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                    "Quelque chose s'est mal passé essaie une autre fois"),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        });
+                      } else {}
+                    }
                   },
                 ),
                 const SpacerWidget(
