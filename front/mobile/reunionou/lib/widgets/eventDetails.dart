@@ -131,7 +131,8 @@ class _EventDetailsState extends State<EventDetails> {
                           text: widget.event.title,
                           linkUrl:
                               'http://docketu.iutnc.univ-lorraine.fr:62015/events/' +
-                                  widget.event.id.toString(),
+                                  widget.event.id.toString() //Change me
+                          ,
                           chooserTitle: 'Partager via');
                     },
                     child: const Padding(
