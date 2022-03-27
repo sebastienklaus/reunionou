@@ -243,12 +243,13 @@ class AuthController {
     
     public function getUsers(Request $req, Response $resp, $args): Response {
         try { 
-            $allUsers = User::select(['id', 'fullname'])->get();
+            $allUsers = User::select(['id', 'fullname', 'username'])->get();
             $data = [];
             foreach ($allUsers as $u) {
                 array_push($data, [
                     'user_id' => $u->id,
                     'user_fullname' => $u->fullname,
+                    'user_username' => $u->username,
                 ]);
             }
 
