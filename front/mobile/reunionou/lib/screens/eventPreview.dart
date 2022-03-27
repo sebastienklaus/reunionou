@@ -77,7 +77,9 @@ class _HomeScreenState extends State<EventPreviewScreen> {
                     event: widget.event,
                   ),
                   const ParticipantsList(),
-                  const CommentsList(),
+                  CommentsList(
+                    event_id: widget.event.id,
+                  ),
                   if (widget.event.user_id ==
                       context.read<DataLoader>().getUser().id)
                     Column(

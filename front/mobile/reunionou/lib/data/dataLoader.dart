@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import '../models/event.dart';
 import '../models/member.dart';
+import '../models/message.dart';
 import '../models/user.dart';
 import 'DatabaseHandler.dart';
 import 'package:uuid/uuid.dart';
@@ -23,9 +24,17 @@ class DataLoader extends ChangeNotifier {
   final String _addEvent = "http://docketu.iutnc.univ-lorraine.fr:62015/events";
 
   //Members links
-  final String _members = "http://docketu.iutnc.univ-lorraine.fr:62015/members";
+  final String _membersUri =
+      "http://docketu.iutnc.univ-lorraine.fr:62015/members";
   final String _eventMembers =
       "http://docketu.iutnc.univ-lorraine.fr:62015/events/{id}/members";
+
+  //Event Messages
+  final String _getEventMessages =
+      "http://docketu.iutnc.univ-lorraine.fr:62015/events/{id}/messages";
+  final String _messageUri =
+      "http://docketu.iutnc.univ-lorraine.fr:62015/messages";
+
   //Card image uri
   final String cardImgUri =
       "https://media.istockphoto.com/photos/award-sparkling-background-picture-id1220754002?k=20&m=1220754002&s=170667a&w=0&h=vnj2Hm2FTsMfV47oznPMinqOGaBghQEj2vcOXlbZFRo=";
@@ -40,6 +49,9 @@ class DataLoader extends ChangeNotifier {
 
   //Participants list
   List<Member> participantsList = [];
+
+  //Messages list
+  List<EventMessage> eventMessages = [];
 
   ///-----------------------------------------------------------------------------------------------------------------------------------///
   ///********************************************************  User Methods  ***********************************************************///
@@ -58,7 +70,7 @@ class DataLoader extends ChangeNotifier {
 
   //Authentificate user
   Future<bool> authentificate(String email, String password) async {
-    //Call authentificate api
+    //Call api
     try {
       String basicAuth = 'Basic ' +
           base64Encode(
@@ -103,7 +115,7 @@ class DataLoader extends ChangeNotifier {
 
   //Authentificate guest
   Future<bool> authentificateGuest(String fullname) async {
-    //Call authentificate api here
+    //Call api here
     if (1 == 1) {
       handler = DatabaseHandler();
       String id = const Uuid().v4();
@@ -166,6 +178,7 @@ class DataLoader extends ChangeNotifier {
             var temp = User(
               id: user['user_id'],
               fullname: user['user_fullname'],
+              username: user['user_username'],
             );
             users.add(temp);
           }
@@ -188,7 +201,7 @@ class DataLoader extends ChangeNotifier {
     confirmPassword,
     token,
   ) async {
-    //Call authentificate api
+    //Call api
     try {
       var response = await Dio().put(_usersUri + id,
           options: Options(
@@ -258,7 +271,7 @@ class DataLoader extends ChangeNotifier {
   //Get events
   Future<List<EventItem>> getEvents() async {
     try {
-      //Call authentificate api
+      //Call api
       var _getUserEvents = this._getUserEvents.replaceAll('{id}', _user.id);
       var response = await Dio().get(
         _getUserEvents,
@@ -298,7 +311,7 @@ class DataLoader extends ChangeNotifier {
 
   //Add event
   Future<bool> addEvent(EventItem event) async {
-    //Call authentificate api
+    //Call api
     try {
       var parsedEvent = {
         "title": event.title,
@@ -338,7 +351,7 @@ class DataLoader extends ChangeNotifier {
   //Add member to event
   Future<bool> addMember(
       String? eventId, String userId, String username) async {
-    //Call authentificate api
+    //Call api
     try {
       var parsedMember = {
         "event_id": eventId,
@@ -347,7 +360,7 @@ class DataLoader extends ChangeNotifier {
       };
 
       var response = await Dio().post(
-        _members,
+        _membersUri,
         options: Options(
           headers: {
             'token': _user.token,
@@ -412,5 +425,73 @@ class DataLoader extends ChangeNotifier {
   //Get members by status
   Iterable<Member> getMemberByStatus(status) {
     return participantsList.where((element) => element.status == status);
+  }
+
+  ///-----------------------------------------------------------------------------------------------------------------------------------///
+  ///****************************************************  Messages Methods  ***********************************************************///
+  ///-----------------------------------------------------------------------------------------------------------------------------------///
+
+  //Get event messages
+  Future<List<EventMessage>> getMessages(event_id) async {
+    try {
+      //Call api
+      var _getEventMessages =
+          this._getEventMessages.replaceAll('{id}', event_id);
+      var response = await Dio().get(
+        _getEventMessages,
+        options: Options(
+          headers: <String, String>{'Origin': "flutter"},
+        ),
+      );
+      if (response.statusCode == 200) {
+        eventMessages = [];
+        for (var msg in response.data['message']) {
+          var temp = EventMessage(
+            id: msg['id'],
+            event_id: msg['event_id'],
+            member_id: msg['member_id'],
+            content: msg['content'],
+          );
+          //Add to eventMessages
+          eventMessages.add(temp);
+        }
+      }
+      return eventMessages;
+    } catch (e) {
+      throw Exception('Failed to load event messages');
+    }
+  }
+
+  //Add message to event
+  Future<bool> addMessage(String? eventId, String message) async {
+    //Call api
+    try {
+      var parsedMessage = {
+        "event_id": eventId,
+        "content": message,
+        "member_id": "sdq"
+      };
+
+      var response = await Dio().post(
+        _messageUri,
+        options: Options(
+          headers: {
+            'token': _user.token,
+            'Origin': "flutter",
+            'Content-Type': 'application/json',
+          },
+        ),
+        data: parsedMessage,
+      );
+
+      if (response.statusCode == 201) {
+        await getMessages(eventId);
+        notifyListeners();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
   }
 }

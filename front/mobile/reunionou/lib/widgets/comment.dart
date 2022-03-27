@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:reunionou/models/message.dart';
 
 class CommentWidget extends StatelessWidget {
-  const CommentWidget({
+  CommentWidget({
     Key? key,
+    required this.message,
   }) : super(key: key);
+
+  EventMessage message;
 
   @override
   Widget build(BuildContext context) {
-    return const ListTile(
-      title: Text("User"),
-      subtitle: Text("Lorem ipsum"),
-      leading: Icon(
+    return ListTile(
+      title: Text(message.member_id),
+      subtitle: Text(message.content),
+      leading: const Icon(
         Icons.person,
         color: Colors.deepPurple,
       ),
-      trailing: Text("22-03-2022 14:40"),
+      trailing: Text(message.created_at!),
     );
   }
 }
