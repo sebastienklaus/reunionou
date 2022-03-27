@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../data/dataLoader.dart';
 import 'addParticipants.dart';
 import 'map.dart';
+import 'package:flutter_share/flutter_share.dart';
 
 class EventDetails extends StatefulWidget {
   const EventDetails({
@@ -88,35 +89,66 @@ class _EventDetailsState extends State<EventDetails> {
             const SpacerWidget(
               space: 15,
             ),
-            Card(
-              margin:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-              elevation: 2.0,
-              child: InkWell(
-                onTap: () async {
-                  String cord =
-                      widget.event.location[0]['latitude'].toString() +
-                          "," +
-                          widget.event.location[0]['longitude'].toString();
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Card(
+                  elevation: 2.0,
+                  child: InkWell(
+                    onTap: () async {
+                      String cord =
+                          widget.event.location[0]['latitude'].toString() +
+                              "," +
+                              widget.event.location[0]['longitude'].toString();
 
-                  var url =
-                      'https://www.google.com/maps/search/?api=1&query=$cord';
-                  var urllaunchable = await canLaunch(url);
-                  if (urllaunchable) {
-                    await launch(url);
-                  } else {
-                    print("URL can't be launched.");
-                  }
-                },
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 30),
-                  child: Text(
-                    "Get direction",
-                    style: TextStyle(
-                        letterSpacing: 2.0, fontWeight: FontWeight.w300),
+                      var url =
+                          'https://www.google.com/maps/search/?api=1&query=$cord';
+                      var urllaunchable = await canLaunch(url);
+                      if (urllaunchable) {
+                        await launch(url);
+                      } else {
+                        print("URL can't be launched.");
+                      }
+                    },
+                    child: const Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 12, horizontal: 30),
+                      child: Text(
+                        "Get direction",
+                        style: TextStyle(
+                            letterSpacing: 2.0, fontWeight: FontWeight.w300),
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                Card(
+                  elevation: 2.0,
+                  color: Colors.deepPurple,
+                  child: InkWell(
+                    onTap: () async {
+                      await FlutterShare.share(
+                          title: widget.event.title,
+                          text: widget.event.title,
+                          linkUrl:
+                              'http://docketu.iutnc.univ-lorraine.fr:62015/events/' +
+                                  widget.event.id.toString() //Change me
+                          ,
+                          chooserTitle: 'Partager via');
+                    },
+                    child: const Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 12, horizontal: 30),
+                      child: Text(
+                        "Partager",
+                        style: TextStyle(
+                            letterSpacing: 2.0,
+                            fontWeight: FontWeight.w300,
+                            color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SpacerWidget(
               space: 30,

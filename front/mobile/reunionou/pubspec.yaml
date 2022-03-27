@@ -54,6 +54,7 @@ dependencies:
   datetime_picker_formfield: ^2.0.0
   geocoder: ^0.2.1
   flutter_typeahead: ^3.2.4
+  flutter_share: ^2.0.0
   
 
 
