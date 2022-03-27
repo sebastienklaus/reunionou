@@ -191,6 +191,18 @@ class DataLoader extends ChangeNotifier {
     }
   }
 
+  //Search user by name
+  Future<Iterable<User>> getUserByName(search) async {
+    try {
+      //Refresh users;
+      return getUsers().then((users) {
+        return users.where((user) => user.fullname.contains(search));
+      });
+    } catch (e) {
+      throw Exception('Failed to load users');
+    }
+  }
+
   //Update user
   Future<bool> updateUser(
     id,

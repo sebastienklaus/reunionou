@@ -51,7 +51,9 @@ class _AddParticipantsWidgetState extends State<AddParticipantsWidget> {
                         controller: participant,
                       ),
                       suggestionsCallback: (pattern) {
-                        return context.read<DataLoader>().getUsers();
+                        return context
+                            .read<DataLoader>()
+                            .getUserByName(pattern);
                       },
                       itemBuilder: (context, User suggestion) {
                         return ListTile(
