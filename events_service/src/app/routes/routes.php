@@ -80,7 +80,7 @@ $app->put('/members/{id}[/]', Members_Controller::class . ':updateMember')
     ->add(new Validation($memberValidators));
 
 
-$app->get('/users/{id}/members[/]', Members_Controller::class . ':getMembersByUserId')
+$app->get('/users/{user_id}/members[/]', Members_Controller::class . ':getMembersByUserId')
     ->setName('getMembersByUserId');
     
     

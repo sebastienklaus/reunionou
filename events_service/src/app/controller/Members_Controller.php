@@ -373,7 +373,7 @@ class Members_Controller
 
     public function getMembersByUserId(Request $req, Response $resp, array $args): Response
     {
-        $id_user = $args['id'];
+        $id_user = $args['user_id'];
         
         try {
             $user_members = Members::select()->where('user_id','like','%' . $id_user)->get();
