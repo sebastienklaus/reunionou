@@ -6,6 +6,8 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use GuzzleHttp\Client as Client;
 
+use reunionou\backoffice\app\controller\BackOfficeAuthController;
+
 use reunionou\backoffice\app\utils\Writer;
 
 class BackOfficeMembersController
@@ -123,16 +125,35 @@ class BackOfficeMembersController
     public function getMembersByUserId(Request $req, Response $resp, $args): Response {
 
 
-        $client = new \GuzzleHttp\Client([
+        $client_events = new \GuzzleHttp\Client([
             'base_uri' => $this->container->get('settings')['events_service'],
             'timeout' => 5.0
         ]);
 
-        $id_user = $args['id'];
-        $response = $client->request('GET', '/users/' . $id_user . '/members/');
+        $client_auth = new \GuzzleHttp\Client([
+            'base_uri' => $this->container->get('settings')['auth_service'],
+            'timeout' => 5.0
+        ]);
 
-        $resp = Writer::json_output($resp, $response->getStatusCode());
-        $resp->getBody()->write($response->getBody());
+
+        $id_user = $args['user_id'];
+        $user_response = $client_auth->request('GET', '/users/'. $id_user);
+        $event_response = $client_events->request('GET', '/users/' . $id_user . '/members/');
+        $datas_resp = [
+            "type" => $event_response->getBody()
+
+        ];
+        $event = json_decode($event_response->getBody()->getContents());
+        var_dump($event->member);
+
+        // $resp = Writer::json_output($resp, 200);
+        
+        // $response->getBody()->write(json_encode($datas_resp));
+
+        // $resp = Writer::json_output($resp, $response->getStatusCode());
+        $resp = Writer::json_output($resp, "200"); //! à changer avec try catch pour gérer les erreur des deux requetes
+        // $resp->getBody()->write($response->getBody());
+        $resp->getBody()->write(json_encode($datas_resp));
         return $resp;
 
         // TODO : Récupérer href des membres

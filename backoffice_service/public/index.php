@@ -20,14 +20,13 @@ $app->options('/{routes:.+}', function ($request, $response, $args) {
 
 $app->add(Middleware::class .':corsHeaders');
 
-
-require_once __DIR__ . '/../src/app/routes/routesAuth.php';
-
 require_once __DIR__ . '/../src/app/routes/routesEvents.php';
 
 require_once __DIR__ . '/../src/app/routes/routesMembers.php';
 
 require_once __DIR__ . '/../src/app/routes/routesMessages.php';
+
+require_once __DIR__ . '/../src/app/routes/routesAuth.php';
 
 // $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function($req, $res) {
 //     $handler = $this->notFoundHandler; 

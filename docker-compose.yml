@@ -103,6 +103,9 @@ services:
 
   api.backoffice:
     image: canals/php:latest
+    environment:
+      - VHOST_HOSTNAME=api.backoffice.local
+      - VHOST_DOCROOT=/var/www/html
     ports:
       - "62015:80"
     volumes:
