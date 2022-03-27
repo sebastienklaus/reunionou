@@ -21,7 +21,8 @@ class DataLoader extends ChangeNotifier {
   //Events links
   final String _getUserEvents =
       "http://docketu.iutnc.univ-lorraine.fr:62015/users/{id}/events";
-  final String _addEvent = "http://docketu.iutnc.univ-lorraine.fr:62015/events";
+  final String _eventsUri =
+      "http://docketu.iutnc.univ-lorraine.fr:62015/events";
 
   //Members links
   final String _membersUri =
@@ -323,7 +324,7 @@ class DataLoader extends ChangeNotifier {
       };
 
       var response = await Dio().post(
-        _addEvent,
+        _eventsUri,
         options: Options(
           headers: {
             'token': _user.token,
@@ -340,6 +341,43 @@ class DataLoader extends ChangeNotifier {
       }
       return false;
     } catch (e) {
+      return false;
+    }
+  }
+
+//Update event
+  Future<bool> updateEvent(EventItem event) async {
+    //Call api
+    try {
+      var parsedEvent = {
+        "title": event.title,
+        "user_id": _user.id,
+        "description": event.description,
+        "location": event.location[0],
+        "heure": event.hour.substring(0, 5),
+        "date": event.date,
+      };
+
+      var response = await Dio().put(
+        _eventsUri + "/" + event.id!,
+        options: Options(
+          headers: {
+            'token': _user.token,
+            'Origin': "flutter",
+            'Content-Type': 'application/json',
+          },
+        ),
+        data: parsedEvent,
+      );
+
+      if (response.statusCode == 200) {
+        await getEvents();
+        notifyListeners();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print(e.toString());
       return false;
     }
   }

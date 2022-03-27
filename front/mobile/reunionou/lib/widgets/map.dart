@@ -10,10 +10,12 @@ class MapWidget extends StatefulWidget {
     this.long,
     this.changedAdr,
     this.getAddress,
+    this.action,
   }) : super(key: key);
   double? lat;
   double? long;
   bool? changedAdr;
+  String? action;
   final Function? getAddress;
 
   @override
@@ -31,6 +33,9 @@ class _MapWidgetState extends State<MapWidget> {
     if (widget.lat != 0 && widget.long != 0) {
       lat = widget.lat!;
       long = widget.long!;
+      if (widget.action == "update") {
+        updatePin = true;
+      }
     } else {
       //Nancy
       lat = 48.69217956848309;

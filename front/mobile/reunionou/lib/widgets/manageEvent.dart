@@ -139,8 +139,8 @@ class _ManageEventScreenState extends State<ManageEventScreen> {
                     DateTimeField(
                       format: DateFormat("yyyy-MM-dd"),
                       controller: date,
-                      validator: (date) {
-                        if (date == null) {
+                      validator: (value) {
+                        if (date.text == "") {
                           return "Veuillez insérer le date d'événement";
                         }
                         return null;
@@ -174,8 +174,8 @@ class _ManageEventScreenState extends State<ManageEventScreen> {
                     DateTimeField(
                       format: DateFormat("HH:mm"),
                       controller: hour,
-                      validator: (hour) {
-                        if (hour == null) {
+                      validator: (value) {
+                        if (hour.text == "") {
                           return "Veuillez insérer l'heure d'événement";
                         }
                         return null;
@@ -214,6 +214,7 @@ class _ManageEventScreenState extends State<ManageEventScreen> {
                       child: MapWidget(
                         lat: lat,
                         long: long,
+                        action: widget.action,
                         changedAdr: changedAdr,
                         getAddress: (Address address) {
                           location.text = "${address.addressLine}";
@@ -316,7 +317,53 @@ class _ManageEventScreenState extends State<ManageEventScreen> {
                             );
                           }
                         });
-                      } else {}
+                      } else {
+                        EventItem event = EventItem(
+                          id: widget.event!.id,
+                          title: title.text,
+                          description: description.text,
+                          location: [
+                            {
+                              "name": location.text,
+                              "latitude": lat,
+                              "longitude": long,
+                            }
+                          ],
+                          date: date.text,
+                          hour: hour.text,
+                        );
+                        context
+                            .read<DataLoader>()
+                            .updateEvent(event)
+                            .then((value) {
+                          if (value) {
+                            setState(() {});
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  "événement mise à jour avec succès",
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 255, 255, 255),
+                                  ),
+                                ),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                            Navigator.pushNamed(
+                              context,
+                              '/home',
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                    "Quelque chose s'est mal passé essaie une autre fois"),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        });
+                      }
                     }
                   },
                 ),
