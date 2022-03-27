@@ -29,6 +29,8 @@ class DataLoader extends ChangeNotifier {
       "http://docketu.iutnc.univ-lorraine.fr:62015/members";
   final String _eventMembers =
       "http://docketu.iutnc.univ-lorraine.fr:62015/events/{id}/members";
+  final String _eventMemberByPseudo =
+      "http://docketu.iutnc.univ-lorraine.fr:62015/members/{pseudo}/events";
 
   //Event Messages
   final String _getEventMessages =
@@ -54,9 +56,9 @@ class DataLoader extends ChangeNotifier {
   //Messages list
   List<EventMessage> eventMessages = [];
 
-  ///-----------------------------------------------------------------------------------------------------------------------------------///
-  ///********************************************************  User Methods  ***********************************************************///
-  ///-----------------------------------------------------------------------------------------------------------------------------------///
+  ///-------------------------------------------------------------------------------------------------------------------------///
+  ///***************************************************  User Methods  ******************************************************///
+  ///-------------------------------------------------------------------------------------------------------------------------///
 
   //Get current _user
   getUser() {
@@ -150,6 +152,7 @@ class DataLoader extends ChangeNotifier {
       if (!dbCheck) {
         var user = await handler.getUser();
         if (user is User) {
+          user.type = "user";
           setUser(user);
           notifyListeners();
           return _user;
@@ -204,16 +207,8 @@ class DataLoader extends ChangeNotifier {
   }
 
   //Update user
-  Future<bool> updateUser(
-    id,
-    fullname,
-    email,
-    username,
-    password,
-    newPassword,
-    confirmPassword,
-    token,
-  ) async {
+  Future<bool> updateUser(id, fullname, email, username, password, newPassword,
+      confirmPassword, token) async {
     //Call api
     try {
       var response = await Dio().put(_usersUri + id,
@@ -226,7 +221,7 @@ class DataLoader extends ChangeNotifier {
             "username": username,
             "old_password": password,
             "new_password": newPassword,
-            "new_password_confirm": confirmPassword,
+            "new_password_confirm": confirmPassword
           });
       if (response.statusCode == 200) {
         var refreshResp = await Dio().get(
@@ -266,7 +261,7 @@ class DataLoader extends ChangeNotifier {
     }
   }
 
-  //Check authentification
+  //Logout
   logout() async {
     try {
       handler = DatabaseHandler();
@@ -277,12 +272,32 @@ class DataLoader extends ChangeNotifier {
     }
   }
 
-  ///-----------------------------------------------------------------------------------------------------------------------------------///
-  ///******************************************************  Events Methods  ***********************************************************///
-  ///-----------------------------------------------------------------------------------------------------------------------------------///
+  ///-------------------------------------------------------------------------------------------------------------------------///
+  ///*************************************************  Events Methods  ******************************************************///
+  ///-------------------------------------------------------------------------------------------------------------------------///
 
   //Get events
   Future<List<EventItem>> getEvents() async {
+    try {
+      myEvents = [];
+      if (_user.type == "user") {
+        //get user event (creator)
+        await getUserEvents();
+
+        //get memebr event (by user_id )
+        await getMemberEvents("psuedo"); //replace with user_id
+      } else {
+        //get memebr event (by pseudo)
+        await getMemberEvents("psuedo");
+      }
+      return myEvents;
+    } catch (e) {
+      throw Exception('Failed to load events');
+    }
+  }
+
+  //Get user events
+  Future<List<EventItem>> getUserEvents() async {
     try {
       //Call api
       var _getUserEvents = this._getUserEvents.replaceAll('{id}', _user.id);
@@ -293,7 +308,6 @@ class DataLoader extends ChangeNotifier {
         ),
       );
       if (response.statusCode == 200) {
-        myEvents = [];
         for (var event in response.data['events']) {
           var temp = EventItem(
             id: event['id'],
@@ -321,6 +335,54 @@ class DataLoader extends ChangeNotifier {
       throw Exception('Failed to load events');
     }
   }
+
+  //Get member events
+  Future<List<EventItem>> getMemberEvents(type) async {
+    try {
+      String uri;
+
+      if (type == "psuedo") {
+        uri = _eventMemberByPseudo.replaceAll('{pseudo}', _user.username!);
+      } else {
+        uri = _eventMemberByPseudo.replaceAll('{user_id}', _user.id);
+      }
+
+      var response = await Dio().get(
+        uri,
+        options: Options(
+          headers: <String, String>{'Origin': "flutter"},
+        ),
+      );
+      if (response.statusCode == 200) {
+        for (var event in response.data['events']) {
+          var temp = EventItem(
+            id: event['id'],
+            title: event['title'],
+            description: event['description'],
+            location: [
+              {
+                "name": event['location']['name'],
+                "latitude": event['location']['latitude'],
+                "longitude": event['location']['longitude'],
+              }
+            ],
+            user_id: event['user_id'],
+            hour: event['heure'],
+            date: event['date'],
+            created_at: event['created_at'],
+            updated_at: event['updated_at'],
+          );
+          //Add to myEvents
+          myEvents.add(temp);
+        }
+      }
+      return myEvents;
+    } catch (e) {
+      throw Exception('Failed to load events');
+    }
+  }
+
+  //Get guest event
 
   //Add event
   Future<bool> addEvent(EventItem event) async {
@@ -394,9 +456,9 @@ class DataLoader extends ChangeNotifier {
     }
   }
 
-  ///-----------------------------------------------------------------------------------------------------------------------------------///
-  ///*****************************************************  Members Methods  ***********************************************************///
-  ///-----------------------------------------------------------------------------------------------------------------------------------///
+  ///-------------------------------------------------------------------------------------------------------------------------///
+  ///************************************************  Members Methods  ******************************************************///
+  ///-------------------------------------------------------------------------------------------------------------------------///
 
   //Add member to event
   Future<bool> addMember(
@@ -477,9 +539,9 @@ class DataLoader extends ChangeNotifier {
     return participantsList.where((element) => element.status == status);
   }
 
-  ///-----------------------------------------------------------------------------------------------------------------------------------///
-  ///****************************************************  Messages Methods  ***********************************************************///
-  ///-----------------------------------------------------------------------------------------------------------------------------------///
+  ///-------------------------------------------------------------------------------------------------------------------------///
+  ///***********************************************  Messages Methods  ******************************************************///
+  ///-------------------------------------------------------------------------------------------------------------------------///
 
   //Get event messages
   Future<List<EventMessage>> getMessages(event_id) async {
