@@ -12,13 +12,13 @@ class CommentWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(message.member_id),
-      subtitle: Text(message.content),
+      title: Text(message.content),
+      subtitle: Text(message.member_id),
       leading: const Icon(
         Icons.person,
         color: Colors.deepPurple,
       ),
-      trailing: Text(message.created_at!),
+      trailing: Text(message.created_at),
     );
   }
 }
