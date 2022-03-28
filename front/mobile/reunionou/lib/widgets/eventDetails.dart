@@ -227,7 +227,34 @@ class _EventDetailsState extends State<EventDetails> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       RaisedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          context
+                              .read<DataLoader>()
+                              .updateAttendance("confirm", widget.event.id!)
+                              .then((value) {
+                            if (value) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    "Bien reçu, bienvenue à notre événement",
+                                    style: TextStyle(
+                                      color: Color.fromARGB(255, 255, 255, 255),
+                                    ),
+                                  ),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                      "Quelque chose s'est mal passé essaie une autre fois"),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          });
+                        },
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),
                         ),
