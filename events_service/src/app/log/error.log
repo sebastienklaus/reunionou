@@ -68,7 +68,6 @@
 [2022-03-24T10:28:47.982657+00:00] lbs.log.ERROR: error input livraison location [] []
 [2022-03-24T10:29:02.689837+00:00] lbs.log.ERROR: error input date date [] []
 [2022-03-24T10:29:16.221689+00:00] lbs.log.ERROR: error input date heure [] []
-<<<<<<< HEAD
 [2022-03-24T14:49:35.216760+00:00] lbs.log.ERROR: error input event title [] []
 [2022-03-24T14:52:26.637486+00:00] lbs.log.ERROR: error input event title [] []
 [2022-03-24T14:53:13.652805+00:00] lbs.log.ERROR: error input event title [] []
@@ -93,12 +92,10 @@
 [2022-03-24T16:26:22.340998+00:00] lbs.log.ERROR: error input date date [] []
 [2022-03-24T16:26:50.804370+00:00] lbs.log.ERROR: error | 500 | internal server error: Call to a member function format() on null | /var/www/src/app/controller/Events_Controller.phpline: 206 [] []
 [2022-03-24T16:27:27.523764+00:00] lbs.log.ERROR: error | 500 | internal server error: Call to a member function format() on null | /var/www/src/app/controller/Events_Controller.phpline: 206 [] []
-=======
 [2022-03-24T11:26:56.516031+00:00] lbs.log.ERROR: POST http://events.service.local:62010/events/0e37cc70-1961-452a-bb0f-84585d6c12dc : bad method - PUT, GET, DELETE wanted [] []
 [2022-03-24T11:27:28.040894+00:00] lbs.log.ERROR: GET http://events.service.local:62010/events/events/0e37cc70-1961-452a-bb0f-84585d6c12dc : malformed uri [] []
 [2022-03-24T14:28:45.966080+00:00] lbs.log.ERROR: bad ressource : http://events.service.local:62010/members/HARMand/events [] []
 [2022-03-24T14:43:26.697053+00:00] lbs.log.ERROR: bad ressource : http://events.service.local:62010/members/HARMand/events [] []
->>>>>>> 06a507d4cc6b81886f2a31e1c03799bf68decae9
 [2022-03-24T16:37:34.810151+00:00] lbs.log.ERROR: bad ressource : http://events.service.local:62010/messages/e61acdb4-fa15-4569-ad13-688b3e766340 [] []
 [2022-03-24T22:44:02.525462+00:00] lbs.log.ERROR: bad ressource : http://events.service.local/events/6be89d60-4c10-4323-b2f1-26a8e80a45ef [] []
 [2022-03-24T22:44:38.778013+00:00] lbs.log.ERROR: bad ressource : http://events.service.local/members/adcac5ad-206a-449c-8f40-aacb32750c47 [] []
@@ -170,8 +167,15 @@
 [2022-03-28T10:17:40.661898+00:00] lbs.log.ERROR: bad ressource : http://events.service.local/members/314fc1b2-a413-481e-b570-c9c2c52e9e07 [] []
 =======
 >>>>>>> 0f53949c86d05a614d6b9a8fc6b7a7a2513aac63
+<<<<<<< HEAD
+[2022-03-28T10:14:27.727385+00:00] lbs.log.ERROR: error input member's event_id [] []
+=======
 >>>>>>> c36ebfa1d10af08d196938be4fd389cc43aa71b9
 [2022-03-28T10:43:06.622462+00:00] lbs.log.ERROR: bad ressource : http://events.service.local/events/238bc285-9c03-43fe-9d15-e9870f507336/messages/ [] []
+<<<<<<< HEAD
 [2022-03-28T13:00:59.715158+00:00] lbs.log.ERROR: bad ressource : http://events.service.local/members/HARMand/events/ [] []
 [2022-03-28T13:02:34.586756+00:00] lbs.log.ERROR: bad ressource : http://events.service.local/events/988f9950-6e27-4ef6-bdb1-fedcbe574b52/members/ [] []
 [2022-03-28T13:37:51.545247+00:00] lbs.log.ERROR: error | 500 | internal server error: Object of class Illuminate\Database\Eloquent\Builder could not be converted to string | /var/www/src/vendor/illuminate/database/Connection.phpline: 619 [] []
+=======
+>>>>>>> 91fa8d07f8fdd1c84583006436fee7e28690a866
+>>>>>>> 67301ab850e5a0be69e1ec637ff8eece62d54912
