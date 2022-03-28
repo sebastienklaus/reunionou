@@ -8,7 +8,6 @@ import '../models/message.dart';
 import '../models/user.dart';
 import 'DatabaseHandler.dart';
 import 'package:uuid/uuid.dart';
-import 'package:username_generator/username_generator.dart';
 import 'package:dio/dio.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
@@ -117,17 +116,21 @@ class DataLoader extends ChangeNotifier {
   }
 
   //Authentificate guest
-  Future<bool> authentificateGuest(String fullname) async {
+  Future<bool> authentificateGuest(String username, String eventUri) async {
     //Call api here
     if (1 == 1) {
       handler = DatabaseHandler();
       String id = const Uuid().v4();
-      var generator = UsernameGenerator();
+
+      username = username.replaceAll(" ", "_");
+      String eventId =
+          eventUri.substring(eventUri.lastIndexOf("/") + 1, eventUri.length);
+
       //In case of success store user to db
       _user = User(
         id: id,
-        fullname: fullname,
-        username: generator.generate(fullname),
+        fullname: username,
+        username: username,
         type: "guest",
       );
       setUser(_user);
