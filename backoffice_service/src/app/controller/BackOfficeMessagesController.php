@@ -45,14 +45,23 @@ class BackOfficeMessagesController
         ]);
 
         $received_message = $req->getParsedBody();
+        if(isset($received_message['media'])) {
+            $response = $client->request('POST', '/messages', [
+                    'form_params'=> [
+                        'content' => $received_message['content'],
+                        'member_id' => $received_message['member_id'],
+                        'event_id' => $received_message['event_id'],
+                        'media' => $received_message['media']
+                    ]]  );
+        } else {
+            $response = $client->request('POST', '/messages', [
+                    'form_params'=> [
+                        'content' => $received_message['content'],
+                        'member_id' => $received_message['member_id'],
+                        'event_id' => $received_message['event_id']
+                    ]]  );
+        }
 
-        $response = $client->request('POST', '/messages', [
-                'form_params'=> [
-                    'content' => $received_message['content'],
-                    'member_id' => $received_message['member_id'],
-                    'event_id' => $received_message['event_id'],
-                    'media' => $received_message['media']
-                ]]  );
 
         $resp = Writer::json_output($resp, $response->getStatusCode());
         

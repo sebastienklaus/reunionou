@@ -131,3 +131,6 @@
 [2022-03-28T08:06:26.085517+00:00] lbs.log.ERROR: error | 500 | internal server error: Cannot use object of type stdClass as array | /var/www/src/app/controller/Messages_Controller.phpline: 80 [] []
 [2022-03-28T08:11:02.139255+00:00] lbs.log.ERROR: error input event content [] []
 [2022-03-28T08:11:42.957187+00:00] lbs.log.ERROR: error input event content [] []
+[2022-03-28T08:27:27.092495+00:00] lbs.log.ERROR: error input event content [] []
+[2022-03-28T08:27:36.628765+00:00] lbs.log.ERROR: error input event content [] []
+[2022-03-28T08:33:07.701955+00:00] lbs.log.ERROR: error input event media [] []
