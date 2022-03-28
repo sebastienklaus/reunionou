@@ -179,3 +179,5 @@
 =======
 >>>>>>> 91fa8d07f8fdd1c84583006436fee7e28690a866
 >>>>>>> 67301ab850e5a0be69e1ec637ff8eece62d54912
+[2022-03-28T13:52:27.652519+00:00] lbs.log.ERROR: error | 500 | internal server error: Call to a member function format() on null | /var/www/src/app/controller/Events_Controller.phpline: 741 [] []
+[2022-03-28T13:53:43.389150+00:00] lbs.log.ERROR: error | 500 | internal server error: Call to a member function format() on null | /var/www/src/app/controller/Events_Controller.phpline: 744 [] []

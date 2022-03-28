@@ -721,21 +721,18 @@ class Events_Controller
     {
         $id_member = $args['id'];
         
-        try {
-            // $user_id = Members::select('user_id')->where('id', $id_member)->get();
-            // $events = Members::select('event_id')->where('user_id', $user_id)->get();
-            // var_dump($events);
+        // TODO : A optimiser
 
-            $members = Members::all();
-            $members_users = [];
-            foreach($members as $member)
-            {
-                if($member->id == $id_member)
-                {
-                    $members_users[] = $member;
-                }
+        try {
+            $user = Members::findOrFail($id_member);
+            $members = Members::select()->where('user_id', $user->user_id)->get();
+            
+            $id_events = [];
+            foreach($members as $member){
+                $id_events[] = $member->event_id;
             }
             
+            $events = Events::select()->whereIn('id',$id_events)->get();
             $nbEvents = count($events);
 
         $events_resp = [];
