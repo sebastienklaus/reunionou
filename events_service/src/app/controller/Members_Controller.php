@@ -640,7 +640,7 @@ class Members_Controller
 
 
     public function getAllMembers(Request $req, Response $resp, array $args): Response {
-        $allMembers = Members::select(['id', 'pseudo','updated_at', 'status'])->orderBy('updated_at')->with('messages')->get();
+        $allMembers = Members::select(['id', 'pseudo','updated_at', 'status'])->orderBy('updated_at')->get();
         $count = count($allMembers);
 
         $data = [
