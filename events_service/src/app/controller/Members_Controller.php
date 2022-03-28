@@ -148,7 +148,7 @@ class Members_Controller
             
             }
             else{
-                return Writer::json_error($resp, 500, 'This member is already exist');
+                return Writer::json_error($resp, 500, 'This member already exist');
             }
 
         } catch (ModelNotFoundException $e) {
