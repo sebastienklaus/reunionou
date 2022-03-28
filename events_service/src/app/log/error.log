@@ -121,3 +121,6 @@
 [2022-03-25T11:44:21.141248+00:00] lbs.log.ERROR: GET http://events.service.local:62010/users/898f20c4-710d-4508-9129-af7a975572ae/members : malformed uri [] []
 [2022-03-26T20:59:18.370314+00:00] lbs.log.ERROR: bad ressource : http://events.service.local/events/0f8b6cbe-a912-4410-9009-75543133a9c4 [] []
 [2022-03-28T08:40:46.053539+00:00] lbs.log.ERROR: bad ressource : http://events.service.local/events/0e37cc70-1961-452a-bb0f-84585d6c12dc/messages/ [] []
+[2022-03-28T08:49:39.798489+00:00] lbs.log.ERROR: bad ressource : http://events.service.local/members/08470cbe-58ad-474e-be87-16252f15b192 [] []
+[2022-03-28T08:50:08.718461+00:00] lbs.log.ERROR: bad ressource : http://events.service.local/events/0f8b6cbe-a912-4410-9009-75543133a9c4 [] []
+[2022-03-28T08:52:51.117139+00:00] lbs.log.ERROR: bad ressource : http://events.service.local/events/0f8b6cbe-a912-4410-9009-75543133a9c4 [] []

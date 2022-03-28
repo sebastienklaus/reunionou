@@ -156,8 +156,8 @@ class Messages_Controller
 
     /**
      * 
-     * @api {GET} /messages/{id} getMessage
-     * @apiName GetMessage
+     * @api {GET} /messages/{id} getMessageById
+     * @apiName GetMessageById
      * @apiGroup Message
      * @apiVersion  1.0.0
      * 
@@ -263,8 +263,8 @@ class Messages_Controller
 
     /**
      * 
-     * @api {GET} /events/{id}/messages getMessageByEvent
-     * @apiName GetMessageByEventId   
+     * @api {GET} /events/{id}/messages getMessagesByEventId
+     * @apiName GetMessagesByEventId   
      * @apiGroup Message
      * @apiVersion  1.0.0
      * 
