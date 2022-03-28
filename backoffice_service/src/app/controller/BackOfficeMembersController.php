@@ -46,11 +46,21 @@ class BackOfficeMembersController
 
         $received_member = $req->getParsedBody();
 
+
+        if (isset($received_member['user_id'])) {
+                $pathForUser = $this->container->router->pathFor(
+                'getUserById',
+                ['id' => $received_member['user_id']]);
+                 } else {
+                $pathForUser = null;
+            };
+
         $response = $client->request('POST', '/members', [
                 'form_params'=> [
                     'pseudo' => $received_member['pseudo'],
                     'event_id' => $received_member['event_id'],
-                    'user_id' => $received_member['user_id']
+                    'user_id' => $pathForUser,
+                    'status' => $received_member['status']
                 ]]  );
 
         $resp = Writer::json_output($resp, $response->getStatusCode());
@@ -70,12 +80,22 @@ class BackOfficeMembersController
 
         $id_event = $args['id'];
         $received_member = $req->getParsedBody();
+
+        if (isset($received_member['user_id'])) {
+                $pathForUser = $this->container->router->pathFor(
+                'getUserById',
+                ['id' => $received_member['user_id']]);
+                 } else {
+                $pathForUser = null;
+            };
+
         
         $response = $client->request('PUT', '/members/' . $id_event, [
             'form_params'=> [
                 'pseudo' => $received_member['pseudo'],
                 'event_id' => $received_member['event_id'],
-                'user_id' => $received_member['user_id']
+                'user_id' => $pathForUser,
+                'status' => $received_member['status']
                 ]]  );
 
         $resp = Writer::json_output($resp, $response->getStatusCode());

@@ -5,7 +5,10 @@
 - UPDATE DATE ET HEURE
 - Retester Events par Members en créant members
 
+- controlle status : validator et filterphp pour -1, 0, 1
+
 - Create Message: !! Attention au format d'input des media (idem avec location dans event)
+
 - try/catch dans methode des backofficecontroller (voir avec seb avant)
   -vérifier code retour http
 - mAJ readme
