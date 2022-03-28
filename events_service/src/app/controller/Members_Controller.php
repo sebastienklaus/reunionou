@@ -261,7 +261,8 @@ class Members_Controller
                 'event_id' => $member->event_id, //? to be or not to be ?
                 'pseudo' => $member->pseudo,
                 'created_at' => $member->created_at,
-                'updated_at' => $member->updated_at
+                'updated_at' => $member->updated_at,
+                'status' => $member->status
             ]; // TODO rajouter lien self pour chaque member
         }
 
