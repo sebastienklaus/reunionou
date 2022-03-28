@@ -564,7 +564,7 @@ class Events_Controller
      *    }
      *}
      */
-    public function getEventByUserId(Request $req, Response $resp, array $args): Response
+    public function getEventCreatedByUserId(Request $req, Response $resp, array $args): Response
     {
         $user_id = $args['id'];
         
@@ -722,14 +722,15 @@ class Events_Controller
         $id_member = $args['id'];
         
         // TODO : A optimiser
+        // TODO : Retourner seul event si user_id NULL
 
         try {
-            $user = Members::findOrFail($id_member);
+            $member = Members::findOrFail($id_member);
             $members = Members::select()->where('user_id', $user->user_id)->get();
             
             $id_events = [];
-            foreach($members as $member){
-                $id_events[] = $member->event_id;
+            foreach($members as $member_data){
+                $id_events[] = $member_data->event_id;
             }
             
             $events = Events::select()->whereIn('id',$id_events)->get();
@@ -751,23 +752,59 @@ class Events_Controller
             ];
         }
 
-            // // Récupération de la route getMembersByEvent                            
-            // $pathForMembersByEvent = $this->container->router->pathFor(
-            //     'getMembersByEvent',
-            //     ['id' => $id_event]
-            // );
+            // Création du body de la réponse
+            //? Renomer les keys ou laisser les noms issus de la DB ?
+            $datas_resp = [
+                "type" => "collection",
+                "count" => $nbEvents,
+                "member" => $events_resp
+            ];
 
-            // $pathForEvent = $this->container->router->pathFor(
-            //     'getEvent',
-            //     ['id' => $id_event]
-            // );
+            //? Ressources imbriquées ? à priori non.
 
-            // // Création des liens hateos
-            // $hateoas = [
-            //     "self" => ["href" => $pathForMembersByEvent],
-            //     "event" => ["href" => $pathForEvent]
-            // ];
+            $resp = Writer::json_output($resp, 200);
+            
+            $resp->getBody()->write(json_encode($datas_resp));
 
+            return $resp;
+        } catch (ModelNotFoundException $e) {
+
+            $clientError = $this->container->clientError;
+            return $clientError($req, $resp, 404, "member not found");
+
+        }
+    }
+
+    public function getAllEventsByUserId(Request $req, Response $resp, array $args): Response
+    {
+        $id_user = $args['id'];
+
+        try {
+            $members = Members::select()->where('user_id','like', '%'.$id_user.'%')->get();
+            
+            $id_events = [];
+            foreach($members as $member_data){
+                $id_events[] = $member_data->event_id;
+            }
+            
+            $events = Events::select()->whereIn('id',$id_events)->get();
+            $nbEvents = count($events);
+
+        $events_resp = [];
+        foreach ($events as $event) {
+            $events_resp[] = [
+                'id' => $event->id,
+                'title' => $event->title,
+                'description' => $event->description,
+                'user_id' => $event->user_id,
+                'location' => json_decode($event->location),
+                'date' => $event->date,
+                'heure' => $event->heure,
+                'created_at' => $event->created_at->format('Y-m-d H:i:s'),
+                'updated_at' => $event->updated_at->format('Y-m-d H:i:s'), //?rajouter un link avec pathfor ?
+                'href' => $this->container->router->pathFor('getEvent',['id' => $event->id])
+            ];
+        }
 
             // Création du body de la réponse
             //? Renomer les keys ou laisser les noms issus de la DB ?
@@ -775,8 +812,6 @@ class Events_Controller
                 "type" => "collection",
                 "count" => $nbEvents,
                 "member" => $events_resp
-                //"links" => $hateoas
-   
             ];
 
             //? Ressources imbriquées ? à priori non.
