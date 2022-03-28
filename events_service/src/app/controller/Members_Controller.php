@@ -29,7 +29,7 @@ class Members_Controller
 
    /**
      * 
-     * @api }{POST} /members createMember
+     * @api {POST} /members createMember
      * @apiName CreateMember
      * @apiGroup Member
      * @apiVersion  1.0.0
