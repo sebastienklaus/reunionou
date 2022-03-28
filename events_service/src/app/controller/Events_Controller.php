@@ -38,7 +38,7 @@ class Events_Controller
      * @apiParam  {String} title Titre de l'event
      * @apiParam  {String} description Description de l'event
      * @apiParam  {String} user_id ID de l'utilisateur ayant créé l'event
-     * @apiParam  {json} location Lieu de l'event
+     * @apiParam  {JSON} location Lieu de l'event
      * @apiParam  {date} date Date de l'event
      * @apiParam  {date} heure Heure de l'event
      *
@@ -59,7 +59,7 @@ class Events_Controller
      * @apiSuccess (Success (201)) {String} title Titre de l'event
      * @apiSuccess (Success (201)) {String} description Description de l'event
      * @apiSuccess (Success (201)) {String} user_id ID de l'utilisateur ayant créé l'event
-     * @apiSuccess (Success (201)) {json} location Lieu de l'event
+     * @apiSuccess (Success (201)) {JSON} location Lieu de l'event
      * @apiSuccess (Success (201)) {date} date Date de l'event
      * @apiSuccess (Success (201)) {date} heure Heure de l'event
      * @apiSuccess (Success (201)) {date} created_at Date de création de l'event
@@ -194,12 +194,12 @@ class Events_Controller
      * @apiVersion  1.0.0
      * 
      * 
-     * @apiParam  {String} title
-     * @apiParam  {String} description
-     * @apiParam  {String} user_id
-     * @apiParam  {json} location
-     * @apiParam  {date} date
-     * @apiParam  {date} heure
+     * @apiParam  {String} title Titre de l'event
+     * @apiParam  {String} description Description de l'event
+     * @apiParam  {String} user_id ID de l'utilisateur ayant créé l'event
+     * @apiParam  {JSON} location Lieu de l'event
+     * @apiParam  {date} date Date de l'event
+     * @apiParam  {date} heure Heure de l'event
      * 
      * @apiParamExample Request-Example:
      *{
@@ -218,7 +218,7 @@ class Events_Controller
      * @apiSuccess (Success (201)) {String} title Titre de l'event
      * @apiSuccess (Success (201)) {String} description Description de l'event
      * @apiSuccess (Success (201)) {String} user_id ID de l'utilisateur ayant créé l'event
-     * @apiSuccess (Success (201)) {json} location Lieu de l'event
+     * @apiSuccess (Success (201)) {JSON} location Lieu de l'event
      * @apiSuccess (Success (201)) {date} date Date de l'event
      * @apiSuccess (Success (201)) {date} heure Heure de l'event
      * @apiSuccess (Success (201)) {date} created_at Date de création de l'event
@@ -344,7 +344,7 @@ class Events_Controller
      * @apiSuccess (Success (200)) {String} title Titre de l'event
      * @apiSuccess (Success (200)) {String} description Description de l'event
      * @apiSuccess (Success (200)) {String} user_id ID de l'utilisateur ayant créé l'event
-     * @apiSuccess (Success (200)) {json} location Lieu de l'event
+     * @apiSuccess (Success (200)) {JSON} location Lieu de l'event
      * @apiSuccess (Success (200)) {date} date Date de l'event
      * @apiSuccess (Success (200)) {date} heure Heure de l'event
      * @apiSuccess (Success (200)) {date} created_at Date de création de l'event
@@ -454,7 +454,7 @@ class Events_Controller
      * @apiSuccess (Success (200)) {String} title Titre de l'event
      * @apiSuccess (Success (200)) {String} description Description de l'event
      * @apiSuccess (Success (200)) {String} user_id ID de l'utilisateur ayant créé l'event
-     * @apiSuccess (Success (200)) {json} location Lieu de l'event
+     * @apiSuccess (Success (200)) {JSON} location Lieu de l'event
      * @apiSuccess (Success (200)) {date} date Date de l'event
      * @apiSuccess (Success (200)) {date} heure Heure de l'event
      * @apiSuccess (Success (200)) {date} created_at Date de création de l'event
@@ -542,7 +542,7 @@ class Events_Controller
      * @apiSuccess (Success (200)) {String} title Titre de l'event
      * @apiSuccess (Success (200)) {String} description Description de l'event
      * @apiSuccess (Success (200)) {String} user_id ID de l'utilisateur ayant créé l'event
-     * @apiSuccess (Success (200)) {json} location Lieu de l'event
+     * @apiSuccess (Success (200)) {JSON} location Lieu de l'event
      * @apiSuccess (Success (200)) {date} date Date de l'event
      * @apiSuccess (Success (200)) {date} heure Heure de l'event
      * @apiSuccess (Success (200)) {date} created_at Date de création de l'event
@@ -626,7 +626,7 @@ class Events_Controller
      * @apiSuccess (Success (200)) {String} title Titre de l'event
      * @apiSuccess (Success (200)) {String} description Description de l'event
      * @apiSuccess (Success (200)) {String} user_id ID de l'utilisateur ayant créé l'event
-     * @apiSuccess (Success (200)) {json} location Lieu de l'event
+     * @apiSuccess (Success (200)) {JSON} location Lieu de l'event
      * @apiSuccess (Success (200)) {date} date Date de l'event
      * @apiSuccess (Success (200)) {date} heure Heure de l'event
      * @apiSuccess (Success (200)) {date} created_at Date de création de l'event

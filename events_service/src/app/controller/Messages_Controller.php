@@ -27,7 +27,48 @@ class Messages_Controller
         $this->container = $container;
     }
 
-    // Créer un event
+    /**
+     * 
+     * @api {POST} /messages createMessage
+     * @apiName CreateMessage
+     * @apiGroup Message
+     * @apiVersion  1.0.0
+     * 
+     * @apiParam  {String} content Contenu du message 
+     * @apiParam  {String} member_id ID du membre ayant créé le message
+     * @apiParam  {String} event_id ID de l'event associé au message
+     * @apiParam  {JSON} media Media contenu dans le message
+     * 
+     * @apiParamExample Success-Response:
+     * {
+     *   "content": "ceci est un message",
+     *   "member_id": "b1858803-2305-47f4-be67-1efc10a91da7",
+     *   "event_id": "e04cc94c-77a7-4671-8e52-34eb1d781d57",
+     *   "media": "{\"name\":\"Charleville\",\"latitude\":64.9483319,\"longitude\":-145.3501717}"
+     * }
+     * 
+     * @apiSuccess (Success (201)) {String} id ID du message
+     * @apiSuccess (Success (201)) {String} content Contenu du message 
+     * @apiSuccess (Success (201)) {String} member_id ID du membre ayant créé le message
+     * @apiSuccess (Success (201)) {String} event_id ID de l'event associé au message
+     * @apiSuccess (Success (201)) {JSON} media Media contenu dans le message
+     * @apiSuccess (Success (201)) {date} created_at Date de création du message
+     * @apiSuccess (Success (201)) {date} updated_at Date de la dernière modification du message
+     * 
+     * @apiSuccessExample Success-Response:
+     * {
+     * "type": "ressource",
+     * "message": {
+     *     "id": "2ade231a-11e5-49b6-bfbc-ac82cb406a7f",
+     *     "content": "ceci est un message",
+     *     "member_id": "b1858803-2305-47f4-be67-1efc10a91da7",
+     *     "event_id": "e04cc94c-77a7-4671-8e52-34eb1d781d57",
+     *     "media": "{&quot;name&quot;:&quot;Charleville&quot;,&quot;latitude&quot;:64.9483319,&quot;longitude&quot;:-145.3501717}",
+     *     "updated_at": "28-03-2022 08:29:40",
+     *     "created_at": "28-03-2022 08:29:40"
+     *            }
+     * }
+     */
     public function createMessage(Request $req, Response $resp, array $args): Response
     {
 
@@ -113,6 +154,37 @@ class Messages_Controller
         //
     }
 
+    /**
+     * 
+     * @api {GET} /messages/{id} getMessage
+     * @apiName GetMessage
+     * @apiGroup Message
+     * @apiVersion  1.0.0
+     * 
+     * @apiParam  {String} id ID du message
+     * 
+     * @apiSuccess (Success (200)) {String} id ID du message
+     * @apiSuccess (Success (200)) {String} content Contenu du message 
+     * @apiSuccess (Success (200)) {String} member_id ID du membre ayant créé le message
+     * @apiSuccess (Success (200)) {String} event_id ID de l'event associé au message
+     * @apiSuccess (Success (200)) {JSON} media Media contenu dans le message
+     * @apiSuccess (Success (200)) {date} created_at Date de création du message
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification du message
+     * 
+     * @apiSuccessExample Success-Response:
+     * {
+     * "type": "ressource",
+     * "message": {
+     *     "id": "2ade231a-11e5-49b6-bfbc-ac82cb406a7f",
+     *     "content": "ceci est un message",
+     *     "member_id": "b1858803-2305-47f4-be67-1efc10a91da7",
+     *     "event_id": "e04cc94c-77a7-4671-8e52-34eb1d781d57",
+     *     "media": "{&quot;name&quot;:&quot;Charleville&quot;,&quot;latitude&quot;:64.9483319,&quot;longitude&quot;:-145.3501717}",
+     *     "updated_at": "28-03-2022 08:29:40",
+     *     "created_at": "28-03-2022 08:29:40"
+     *            }
+     * }
+     */
     public function getMessage(Request $req, Response $resp, array $args): Response
     {
         $id_message = $args['id'];
@@ -189,6 +261,39 @@ class Messages_Controller
         }
     }
 
+    /**
+     * 
+     * @api {GET} /events/{id}/messages getMessageByEvent
+     * @apiName GetMessageByEventId   
+     * @apiGroup Message
+     * @apiVersion  1.0.0
+     * 
+     * @apiParam  {String} id ID de l'event
+     * 
+     * @apiSuccess (Success (200)) {String} id ID du message
+     * @apiSuccess (Success (200)) {String} content Contenu du message 
+     * @apiSuccess (Success (200)) {String} member_id ID du membre ayant créé le message
+     * @apiSuccess (Success (200)) {String} event_id ID de l'event associé au message
+     * @apiSuccess (Success (200)) {JSON} media Media contenu dans le message
+     * @apiSuccess (Success (200)) {date} created_at Date de création du message
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification du message
+     * 
+     * @apiSuccessExample Success-Response:
+     *  {
+     * "type": "collection",
+     * "count": 2,
+     * "message": [
+     *     {
+     *         "id": "559407d8-73c1-4251-8fab-f9413a48fec6",
+     *         "content": "In est risus, auctor sed, tristique in, tempus sit amet, sem. Fusce consequat. Nulla nisl.",
+     *         "member_id": "1190e0fc-524f-4c32-a087-4bed56091978",
+     *         "event_id": "0447ff47-e257-4bfc-b1a6-913a2c6cbd79",
+     *         "media": "{\"img\":\"http://dummyimage.com/122x100.png/cc0000/ffffff\",\"link\":\"http://dummyimage.com/249x100.png/5fa2dd/ffffff\"}",
+    *          "updated_at": "2021-09-16 10:10:39",
+     *         "created_at": "2021-04-03 12:07:25"
+     *     }
+     *     ...
+     */
     public function getMessagesByEvent(Request $req, Response $resp, array $args): Response
     {
         $id_event = $args['id'];
@@ -255,6 +360,38 @@ class Messages_Controller
         }
     }
 
+    /**
+     * 
+     * @api {DELETE} /messages/{id} deleteMessage
+     * @apiName DeleteMessageById
+     * @apiGroup Message
+     * @apiVersion  1.0.0
+     * 
+     * @apiParam  {String} id ID du message
+     * 
+     * @apiSuccess (Success (200)) {String} id ID du message
+     * @apiSuccess (Success (200)) {String} content Contenu du message 
+     * @apiSuccess (Success (200)) {String} member_id ID du membre ayant créé le message
+     * @apiSuccess (Success (200)) {String} event_id ID de l'event associé au message
+     * @apiSuccess (Success (200)) {JSON} media Media contenu dans le message
+     * @apiSuccess (Success (200)) {date} created_at Date de création du message
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification du message
+     * 
+     * @apiSuccessExample Success-Response:
+     *  {
+     * "type": "message",
+     * "message": {
+     *     "id": "559407d8-73c1-4251-8fab-f9413a48fec6",
+     *     "content": "In est risus, auctor sed, tristique in, tempus sit amet, sem. Fusce consequat. Nulla nisl.",
+     *     "member_id": "1190e0fc-524f-4c32-a087-4bed56091978",
+     *     "event_id": "0447ff47-e257-4bfc-b1a6-913a2c6cbd79",
+     *     "media": "{\"img\":\"http://dummyimage.com/122x100.png/cc0000/ffffff\",\"link\":\"http://dummyimage.com/249x100.png/5fa2dd/ffffff\"}",
+     *     "created_at": "2021-04-03T12:07:25.000000Z",
+     *     "updated_at": "2021-09-16T10:10:39.000000Z"
+     * },
+     * "response": "message deleted"
+     * }
+     */
     public function deleteMessageById(Request $req, Response $resp, array $args): Response
     {
         $id_message = $args['id'] ?? null;
