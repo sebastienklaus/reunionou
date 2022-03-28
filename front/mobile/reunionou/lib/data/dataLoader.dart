@@ -539,6 +539,44 @@ class DataLoader extends ChangeNotifier {
     return participantsList.where((element) => element.status == status);
   }
 
+  //Update attendance
+  Future<bool> updateAttendance(String rep, String event_id) async {
+    //Call api
+    // try {
+    //   var parsedMember = {
+    //     "title": event.title,
+    //     "user_id": _user.id,
+    //     "description": event.description,
+    //     "location": event.location[0],
+    //     "heure": event.hour.substring(0, 5),
+    //     "date": event.date,
+    //   };
+
+    //   var response = await Dio().put(
+    //     _eventsUri + "/" + event.id!,
+    //     options: Options(
+    //       headers: {
+    //         'token': _user.token,
+    //         'Origin': "flutter",
+    //         'Content-Type': 'application/json',
+    //       },
+    //     ),
+    //     data: parsedEvent,
+    //   );
+
+    //   if (response.statusCode == 200) {
+    //     await getEvents();
+    //     notifyListeners();
+    //     return true;
+    //   }
+    //   return false;
+    // } catch (e) {
+    //   print(e.toString());
+    //   return false;
+    // }
+    return false;
+  }
+
   ///-------------------------------------------------------------------------------------------------------------------------///
   ///***********************************************  Messages Methods  ******************************************************///
   ///-------------------------------------------------------------------------------------------------------------------------///
