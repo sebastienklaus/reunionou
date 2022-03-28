@@ -23,4 +23,9 @@ class Members extends \Illuminate\Database\Eloquent\Model
         return $this->belongsTo('\reu\events\app\models\Events', 'event_id');
     }
 
+    public function messages()
+    {
+        return $this->hasMany('\reu\events\app\models\Messages', 'member_id');
+    }
+
 }

@@ -171,3 +171,4 @@
 =======
 >>>>>>> 0f53949c86d05a614d6b9a8fc6b7a7a2513aac63
 >>>>>>> c36ebfa1d10af08d196938be4fd389cc43aa71b9
+[2022-03-28T10:43:06.622462+00:00] lbs.log.ERROR: bad ressource : http://events.service.local/events/238bc285-9c03-43fe-9d15-e9870f507336/messages/ [] []
