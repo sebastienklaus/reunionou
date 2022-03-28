@@ -143,3 +143,8 @@
 [2022-03-28T08:33:07.701955+00:00] lbs.log.ERROR: error input event media [] []
 >>>>>>> 0c861fba5451b3becbf35fe44194e0d59db15de2
 [2022-03-28T09:38:28.371116+00:00] lbs.log.ERROR: bad ressource : http://events.service.local/events/0447ff47-e257-4bfc-b1a6-913a2c6cbd79/members/ [] []
+[2022-03-28T09:40:53.213405+00:00] lbs.log.ERROR: bad ressource : http://events.service.local/events/238bc285-9c03-43fe-9d15-e9870f507336/members/ [] []
+[2022-03-28T09:41:10.745356+00:00] lbs.log.ERROR: bad ressource : http://events.service.local/events/238bc285-9c03-43fe-9d15-e9870f507336/messages/ [] []
+[2022-03-28T10:09:57.539971+00:00] lbs.log.ERROR: bad ressource : http://events.service.local/events/2ff0bc1a-e79b-4e84-acff-c9d62eb8065 [] []
+[2022-03-28T10:11:38.586058+00:00] lbs.log.ERROR: error input event title [] []
+[2022-03-28T10:17:40.661898+00:00] lbs.log.ERROR: bad ressource : http://events.service.local/members/314fc1b2-a413-481e-b570-c9c2c52e9e07 [] []
