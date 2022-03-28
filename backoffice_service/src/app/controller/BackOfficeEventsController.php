@@ -278,4 +278,4 @@ class BackOfficeEventsController
 
     }
 
-}
+} // test de transfert

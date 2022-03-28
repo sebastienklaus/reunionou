@@ -1063,3 +1063,6 @@
 [2022-03-28T15:10:10.356066+00:00] lbs.log.DEBUG: eloquent started - routes register started [] []
 >>>>>>> feature/Debogage
 >>>>>>> dd10433940bc7ae5d8a333cbe0ae0a7dc3071089
+[2022-03-28T16:15:05.399728+00:00] lbs.log.DEBUG: eloquent started - routes register started [] []
+[2022-03-28T16:15:08.827606+00:00] lbs.log.DEBUG: eloquent started - routes register started [] []
+[2022-03-28T16:15:13.556639+00:00] lbs.log.DEBUG: eloquent started - routes register started [] []
