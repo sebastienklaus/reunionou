@@ -141,10 +141,33 @@
 [2022-03-28T08:27:27.092495+00:00] lbs.log.ERROR: error input event content [] []
 [2022-03-28T08:27:36.628765+00:00] lbs.log.ERROR: error input event content [] []
 [2022-03-28T08:33:07.701955+00:00] lbs.log.ERROR: error input event media [] []
+<<<<<<< HEAD
+[2022-03-28T09:07:43.360083+00:00] lbs.log.ERROR: error input member's event_id [] []
+[2022-03-28T09:10:21.475373+00:00] lbs.log.ERROR: error input member's status [] []
+[2022-03-28T09:10:34.556713+00:00] lbs.log.ERROR: error input member's status [] []
+[2022-03-28T09:10:45.857398+00:00] lbs.log.ERROR: error input member's status [] []
+[2022-03-28T09:11:40.229664+00:00] lbs.log.ERROR: error input member's status [] []
+[2022-03-28T09:12:14.524205+00:00] lbs.log.ERROR: PUT http://events.service.local:62010/members/ : bad method - POST wanted [] []
+[2022-03-28T09:12:52.598451+00:00] lbs.log.ERROR: error input member's status [] []
+[2022-03-28T09:14:50.885024+00:00] lbs.log.ERROR: error input member's status [] []
+[2022-03-28T09:17:08.075113+00:00] lbs.log.ERROR: error input member's status [] []
+[2022-03-28T09:18:14.289449+00:00] lbs.log.ERROR: error input member's status [] []
+[2022-03-28T09:19:32.610446+00:00] lbs.log.ERROR: error input member's status [] []
+[2022-03-28T09:35:54.939764+00:00] lbs.log.ERROR: error input member's event_id [] []
+[2022-03-28T09:42:43.053623+00:00] lbs.log.ERROR: error input event event_id [] []
+[2022-03-28T09:53:06.975596+00:00] lbs.log.ERROR: error | 500 | internal server error: syntax error, unexpected 'catch' (T_CATCH), expecting function (T_FUNCTION) or const (T_CONST) | /var/www/src/app/controller/Members_Controller.phpline: 113 [] []
+[2022-03-28T10:01:54.423541+00:00] lbs.log.ERROR: error | 500 | internal server error: syntax error, unexpected 'catch' (T_CATCH), expecting function (T_FUNCTION) or const (T_CONST) | /var/www/src/app/controller/Members_Controller.phpline: 113 [] []
+[2022-03-28T10:02:01.924500+00:00] lbs.log.ERROR: error | 500 | internal server error: syntax error, unexpected 'catch' (T_CATCH), expecting function (T_FUNCTION) or const (T_CONST) | /var/www/src/app/controller/Members_Controller.phpline: 113 [] []
+[2022-03-28T10:02:13.256133+00:00] lbs.log.ERROR: error | 500 | internal server error: syntax error, unexpected 'catch' (T_CATCH), expecting function (T_FUNCTION) or const (T_CONST) | /var/www/src/app/controller/Members_Controller.phpline: 113 [] []
+=======
 >>>>>>> 0c861fba5451b3becbf35fe44194e0d59db15de2
 [2022-03-28T09:38:28.371116+00:00] lbs.log.ERROR: bad ressource : http://events.service.local/events/0447ff47-e257-4bfc-b1a6-913a2c6cbd79/members/ [] []
+<<<<<<< HEAD
 [2022-03-28T09:40:53.213405+00:00] lbs.log.ERROR: bad ressource : http://events.service.local/events/238bc285-9c03-43fe-9d15-e9870f507336/members/ [] []
 [2022-03-28T09:41:10.745356+00:00] lbs.log.ERROR: bad ressource : http://events.service.local/events/238bc285-9c03-43fe-9d15-e9870f507336/messages/ [] []
 [2022-03-28T10:09:57.539971+00:00] lbs.log.ERROR: bad ressource : http://events.service.local/events/2ff0bc1a-e79b-4e84-acff-c9d62eb8065 [] []
 [2022-03-28T10:11:38.586058+00:00] lbs.log.ERROR: error input event title [] []
 [2022-03-28T10:17:40.661898+00:00] lbs.log.ERROR: bad ressource : http://events.service.local/members/314fc1b2-a413-481e-b570-c9c2c52e9e07 [] []
+=======
+>>>>>>> 0f53949c86d05a614d6b9a8fc6b7a7a2513aac63
+>>>>>>> c36ebfa1d10af08d196938be4fd389cc43aa71b9

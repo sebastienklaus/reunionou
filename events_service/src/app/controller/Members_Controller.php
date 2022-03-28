@@ -76,16 +76,20 @@ class Members_Controller
                 $errors = $req->getAttribute('errors');
             
                 if (isset($errors['user_id'])) {
-                    $this->container->get('logger.error')->error("error input event user_id");
-                    return Writer::json_error($resp, 403, '"user_id" : invalid input, valid user_id expected');
+                    $this->container->get('logger.error')->error("error input member's user_id");
+                    return Writer::json_error($resp, 403, '"user_id" : invalid input, uuid expected');
                 }
                 if (isset($errors['event_id'])) {
-                    $this->container->get('logger.error')->error("error input event event_id");
-                    return Writer::json_error($resp, 403, '"event_id" : invalid input, string expected');
+                    $this->container->get('logger.error')->error("error input member's event_id");
+                    return Writer::json_error($resp, 403, '"event_id" : invalid input, uuid expected');
                 }
                 if (isset($errors['pseudo'])) {
-                    $this->container->get('logger.error')->error("error input event pseudo");
-                    return Writer::json_error($resp, 403, '"pseudo" : invalid input, valid pseudo expected');
+                    $this->container->get('logger.error')->error("error input member's pseudo");
+                    return Writer::json_error($resp, 403, '"pseudo" : invalid input, String expected');
+                }
+               if (isset($errors['status'])) {
+                    $this->container->get('logger.error')->error("error input member's status");
+                    return Writer::json_error($resp, 403, '"status" : invalid input, -1,0 or 1 expected');
                 }
                 
             };
@@ -100,9 +104,14 @@ class Members_Controller
             // génération id basé sur un aléa : UUID v4
             $new_member->id = $new_uuid(4);
 
-            $new_member->user_id = filter_var($member_req['user_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $new_member->event_id = filter_var($member_req['event_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            if (isset($member_req['user_id'])) {
+                $new_member->user_id = filter_var($member_req['user_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            }
+            if (isset($member_req['event_id'])) {
+                $new_member->event_id = filter_var($member_req['event_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            }
             $new_member->pseudo = filter_var($member_req['pseudo'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $new_member->status = filter_var($member_req['status'], FILTER_SANITIZE_NUMBER_FLOAT); //? Maybe there is a better way to controle -1,0 1
 
             $new_member->save();
 
@@ -121,6 +130,7 @@ class Members_Controller
                     "pseudo" => $new_member->pseudo,
                     "updated_at" => $new_member->updated_at->format('Y-m-d H:i:s'),
                     "created_at" => $new_member->created_at->format('Y-m-d H:i:s'),
+                    "status" => $new_member->status
                 ]
             ];
 
@@ -202,6 +212,10 @@ class Members_Controller
                     $this->container->get('logger.error')->error("error input event pseudo");
                     return Writer::json_error($resp, 403, '"pseudo" : invalid input, valid pseudo expected');
                 }
+                if (isset($errors['status'])) {
+                    $this->container->get('logger.error')->error("error input member's status");
+                    return Writer::json_error($resp, 403, '"status" : invalid input, -1,0 or 1 expected');
+                }
                 
             };
     
@@ -216,7 +230,8 @@ class Members_Controller
                 $member->user_id = filter_var($member_req['user_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                 $member->event_id = filter_var($member_req['event_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                 $member->pseudo = filter_var($member_req['pseudo'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    
+                $member->status = filter_var($member_req['status'], FILTER_SANITIZE_NUMBER_FLOAT); //? Maybe there is a better way to controle -1,0 1
+
                 $member->save();
     
                 // Récupération du path pour le location dans header
@@ -234,6 +249,7 @@ class Members_Controller
                         "pseudo" => $member->pseudo,
                         "updated_at" => $member->updated_at->format('Y-m-d H:i:s'),
                         "created_at" => $member->created_at->format('Y-m-d H:i:s'),
+                        "status" => $member->status
                     ]
                 ];
     
@@ -290,7 +306,7 @@ class Members_Controller
         try {
             
             //* Modification TD4.2
-            $member = Members::select(['id', 'user_id', 'event_id', 'pseudo', 'created_at', 'updated_at'])
+            $member = Members::select(['id', 'user_id', 'event_id', 'pseudo', 'created_at', 'updated_at', 'status'])
             ->where('id', '=', $id_member)
             ->firstOrFail();
 
@@ -302,7 +318,8 @@ class Members_Controller
                 'event_id' => $member->event_id, //? to be or not to be ?
                 'pseudo' => $member->pseudo,
                 'created_at' => $member->created_at->format('Y-m-d H:i:s'),
-                'updated_at' => $member->updated_at->format('Y-m-d H:i:s')
+                'updated_at' => $member->updated_at->format('Y-m-d H:i:s'),
+                'status' => $member->status
             ];
 
             // Récupération de la route member                          
@@ -393,7 +410,8 @@ class Members_Controller
                 'event_id' => $member->event_id, //? to be or not to be ?
                 'pseudo' => $member->pseudo,
                 'created_at' => $member->created_at,
-                'updated_at' => $member->updated_at
+                'updated_at' => $member->updated_at,
+                'status' => $member->status
             ]; // TODO rajouter lien self pour chaque member
         }
 
@@ -562,6 +580,7 @@ class Members_Controller
                 'pseudo' => $member->pseudo,
                 'created_at' => $member->created_at,
                 'updated_at' => $member->updated_at,
+                'status' => $member->status,
                 'links' => [
                     "self" => ["href" => $pathForMember],
                     "event" => ["href" => $pathForEvent]
