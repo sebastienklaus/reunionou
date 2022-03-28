@@ -694,9 +694,7 @@ class Events_Controller
         $id_event = $args['id'] ?? null;
         try {
             $event = Events::findOrFail($id_event);
-            $members = $event->members()->select()->get();
-            $messages = $event->messages()->select()->get();
-            if ($event->delete() && $members->delete() && $messages->delete()) 
+            if ($event->delete())
             {
                 $datas_resp = [
                     "type" => "event",
