@@ -163,3 +163,4 @@
 >>>>>>> 0c861fba5451b3becbf35fe44194e0d59db15de2
 [2022-03-28T09:38:28.371116+00:00] lbs.log.ERROR: bad ressource : http://events.service.local/events/0447ff47-e257-4bfc-b1a6-913a2c6cbd79/members/ [] []
 >>>>>>> 0f53949c86d05a614d6b9a8fc6b7a7a2513aac63
+[2022-03-28T10:14:27.727385+00:00] lbs.log.ERROR: error input member's event_id [] []
