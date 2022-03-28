@@ -482,21 +482,26 @@ class Events_Controller
             $event = Events::findOrFail($id_event);
             $members = $event->members()->select()->get();
             $messages = $event->messages()->select()->get();
-            if ($event->delete() && $members->delete() && $messages->delete()) 
-            {
+
+            $event->delete();
+            // $members->delete();
+            // $messages->delete();
+
+            // if ($event->delete() && $members->delete() && $messages->delete()) 
+            // {
                 $datas_resp = [
                     "type" => "event",
                     "event" => $event,
                     "response" => "event deleted",
                 ];
-            } else 
-            {
-                $datas_resp = [
-                    "type" => "event",
-                    "event" => $event,
-                    "response" => "event couldn't be deleted"
-                ];
-            }
+            // } else 
+            // {
+            //     $datas_resp = [
+            //         "type" => "event",
+            //         "event" => $event,
+            //         "response" => "event couldn't be deleted"
+            //     ];
+            // }
             // ! Fonctionne mais erreur HTML
             $resp->getBody()->write(json_encode($datas_resp));
             return writer::json_output($resp, 200);
