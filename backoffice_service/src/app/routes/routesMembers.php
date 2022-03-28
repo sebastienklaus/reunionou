@@ -23,3 +23,6 @@ $app->get('/users/{id}/members[/]', BackOfficeMembersController::class . ':getMe
 
 $app->get('/member[/]', BackOfficeMembersController::class . ':getOneMember')
     ->setName('getOneMember');
+
+$app->get('/members[/]', BackOfficeMembersController::class . ':getMembers')
+    ->setName('getMembers');

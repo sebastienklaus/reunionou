@@ -109,3 +109,6 @@ $app->delete('/events/{id}/members[/]', Members_Controller::class . ':deleteMemb
 
 $app->get('/member[/]', Members_Controller::class . ':getOneMember')
     ->setName('getOneMember');
+
+$app->get('/members[/]', Members_Controller::class . ':getAllMembers')
+    ->setName('getAllMembers');
