@@ -428,5 +428,31 @@ class Members_Controller
 
         }
     }
+
+
+    public function getOneMember(Request $req, Response $resp, array $args): Response {
+
+        $query= $req->getQueryParams();
+
+        // $event = Events::select();
+        $event = Events::findOrFail($query['event'])->members();
+        
+        if (isset($query['pseudo'])) {
+            // $event = $event->with('members')->get();
+            $query['user_id'] = null;
+            $event = $event->where('pseudo', 'like', '%'.$query['pseudo'])->first();
+        }
+        if (isset($query['user_id'])) {
+            $query['pseudo'] = null;
+            $event = $event->where('user_id', 'like', '%/users/'.$query['user_id'])->first();
+        }
+
+        // $event = $event->get();
+        $resp = Writer::json_output($resp, 200);
+            
+        $resp->getBody()->write(json_encode($event));
+
+        return $resp;
+    }
     
 }
