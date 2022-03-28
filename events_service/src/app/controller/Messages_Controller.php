@@ -278,6 +278,7 @@ class Messages_Controller
      * 
      * @apiSuccess (Success (200)) {String} id ID du message
      * @apiSuccess (Success (200)) {String} content Contenu du message 
+     * @apiSuccess (Success (200)) {String} pseudo Pseudo du membre
      * @apiSuccess (Success (200)) {String} member_id ID du membre ayant créé le message
      * @apiSuccess (Success (200)) {String} event_id ID de l'event associé au message
      * @apiSuccess (Success (200)) {JSON} media Media contenu dans le message
@@ -292,6 +293,7 @@ class Messages_Controller
      *     {
      *         "id": "559407d8-73c1-4251-8fab-f9413a48fec6",
      *         "content": "In est risus, auctor sed, tristique in, tempus sit amet, sem. Fusce consequat. Nulla nisl.",
+     *         "pseudo": "HARMand"
      *         "member_id": "1190e0fc-524f-4c32-a087-4bed56091978",
      *         "event_id": "0447ff47-e257-4bfc-b1a6-913a2c6cbd79",
      *         "media": "{\"img\":\"http://dummyimage.com/122x100.png/cc0000/ffffff\",\"link\":\"http://dummyimage.com/249x100.png/5fa2dd/ffffff\"}",
