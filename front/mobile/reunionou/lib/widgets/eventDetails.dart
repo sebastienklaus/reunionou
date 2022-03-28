@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reunionou/models/event.dart';
+import 'package:reunionou/services/weather.dart';
 import 'package:reunionou/widgets/spacer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../data/dataLoader.dart';
@@ -22,11 +25,24 @@ class EventDetails extends StatefulWidget {
 class _EventDetailsState extends State<EventDetails> {
   int confirmedParts = 0;
   int declinedParts = 0;
+  String weatherStatus = "";
+  String weatherIcon = "";
+
   @override
   void initState() {
     super.initState();
-    confirmedParts = context.read<DataLoader>().getMemberByStatus("1").length;
-    declinedParts = context.read<DataLoader>().getMemberByStatus("0").length;
+    confirmedParts = context.read<DataLoader>().getMemberByStatus(1).length;
+    declinedParts = context.read<DataLoader>().getMemberByStatus(0).length;
+    getWeather();
+  }
+
+  Future<void> getWeather() async {
+    var temp = await Weather().getWeather(widget.event.location[0]['latitude'],
+        widget.event.location[0]['longitude']);
+    setState(() {
+      weatherStatus = temp['text'];
+      weatherIcon = temp['icon'];
+    });
   }
 
   @override
@@ -149,6 +165,32 @@ class _EventDetailsState extends State<EventDetails> {
                   ),
                 ),
               ],
+            ),
+            const SpacerWidget(
+              space: 30,
+            ),
+            const Text(
+              "Météo",
+              style: TextStyle(
+                  fontSize: 25.0,
+                  color: Colors.blueGrey,
+                  letterSpacing: 2.0,
+                  fontWeight: FontWeight.w400),
+            ),
+            const SpacerWidget(
+              space: 13,
+            ),
+            Text(
+              weatherStatus,
+              style: const TextStyle(
+                  fontSize: 18.0,
+                  color: Colors.black,
+                  letterSpacing: 2.0,
+                  fontWeight: FontWeight.w300),
+            ),
+            Image.network(
+              "https:" + weatherIcon,
+              width: 50,
             ),
             const SpacerWidget(
               space: 30,
