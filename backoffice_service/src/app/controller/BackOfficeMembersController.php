@@ -113,20 +113,20 @@ class BackOfficeMembersController
         $id_event = $args['id'];
         $received_member = $req->getParsedBody();
 
-        if (isset($received_member['user_id'])) {
-                $pathForUser = $this->container->router->pathFor(
-                'getUserById',
-                ['id' => $received_member['user_id']]);
-                 } else {
-                $pathForUser = null;
-            };
+        // if (isset($received_member['user_id'])) {
+        //         $pathForUser = $this->container->router->pathFor(
+        //         'getUserById',
+        //         ['id' => $received_member['user_id']]);
+        //          } else {
+        //         $pathForUser = null;
+        //     };
 
         
         $response = $client->request('PUT', '/members/' . $id_event, [
             'form_params'=> [
                 'pseudo' => $received_member['pseudo'],
                 'event_id' => $received_member['event_id'],
-                'user_id' => $pathForUser,
+                'user_id' => $received_member['user_id'],
                 'status' => $received_member['status']
                 ]]  );
 
