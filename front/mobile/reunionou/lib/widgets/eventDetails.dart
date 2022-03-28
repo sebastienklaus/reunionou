@@ -7,6 +7,7 @@ import 'package:reunionou/services/weather.dart';
 import 'package:reunionou/widgets/spacer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../data/dataLoader.dart';
+import '../models/member.dart';
 import 'addParticipants.dart';
 import 'map.dart';
 import 'package:flutter_share/flutter_share.dart';
@@ -26,14 +27,16 @@ class _EventDetailsState extends State<EventDetails> {
   int confirmedParts = 0;
   int declinedParts = 0;
   String weatherStatus = "";
-  String weatherIcon = "";
+  late String weatherIcon = "";
+  late Member? _member;
 
   @override
   void initState() {
     super.initState();
+    getWeather();
+    getMember();
     confirmedParts = context.read<DataLoader>().getMemberByStatus(1).length;
     declinedParts = context.read<DataLoader>().getMemberByStatus(0).length;
-    getWeather();
   }
 
   Future<void> getWeather() async {
@@ -42,6 +45,13 @@ class _EventDetailsState extends State<EventDetails> {
     setState(() {
       weatherStatus = temp['text'];
       weatherIcon = temp['icon'];
+    });
+  }
+
+  Future<void> getMember() async {
+    Member? temp = await context.read<DataLoader>().getMember(widget.event.id!);
+    setState(() {
+      _member = temp;
     });
   }
 
@@ -188,10 +198,11 @@ class _EventDetailsState extends State<EventDetails> {
                   letterSpacing: 2.0,
                   fontWeight: FontWeight.w300),
             ),
-            Image.network(
-              "https:" + weatherIcon,
-              width: 50,
-            ),
+            if (weatherIcon != "")
+              Image.network(
+                "https:" + weatherIcon,
+                width: 50,
+              ),
             const SpacerWidget(
               space: 30,
             ),
