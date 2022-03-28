@@ -25,8 +25,8 @@ $app->put('/events/{id}[/]', Events_Controller::class . ':updateEvent')
     ->setName('updateEvent')
     ->add(new Validation($eventValidators));
         
-$app->get('/members/{pseudo}/events[/]', Events_Controller::class . ':getEventbyMemberPseudo')
-    ->setName('getEventbyMemberPseudo');
+$app->get('/members/{pseudo}/events[/]', Events_Controller::class . ':getEventByMemberPseudo')
+    ->setName('getEventByMemberPseudo');
 
 $app->get('/events/{id}[/]', Events_Controller::class . ':getEvent')
     ->setName('getEvent');
@@ -37,11 +37,14 @@ $app->get('/events[/]', Events_Controller::class . ':getAllEvent')
 $app->delete('/events/{id}[/]', Events_Controller::class . ':deleteEventById')
     ->setName('deleteEventById');
 
-$app->get('/users/{id}/events[/]', Events_Controller::class . ':getEventbyUserId')
-    ->setName('getEventbyUserId');
+$app->get('/users/{id}/created_events[/]', Events_Controller::class . ':getEventCreatedByUserId')
+    ->setName('getEventCreatedByUserId');
     
-$app->get('/members_users/{id}/events[/]', Events_Controller::class . ':getAllEventsbyMember')
-    ->setName('getAllEventsbyMember');
+$app->get('/members_users/{id}/events[/]', Events_Controller::class . ':getAllEventsByMember')
+    ->setName('getAllEventsByMember');
+
+$app->get('/users/{id}/events[/]', Events_Controller::class . ':getAllEventsByUserId')
+    ->setName('getAllEventsByUserId');
 
  //TODO evetually : creator of event can delete his/her event (côté backoffice?)
 
@@ -70,7 +73,7 @@ $app->delete('/messages/{id}[/]', Messages_Controller::class . ':deleteMessageBy
 $app->delete('/events/{id}/messages[/]', Messages_Controller::class . ':deleteMessagesByEvent')
     ->setName('deleteMessagesByEvent');
   
-//todo ?? message by members. Dans ce cas, rajouter ce lien dans hateos dans getMember.
+//todo ?? message By members. Dans ce cas, rajouter ce lien dans hateos dans getMember.
 
 // Members
 
