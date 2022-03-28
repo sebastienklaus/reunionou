@@ -604,9 +604,11 @@ class DataLoader extends ChangeNotifier {
             event_id: msg['event_id'],
             member_id: msg['member_id'],
             content: msg['content'],
+            created_at: msg['created_at'],
+            media: msg['media'],
           );
           //Add to eventMessages
-          eventMessages.add(temp);
+          eventMessages.insert(0, temp);
         }
       }
       return eventMessages;
@@ -622,7 +624,7 @@ class DataLoader extends ChangeNotifier {
       var parsedMessage = {
         "event_id": eventId,
         "content": message,
-        "member_id": "sdq"
+        "member_id": "00fad32a-c86f-4e15-a8e9-619fd59793a7"
       };
 
       var response = await Dio().post(
