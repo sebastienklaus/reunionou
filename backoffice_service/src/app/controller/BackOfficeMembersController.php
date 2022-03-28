@@ -60,19 +60,29 @@ class BackOfficeMembersController
         $received_member = $req->getParsedBody();
 
 
-        if (isset($received_member['user_id'])) {
-                $pathForUser = $this->container->router->pathFor(
-                'getUserById',
-                ['id' => $received_member['user_id']]);
-                 } else {
-                $pathForUser = null;
-            };
+        //* Génére automatiquement l'URI avec l'user_id vers la route getUserById
+        // if (isset($received_member['user_id'])) {
+        //         $pathForUser = $this->container->router->pathFor(
+        //         'getUserById',
+        //         ['id' => $received_member['user_id']]);
+        //          } else {
+        //         $pathForUser = null;
+        //     };
+
+        if (!isset($received_member['user_id'])) {
+            $received_member['user_id'] = null;
+        }
+
+        if (!isset($received_member['status']) || ($received_member['status'] == "") ) {
+            $received_member['status'] = "-1";
+        }
 
         $response = $client->request('POST', '/members', [
                 'form_params'=> [
                     'pseudo' => $received_member['pseudo'],
                     'event_id' => $received_member['event_id'],
-                    'user_id' => $pathForUser,
+                    // 'user_id' => $pathForUser,
+                    'user_id' => $received_member['user_id'],
                     'status' => $received_member['status']
                 ]]  );
 
@@ -103,20 +113,20 @@ class BackOfficeMembersController
         $id_event = $args['id'];
         $received_member = $req->getParsedBody();
 
-        if (isset($received_member['user_id'])) {
-                $pathForUser = $this->container->router->pathFor(
-                'getUserById',
-                ['id' => $received_member['user_id']]);
-                 } else {
-                $pathForUser = null;
-            };
+        // if (isset($received_member['user_id'])) {
+        //         $pathForUser = $this->container->router->pathFor(
+        //         'getUserById',
+        //         ['id' => $received_member['user_id']]);
+        //          } else {
+        //         $pathForUser = null;
+        //     };
 
         
         $response = $client->request('PUT', '/members/' . $id_event, [
             'form_params'=> [
                 'pseudo' => $received_member['pseudo'],
                 'event_id' => $received_member['event_id'],
-                'user_id' => $pathForUser,
+                'user_id' => $received_member['user_id'],
                 'status' => $received_member['status']
                 ]]  );
 
@@ -231,6 +241,32 @@ class BackOfficeMembersController
         $resp->getBody()->write($response->getBody());
         return $resp;
 
+    } 
+    catch (ClientException $e) { 
+        $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+        return Writer::json_error_data($resp, 401, $responseBodyAsString);
+    } 
+    catch (ServerException $e) {
+        $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+        return Writer::json_error_data($resp, 500, $responseBodyAsString);
+    }  
+
+    }
+
+
+    public function getMembers(Request $req, Response $resp, $args): Response {
+
+        try {
+        $client = new \GuzzleHttp\Client([
+            'base_uri' => $this->container->get('settings')['events_service'],
+            'timeout' => 5.0
+        ]);
+
+        $response = $client->request('GET', '/members/');
+
+        $resp = Writer::json_output($resp, $response->getStatusCode());
+        $resp->getBody()->write($response->getBody());
+        return $resp;
     } 
     catch (ClientException $e) { 
         $responseBodyAsString = $e->getResponse()->getBody()->getContents();

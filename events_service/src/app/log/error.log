@@ -178,6 +178,10 @@
 [2022-03-28T13:37:51.545247+00:00] lbs.log.ERROR: error | 500 | internal server error: Object of class Illuminate\Database\Eloquent\Builder could not be converted to string | /var/www/src/vendor/illuminate/database/Connection.phpline: 619 [] []
 =======
 >>>>>>> 91fa8d07f8fdd1c84583006436fee7e28690a866
+<<<<<<< HEAD
 >>>>>>> 67301ab850e5a0be69e1ec637ff8eece62d54912
 [2022-03-28T13:52:27.652519+00:00] lbs.log.ERROR: error | 500 | internal server error: Call to a member function format() on null | /var/www/src/app/controller/Events_Controller.phpline: 741 [] []
 [2022-03-28T13:53:43.389150+00:00] lbs.log.ERROR: error | 500 | internal server error: Call to a member function format() on null | /var/www/src/app/controller/Events_Controller.phpline: 744 [] []
+=======
+[2022-03-28T14:08:08.342427+00:00] lbs.log.ERROR: error | 500 | internal server error: Cannot use object of type DateTime as array | /var/www/src/app/controller/Members_Controller.phpline: 655 [] []
+>>>>>>> feature/RouteGetMembersExpired
