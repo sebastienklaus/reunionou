@@ -27,7 +27,44 @@ class Members_Controller
         $this->container = $container;
     }
 
-    // Créer un event
+   /**
+     * 
+     * @api }{POST} /members createMember
+     * @apiName CreateMember
+     * @apiGroup Member
+     * @apiVersion  1.0.0
+     * 
+     * @apiParam {String} user_id ID de l'utilisateur associé au member
+     * @apiParam {String} event_id ID de l'event associé au member
+     * @apiParam {String} pseudo Pseudo du member
+     * 
+     * 
+     * {
+     * "user_id": "/users/b1858803-2305-47f4-be67-1efc10a91da7",
+     * "event_id": "7be3efde-34b1-4cc8-a52f-1429bdee413b",
+     * "pseudo": "HARMand"
+     * }
+     * 
+     * @apiSuccess (Success (200)) {String} id ID du member
+     * @apiSuccess (Success (200)) {String} user_id ID de l'utilisateur associé au member
+     * @apiSuccess (Success (200)) {String} event_id ID de l'event associé au member
+     * @apiSuccess (Success (200)) {String} pseudo Pseudo du member
+     * @apiSuccess (Success (200)) {date} created_at Date de création du member
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification du member
+     * 
+     * @apiSuccessExample Success-Response:
+     *  {
+     * "type": "ressource",
+     * "member": {
+     *     "id": "a9840463-19a3-4d3c-9cc4-c12fdfed0c35",
+     *     "user_id": "/users/b1858803-2305-47f4-be67-1efc10a91da7",
+     *     "event_id": "7be3efde-34b1-4cc8-a52f-1429bdee413b",
+     *     "pseudo": "HARMand",
+     *     "updated_at": "2022-03-28 09:01:22",
+     *     "created_at": "2022-03-28 09:01:22"
+     *           }
+     * }
+     */
     public function createMember(Request $req, Response $resp, array $args): Response
     {
 
@@ -104,7 +141,44 @@ class Members_Controller
         //
     }
 
-        // Créer un event
+        /**
+     * 
+     * @api {PUT} /members/{id} updateMember
+     * @apiName UpdateMember
+     * @apiGroup Member
+     * @apiVersion  1.0.0
+     * 
+     * @apiParam {String} user_id ID de l'utilisateur associé au member
+     * @apiParam {String} event_id ID de l'event associé au member
+     * @apiParam {String} pseudo Pseudo du member
+     * 
+     * 
+     * {
+     * "user_id": "/users/b1858803-2305-47f4-be67-1efc10a91da7",
+     * "event_id": "7be3efde-34b1-4cc8-a52f-1429bdee413b",
+     * "pseudo": "HARMand"
+     * }
+     * 
+     * @apiSuccess (Success (200)) {String} id ID du member
+     * @apiSuccess (Success (200)) {String} user_id ID de l'utilisateur associé au member
+     * @apiSuccess (Success (200)) {String} event_id ID de l'event associé au member
+     * @apiSuccess (Success (200)) {String} pseudo Pseudo du member
+     * @apiSuccess (Success (200)) {date} created_at Date de création du member
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification du member
+     * 
+     * @apiSuccessExample Success-Response:
+     *  {
+     * "type": "ressource",
+     * "member": {
+     *     "id": "a9840463-19a3-4d3c-9cc4-c12fdfed0c35",
+     *     "user_id": "/users/b1858803-2305-47f4-be67-1efc10a91da7",
+     *     "event_id": "7be3efde-34b1-4cc8-a52f-1429bdee413b",
+     *     "pseudo": "HARMand",
+     *     "updated_at": "2022-03-28 09:01:22",
+     *     "created_at": "2022-03-28 09:01:22"
+     *           }
+     * }
+     */
         public function updateMember(Request $req, Response $resp, array $args): Response
         {
     
@@ -180,6 +254,35 @@ class Members_Controller
             //
         }
 
+    /**
+     * 
+     * @api {GET} /members/{id} getMemberById
+     * @apiName GetMemberById
+     * @apiGroup Member
+     * @apiVersion  1.0.0
+     * 
+     * @apiParam  {String} id ID du member
+     * 
+     * @apiSuccess (Success (200)) {String} id ID du member
+     * @apiSuccess (Success (200)) {String} member_id ID de l'utilisateur associé au member
+     * @apiSuccess (Success (200)) {String} event_id ID de l'event associé au member
+     * @apiSuccess (Success (200)) {String} pseudo Pseudo du member
+     * @apiSuccess (Success (200)) {date} created_at Date de création du member
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification du member
+     * 
+     * @apiSuccessExample Success-Response:
+     *  {
+     * "type": "ressource",
+     * "member": {
+     *     "id": "314fc1b2-a413-481e-b570-c9c2c52e9e07",
+     *     "user_id": "/users/9c2eca18-28ba-4c36-90c7-f0cb1d5e122b",
+     *     "event_id": "1590272b-2f38-4d59-9f49-fe0dde3e2ea1",
+     *     "pseudo": "hmerwoody",
+     *     "created_at": "2021-08-04 01:16:08",
+     *     "updated_at": "2021-12-16 10:01:06"
+     * }
+     * ...
+     */
     public function getMember(Request $req, Response $resp, array $args): Response
     {
         $id_member = $args['id'];
@@ -244,7 +347,36 @@ class Members_Controller
         }
     }
 
-   public function getMembersByEvent(Request $req, Response $resp, array $args): Response
+    /**
+     * 
+     * @api {GET} /events/{id}/members getMembersByEventId
+     * @apiName GetMembersByEventId
+     * @apiGroup Member
+     * @apiVersion  1.0.0
+     * 
+     * @apiParam  {String} id ID de l'event
+     * 
+     * @apiSuccess (Success (200)) {String} id ID du member
+     * @apiSuccess (Success (200)) {String} member_id ID de l'utilisateur associé au member
+     * @apiSuccess (Success (200)) {String} event_id ID de l'event associé au member
+     * @apiSuccess (Success (200)) {String} pseudo Pseudo du member
+     * @apiSuccess (Success (200)) {date} created_at Date de création du member
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification du member
+     * 
+     * @apiSuccessExample Success-Response:
+     *  {
+     * "type": "ressource",
+     * "member": {
+     *     "id": "314fc1b2-a413-481e-b570-c9c2c52e9e07",
+     *     "user_id": "/users/9c2eca18-28ba-4c36-90c7-f0cb1d5e122b",
+     *     "event_id": "1590272b-2f38-4d59-9f49-fe0dde3e2ea1",
+     *     "pseudo": "hmerwoody",
+     *     "created_at": "2021-08-04 01:16:08",
+     *     "updated_at": "2021-12-16 10:01:06"
+     * }
+     * ...
+     */
+    public function getMembersByEvent(Request $req, Response $resp, array $args): Response
     {
         $id_event = $args['id'];
         
@@ -308,6 +440,36 @@ class Members_Controller
         }
     }
 
+    /**
+     * 
+     * @api {DELETE} /members/{id} deleteMember
+     * @apiName DeleteMemberById
+     * @apiGroup Member
+     * @apiVersion  1.0.0
+     * 
+     * @apiParam  {String} id ID du member
+     * 
+     * @apiSuccess (Success (200)) {String} id ID du member
+     * @apiSuccess (Success (200)) {String} user_id ID de l'utilisateur ayant créé le member
+     * @apiSuccess (Success (200)) {String} event_id ID de l'event associé au member
+     * @apiSuccess (Success (200)) {JSON} media Media contenu dans le member
+     * @apiSuccess (Success (200)) {date} created_at Date de création du member
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification du member
+     * 
+     * @apiSuccessExample Success-Response:
+     *  {
+     * "type": "member",
+     * "member": {
+     *     "id": "a9840463-19a3-4d3c-9cc4-c12fdfed0c35",
+     *     "user_id": "/users/b1858803-2305-47f4-be67-1efc10a91da7",
+     *     "event_id": "7be3efde-34b1-4cc8-a52f-1429bdee413b",
+     *     "pseudo": "HARMand",
+     *     "created_at": "2022-03-28T09:01:22.000000Z",
+     *     "updated_at": "2022-03-28T09:01:22.000000Z"
+     * },
+     * "response": "member deleted"
+     * }
+     */
     public function deleteMemberById(Request $req, Response $resp, array $args): Response
     {
         $id_member = $args['id'] ?? null;
@@ -334,6 +496,7 @@ class Members_Controller
             return Writer::json_error($resp, 404, "member not found");
         }
     }
+
 
     public function deleteMembersByEvent(Request $req, Response $resp, array $args): Response
     {
