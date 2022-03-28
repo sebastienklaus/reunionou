@@ -3,7 +3,7 @@ class Member {
   String? user_id;
   String event_id;
   String pseudo;
-  String status;
+  int? status;
   String created_at;
   String updated_at;
 
@@ -13,7 +13,7 @@ class Member {
     this.user_id,
     required this.event_id,
     required this.pseudo,
-    required this.status,
+    this.status,
     required this.created_at,
     required this.updated_at,
   });

@@ -30,6 +30,8 @@ class DataLoader extends ChangeNotifier {
       "http://docketu.iutnc.univ-lorraine.fr:62015/events/{id}/members";
   final String _eventMemberByPseudo =
       "http://docketu.iutnc.univ-lorraine.fr:62015/members/{pseudo}/events";
+  final String _eventMemberByUserId =
+      "http://docketu.iutnc.univ-lorraine.fr:62015/users/{user_id}/members";
 
   //Event Messages
   final String _getEventMessages =
@@ -374,7 +376,7 @@ class DataLoader extends ChangeNotifier {
       if (type == "psuedo") {
         uri = _eventMemberByPseudo.replaceAll('{pseudo}', _user.username!);
       } else {
-        uri = _eventMemberByPseudo.replaceAll('{user_id}', _user.id);
+        uri = _eventMemberByUserId.replaceAll('{user_id}', _user.id);
       }
 
       var response = await Dio().get(
@@ -498,7 +500,8 @@ class DataLoader extends ChangeNotifier {
       var parsedMember = {
         "event_id": eventId,
         "user_id": userId,
-        "pseudo": username
+        "pseudo": username,
+        "status": -1
       };
 
       var response = await Dio().post(
@@ -548,7 +551,7 @@ class DataLoader extends ChangeNotifier {
             user_id: member['user_id'],
             event_id: member['event_id'],
             pseudo: member['pseudo'],
-            status: "1",
+            status: member['status'],
             created_at: member['created_at'],
             updated_at: member['updated_at'],
           );
@@ -570,41 +573,38 @@ class DataLoader extends ChangeNotifier {
   }
 
   //Update attendance
-  Future<bool> updateAttendance(String rep, String event_id) async {
+  Future<bool> updateAttendance(int rep, String event_id) async {
     //Call api
-    // try {
-    //   var parsedMember = {
-    //     "title": event.title,
-    //     "user_id": _user.id,
-    //     "description": event.description,
-    //     "location": event.location[0],
-    //     "heure": event.hour.substring(0, 5),
-    //     "date": event.date,
-    //   };
+    try {
+      var parsedMember = {
+        "user_id": _user.id,
+        "event_id": event_id,
+        "pseudo": _user.username,
+        "status": rep,
+      };
 
-    //   var response = await Dio().put(
-    //     _eventsUri + "/" + event.id!,
-    //     options: Options(
-    //       headers: {
-    //         'token': _user.token,
-    //         'Origin': "flutter",
-    //         'Content-Type': 'application/json',
-    //       },
-    //     ),
-    //     data: parsedEvent,
-    //   );
+      var response = await Dio().put(
+        _membersUri + "/" + "00ff2bb1-fd5d-4ed1-b0f8-89a4f3b4c232",
+        options: Options(
+          headers: {
+            'token': _user.token,
+            'Origin': "flutter",
+            'Content-Type': 'application/json',
+          },
+        ),
+        data: parsedMember,
+      );
 
-    //   if (response.statusCode == 200) {
-    //     await getEvents();
-    //     notifyListeners();
-    //     return true;
-    //   }
-    //   return false;
-    // } catch (e) {
-    //   print(e.toString());
-    //   return false;
-    // }
-    return false;
+      if (response.statusCode == 200) {
+        await getEventParticipants(event_id);
+        notifyListeners();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
   }
 
   ///-------------------------------------------------------------------------------------------------------------------------///
