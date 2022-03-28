@@ -37,6 +37,8 @@
 
 - rajouter dans hateos les liens self dans les getall dnas les foreach
 
+- Rajouter hateos user_id : user/{user_id} dans le back office pour donner la route vers l'user en utilisant l'user_id du members si présent
+
 ## Youssef
 
 - format JSON Spot
