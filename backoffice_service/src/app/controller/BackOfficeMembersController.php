@@ -213,4 +213,34 @@ class BackOfficeMembersController
 
     }
 
+
+    public function getOneMember(Request $req, Response $resp, $args): Response {
+    try{
+        $query= $req->getQueryParams();
+
+        $client = new \GuzzleHttp\Client([
+            'base_uri' => $this->container->get('settings')['events_service'],
+            'timeout' => 5.0
+        ]);
+
+        $response = $client->request('GET', '/member/', [
+            'query'=>$query
+        ]);
+
+        $resp = Writer::json_output($resp, $response->getStatusCode());
+        $resp->getBody()->write($response->getBody());
+        return $resp;
+
+    } 
+    catch (ClientException $e) { 
+        $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+        return Writer::json_error_data($resp, 401, $responseBodyAsString);
+    } 
+    catch (ServerException $e) {
+        $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+        return Writer::json_error_data($resp, 500, $responseBodyAsString);
+    }  
+
+    }
+
 }

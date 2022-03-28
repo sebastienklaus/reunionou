@@ -100,3 +100,6 @@ $app->delete('/events/{id}/members[/]', Members_Controller::class . ':deleteMemb
     // post delete
 
 //TODO tout les events pour un members.user_id : nackoffice rajouter /user/id
+
+$app->get('/member[/]', Members_Controller::class . ':getOneMember')
+    ->setName('getOneMember');
