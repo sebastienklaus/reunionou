@@ -163,4 +163,38 @@ class BackOfficeAuthController
             return Writer::json_error_data($resp, 500, $responseBodyAsString);
         }
     }
+
+    public function authenticateAdmin(Request $req, Response $resp, array $args): Response {
+
+        $isAdmin = $req->getAttribute('isAdmin');
+
+        if ($isAdmin == 1) {
+            try {
+                $client = new Client([
+                    'base_uri' => $this->container->get('settings')['auth_service'],
+                    'timeout' => 5.0,
+                ]);
+                $response = $client->request('POST', '/auth', [
+                        'headers'=> ['Authorization' => $req->getHeader('Authorization')]
+        
+                ]);
+                return $resp->withStatus($response->getStatusCode())
+                            ->withHeader('Content-Type', $response->getHeader('Content-Type'))
+                            ->withBody($response->getBody());
+            } 
+            catch (ClientException $e) { 
+                $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+                return Writer::json_error_data($resp, 401, $responseBodyAsString);
+            } 
+            catch (ServerException $e) {
+                $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+                return Writer::json_error_data($resp, 500, $responseBodyAsString);
+            }
+        }
+        else{
+            return Writer::json_error($resp, 401, 'User is not admin');
+        }
+
+                
+    }
 }

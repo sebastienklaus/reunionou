@@ -47,7 +47,7 @@ class Middleware {
         $response = $next($req,$resp);
 
         $response = $response->withHeader('Access-Control-Allow-Origin', $req->getHeader('Origin'))
-                                ->withHeader('Access-Control-Allow-Methods', 'POST, PUT, GET, DELTE' )
+                                ->withHeader('Access-Control-Allow-Methods', 'POST, PUT, GET, DELETE' )
                                 ->withHeader('Access-Control-Allow-Headers','Authorization, Content-Type' )
                                 ->withHeader('Access-Control-Max-Age', 3600)
                                 ->withHeader('Access-Control-Allow-Credentials', 'true');
@@ -67,7 +67,8 @@ class Middleware {
         );
 
         $body = json_decode($response->getBody());
-        var_dump($body);
+
+        $req = $req->withAttribute('isAdmin', $body->is_Admin);
 
         $resp = $next($req,$resp);
 

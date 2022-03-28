@@ -244,14 +244,28 @@ class AuthController {
     public function getUsers(Request $req, Response $resp, $args): Response {
         try { 
             $allUsers = User::select(['id', 'fullname', 'username'])->get();
-            $data = [];
+            $count = count($allUsers);
+            $linkUsers = $this->container->router->pathFor('getUsers');
+            
+            $users_resp = [];
             foreach ($allUsers as $u) {
-                array_push($data, [
+                $users_resp[] = [
                     'user_id' => $u->id,
                     'user_fullname' => $u->fullname,
                     'user_username' => $u->username,
-                ]);
+                ];
             }
+
+            $data = [
+                "type" => "collection",
+                "count" => $count,
+                "users" => $users_resp,
+                "links" => [
+                    "self" => [
+                        "href" => $linkUsers
+                    ]
+                ]
+            ];
 
             return Writer::json_output($resp, 200, $data);
 
@@ -269,8 +283,24 @@ class AuthController {
         $userID = $args['id'];
         try { 
             $user = User::select(['id', 'fullname','email', 'username', 'refresh_token'])->findOrFail($userID);
+            $linkUsers = $this->container->router->pathFor('getUsers');
+            $linkSelfUser = $this->container->router->pathFor('getUserByID',['id' => $user->id]);
 
-            return Writer::json_output($resp, 200, $user);
+
+            $data = [
+                "type" => "ressouce",
+                "user" => $user,
+                "links" => [
+                    "users" => [
+                        "href" => $linkUsers
+                    ],
+                    "self" => [
+                        "href" => $linkSelfUser
+                    ]
+                ],
+            ];
+
+            return Writer::json_output($resp, 200, $data);
 
         } catch (ModelNotFoundException $e) {
             $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="reunionou auth" ');

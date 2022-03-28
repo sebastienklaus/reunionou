@@ -4,9 +4,13 @@ namespace reunionou\backoffice\app\controller;
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
-use GuzzleHttp\Client as Client;
 
 use reunionou\backoffice\app\utils\Writer;
+
+use GuzzleHttp\Psr7;
+use GuzzleHttp\Client as Client;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 
 class BackOfficeMessagesController
 {
@@ -21,7 +25,7 @@ class BackOfficeMessagesController
 
     public function getMessage(Request $req, Response $resp, $args): Response {
 
-
+        try {
         $client = new \GuzzleHttp\Client([
             'base_uri' => $this->container->get('settings')['events_service'],
             'timeout' => 5.0
@@ -33,12 +37,21 @@ class BackOfficeMessagesController
         $resp = Writer::json_output($resp, $response->getStatusCode());
         $resp->getBody()->write($response->getBody());
         return $resp;
+    } 
+    catch (ClientException $e) { 
+        $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+        return Writer::json_error_data($resp, 401, $responseBodyAsString);
+    } 
+    catch (ServerException $e) {
+        $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+        return Writer::json_error_data($resp, 500, $responseBodyAsString);
+    }  
 
     }
 
     public function createMessage(Request $req, Response $resp, $args): Response {
 
-
+        try {
         $client = new \GuzzleHttp\Client([
             'base_uri' => $this->container->get('settings')['events_service'],
             'timeout' => 5.0
@@ -60,7 +73,15 @@ class BackOfficeMessagesController
                         'member_id' => $received_message['member_id'],
                         'event_id' => $received_message['event_id']
                     ]]  );
-        }
+        }} 
+        catch (ClientException $e) { 
+            $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+            return Writer::json_error_data($resp, 401, $responseBodyAsString);
+        } 
+        catch (ServerException $e) {
+            $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+            return Writer::json_error_data($resp, 500, $responseBodyAsString);
+        }  
 
 
         $resp = Writer::json_output($resp, $response->getStatusCode());
@@ -72,7 +93,7 @@ class BackOfficeMessagesController
 
     public function getMessagesByEvent(Request $req, Response $resp, $args): Response {
 
-
+        try{
         $client = new \GuzzleHttp\Client([
             'base_uri' => $this->container->get('settings')['events_service'],
             'timeout' => 5.0
@@ -84,14 +105,21 @@ class BackOfficeMessagesController
         $resp = Writer::json_output($resp, $response->getStatusCode());
         $resp->getBody()->write($response->getBody());
         return $resp;
-
-        // TODO : Récupérer href des membres
+    } 
+    catch (ClientException $e) { 
+        $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+        return Writer::json_error_data($resp, 401, $responseBodyAsString);
+    } 
+    catch (ServerException $e) {
+        $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+        return Writer::json_error_data($resp, 500, $responseBodyAsString);
+    }  
 
     }
 
     public function deleteMessageById(Request $req, Response $resp, $args): Response {
 
-
+        try{
         $client = new \GuzzleHttp\Client([
             'base_uri' => $this->container->get('settings')['events_service'],
             'timeout' => 5.0
@@ -103,6 +131,15 @@ class BackOfficeMessagesController
         $resp = Writer::json_output($resp, $response->getStatusCode());
         $resp->getBody()->write($response->getBody());
         return $resp;
+    } 
+    catch (ClientException $e) { 
+        $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+        return Writer::json_error_data($resp, 401, $responseBodyAsString);
+    } 
+    catch (ServerException $e) {
+        $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+        return Writer::json_error_data($resp, 500, $responseBodyAsString);
+    }  
 
     }
 
