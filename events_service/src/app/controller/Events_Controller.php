@@ -716,4 +716,84 @@ class Events_Controller
             return Writer::json_error($resp, 404, "event not found");
         }
     }
+
+    public function getAllEventsByMember(Request $req, Response $resp, array $args): Response
+    {
+        $id_member = $args['id'];
+        
+        try {
+            // $user_id = Members::select('user_id')->where('id', $id_member)->get();
+            // $events = Members::select('event_id')->where('user_id', $user_id)->get();
+            // var_dump($events);
+
+            $members = Members::all();
+            $members_users = [];
+            foreach($members as $member)
+            {
+                if($member->id == $id_member)
+                {
+                    $members_users[] = $member;
+                }
+            }
+            
+            $nbEvents = count($events);
+
+        $events_resp = [];
+        foreach ($events as $event) {
+            $events_resp[] = [
+                'id' => $event->id,
+                'title' => $event->title,
+                'description' => $event->description,
+                'user_id' => $event->user_id,
+                'location' => json_decode($event->location),
+                'date' => $event->date,
+                'heure' => $event->heure,
+                'created_at' => $event->created_at->format('Y-m-d H:i:s'),
+                'updated_at' => $event->updated_at->format('Y-m-d H:i:s'), //?rajouter un link avec pathfor ?
+                'href' => $this->container->router->pathFor('getEvent',['id' => $event->id])
+            ];
+        }
+
+            // // Récupération de la route getMembersByEvent                            
+            // $pathForMembersByEvent = $this->container->router->pathFor(
+            //     'getMembersByEvent',
+            //     ['id' => $id_event]
+            // );
+
+            // $pathForEvent = $this->container->router->pathFor(
+            //     'getEvent',
+            //     ['id' => $id_event]
+            // );
+
+            // // Création des liens hateos
+            // $hateoas = [
+            //     "self" => ["href" => $pathForMembersByEvent],
+            //     "event" => ["href" => $pathForEvent]
+            // ];
+
+
+            // Création du body de la réponse
+            //? Renomer les keys ou laisser les noms issus de la DB ?
+            $datas_resp = [
+                "type" => "collection",
+                "count" => $nbEvents,
+                "member" => $events_resp
+                //"links" => $hateoas
+   
+            ];
+
+            //? Ressources imbriquées ? à priori non.
+
+            $resp = Writer::json_output($resp, 200);
+            
+            $resp->getBody()->write(json_encode($datas_resp));
+
+            return $resp;
+        } catch (ModelNotFoundException $e) {
+
+            $clientError = $this->container->clientError;
+            return $clientError($req, $resp, 404, "member not found");
+
+        }
+    }
 }

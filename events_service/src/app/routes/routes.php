@@ -39,6 +39,9 @@ $app->delete('/events/{id}[/]', Events_Controller::class . ':deleteEventById')
 
 $app->get('/users/{id}/events[/]', Events_Controller::class . ':getEventbyUserId')
     ->setName('getEventbyUserId');
+    
+$app->get('/members_users/{id}/events[/]', Events_Controller::class . ':getAllEventsbyMember')
+    ->setName('getAllEventsbyMember');
 
  //TODO evetually : creator of event can delete his/her event (côté backoffice?)
 
