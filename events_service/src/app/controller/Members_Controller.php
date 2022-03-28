@@ -2,6 +2,7 @@
 
 namespace reu\events\app\controller;
 
+use DateInterval;
 use DateTime;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -632,6 +633,25 @@ class Members_Controller
         $resp = Writer::json_output($resp, 200);
             
         $resp->getBody()->write(json_encode($event));
+
+        return $resp;
+    }
+
+
+
+    public function getAllMembers(Request $req, Response $resp, array $args): Response {
+        $allMembers = Members::select(['id', 'pseudo','updated_at', 'status'])->orderBy('updated_at')->with('messages')->get();
+        $count = count($allMembers);
+
+        $data = [
+            'type'=>'collection',
+            'count'=>$count,
+            'members'=>$allMembers
+        ];
+
+        $resp = Writer::json_output($resp, 200);
+            
+        $resp->getBody()->write(json_encode($data));
 
         return $resp;
     }
