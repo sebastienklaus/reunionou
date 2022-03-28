@@ -307,6 +307,7 @@ class Messages_Controller
         try {
             $event = Events::findOrFail($id_event);
             $messages = $event->messages()->select()->get();
+            
             $nbMessage = count($messages);
 
         $messages_resp = [];
@@ -314,6 +315,7 @@ class Messages_Controller
             $messages_resp[] = [
              'id' => $message->id,
                 'content' => $message->content,
+                'pseudo' => $message->member->pseudo,
                 'member_id' => $message->member_id,
                 'event_id' => $message->event_id,
                 'media' => $message->media,
