@@ -98,7 +98,10 @@ class Members_Controller
             
             // Création d'un message via le model
             $new_member = new Members();
+
+            $check_member = Members::select()->where('user_id',$member_req['user_id'])->where('event_id',$member_req['event_id'])->first();
             
+            if (is_null($check_member)) {
             // Récupération de la fonction UUID generator depuis le container
             $new_uuid = $this->container->uuid;
             // génération id basé sur un aléa : UUID v4
@@ -141,6 +144,12 @@ class Members_Controller
             $resp->getBody()->write(json_encode($datas_resp));
 
             return $resp;
+            
+            }
+            else{
+                return Writer::json_error($resp, 500, 'This member is already exist');
+            }
+
         } catch (ModelNotFoundException $e) {
             //todo: logError
             return Writer::json_error($resp, 404, 'Ressource not found : message ID = ' . $new_member->id);
