@@ -197,6 +197,33 @@ class DataLoader extends ChangeNotifier {
     }
   }
 
+  //Get all users
+  Future<Object> getUserById(id) async {
+    try {
+      //Call api
+      var response = await Dio().get(
+        _usersUri + id,
+        options: Options(
+          headers: <String, String>{'Origin': "flutter"},
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        return User(
+          id: response.data['id'],
+          fullname: response.data['fullname'],
+          username: response.data['username'],
+          email: response.data['email'],
+          type: "user",
+        );
+      } else {
+        return false;
+      }
+    } catch (e) {
+      throw Exception('Failed to load users');
+    }
+  }
+
   //Search user by name
   Future<Iterable<User>> getUserByName(search) async {
     try {
