@@ -1,5 +1,7 @@
 # TO DO in Events Service
 
+- Controle format donnée des médias !!!!!!!!!!!!!!
+
 - UPDATE DATE ET HEURE
 - Retester Events par Members en créant members
 
