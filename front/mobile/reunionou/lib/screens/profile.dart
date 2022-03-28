@@ -53,279 +53,264 @@ class _ProfileScreenState extends State<ProfileScreen> {
           title: const Text('Mon profile'),
           centerTitle: true,
         ),
-        body: FutureBuilder(
-          future: context.read<DataLoader>().getEvents(),
-          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-            if (snapshot.data == null) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else {
-              return Scaffold(
-                body: Form(
-                  key: _formKey,
-                  child: ListView(
-                    padding: const EdgeInsets.symmetric(horizontal: 32),
-                    physics: const BouncingScrollPhysics(),
-                    children: [
-                      const SizedBox(height: 24),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "Votre nom",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                          const SizedBox(height: 8),
-                          TextFormField(
-                            controller: fullname,
-                            validator: (fullname) {
-                              if (fullname!.isEmpty) {
-                                return 'Veuillez insérer un votre nom';
-                              }
-                              return null;
-                            },
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            maxLines: 1,
-                          ),
-                        ],
-                      ),
-                      const SpacerWidget(
-                        space: 24,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "Votre email",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                          const SpacerWidget(
-                            space: 8,
-                          ),
-                          TextFormField(
-                            controller: email,
-                            validator: (email) {
-                              if (email!.isEmpty ||
-                                  !EmailValidator.validate(email)) {
-                                return 'Veuillez insérer un email valide';
-                              }
-                              return null;
-                            },
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            maxLines: 1,
-                          ),
-                        ],
-                      ),
-                      const SpacerWidget(
-                        space: 24,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "Votre pseudo",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                          const SpacerWidget(
-                            space: 8,
-                          ),
-                          TextFormField(
-                            controller: username,
-                            validator: (username) {
-                              if (username!.isEmpty) {
-                                return 'Veuillez insérer un pseudo valide';
-                              }
-                              return null;
-                            },
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            maxLines: 1,
-                          ),
-                        ],
-                      ),
-                      const SpacerWidget(
-                        space: 24,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "Votre mot de passe",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                          const SpacerWidget(
-                            space: 8,
-                          ),
-                          TextFormField(
-                            controller: password,
-                            obscureText: true,
-                            enableSuggestions: false,
-                            autocorrect: false,
-                            validator: (password) {
-                              if (password!.isEmpty) {
-                                return 'Veuillez insérer un mot de passe';
-                              }
-                              return null;
-                            },
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            maxLines: 1,
-                          ),
-                        ],
-                      ),
-                      const SpacerWidget(
-                        space: 24,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "Nouveau mot de passe",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                          const SpacerWidget(
-                            space: 8,
-                          ),
-                          TextFormField(
-                            controller: newPassword,
-                            obscureText: true,
-                            enableSuggestions: false,
-                            autocorrect: false,
-                            validator: (newPassword) {
-                              if (newPassword!.isNotEmpty &&
-                                  newPassword.length < 8) {
-                                return 'Le mot de passe doit comporter au moins 8 caractères';
-                              }
-                              return null;
-                            },
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            maxLines: 1,
-                          ),
-                        ],
-                      ),
-                      const SpacerWidget(
-                        space: 24,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "Confirmer le nouveau mot de passe",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                          const SpacerWidget(
-                            space: 8,
-                          ),
-                          TextFormField(
-                            controller: confirmPassword,
-                            obscureText: true,
-                            enableSuggestions: false,
-                            autocorrect: false,
-                            validator: (confirmPassword) {
-                              if (newPassword.text != confirmPassword) {
-                                return 'Veuillez confirmer le nouveau mot de passe';
-                              }
-                              return null;
-                            },
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            maxLines: 1,
-                          ),
-                        ],
-                      ),
-                      const SpacerWidget(
-                        space: 24,
-                      ),
-                      RaisedButton(
-                        color: const Color.fromRGBO(143, 148, 251, 1),
-                        splashColor: const Color.fromRGBO(143, 148, 251, 0.3),
-                        child: const Center(
-                          child: Text(
-                            "Mise a jour",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
+        body: Scaffold(
+          body: Form(
+            key: _formKey,
+            child: ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              physics: const BouncingScrollPhysics(),
+              children: [
+                const SizedBox(height: 24),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Votre nom",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: fullname,
+                      validator: (fullname) {
+                        if (fullname!.isEmpty) {
+                          return 'Veuillez insérer un votre nom';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            context
-                                .read<DataLoader>()
-                                .updateUser(
-                                    widget.user!.id,
-                                    fullname.text,
-                                    email.text,
-                                    username.text,
-                                    password.text,
-                                    newPassword.text,
-                                    confirmPassword.text,
-                                    widget.user!.token)
-                                .then(
-                              (rep) {
-                                if (rep) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        "Profil mis à jour",
-                                        style: TextStyle(
-                                          color: Color.fromARGB(
-                                              255, 255, 255, 255),
-                                        ),
-                                      ),
-                                      backgroundColor: Colors.green,
-                                    ),
-                                  );
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                          "Oups quelque chose s'est mal passé"),
-                                      backgroundColor: Colors.red,
-                                    ),
-                                  );
-                                }
-                              },
+                      ),
+                      maxLines: 1,
+                    ),
+                  ],
+                ),
+                const SpacerWidget(
+                  space: 24,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Votre email",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    const SpacerWidget(
+                      space: 8,
+                    ),
+                    TextFormField(
+                      controller: email,
+                      validator: (email) {
+                        if (email!.isEmpty || !EmailValidator.validate(email)) {
+                          return 'Veuillez insérer un email valide';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      maxLines: 1,
+                    ),
+                  ],
+                ),
+                const SpacerWidget(
+                  space: 24,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Votre pseudo",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    const SpacerWidget(
+                      space: 8,
+                    ),
+                    TextFormField(
+                      controller: username,
+                      validator: (username) {
+                        if (username!.isEmpty) {
+                          return 'Veuillez insérer un pseudo valide';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      maxLines: 1,
+                    ),
+                  ],
+                ),
+                const SpacerWidget(
+                  space: 24,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Votre mot de passe",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    const SpacerWidget(
+                      space: 8,
+                    ),
+                    TextFormField(
+                      controller: password,
+                      obscureText: true,
+                      enableSuggestions: false,
+                      autocorrect: false,
+                      validator: (password) {
+                        if (password!.isEmpty) {
+                          return 'Veuillez insérer un mot de passe';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      maxLines: 1,
+                    ),
+                  ],
+                ),
+                const SpacerWidget(
+                  space: 24,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Nouveau mot de passe",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    const SpacerWidget(
+                      space: 8,
+                    ),
+                    TextFormField(
+                      controller: newPassword,
+                      obscureText: true,
+                      enableSuggestions: false,
+                      autocorrect: false,
+                      validator: (newPassword) {
+                        if (newPassword!.isNotEmpty && newPassword.length < 8) {
+                          return 'Le mot de passe doit comporter au moins 8 caractères';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      maxLines: 1,
+                    ),
+                  ],
+                ),
+                const SpacerWidget(
+                  space: 24,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Confirmer le nouveau mot de passe",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    const SpacerWidget(
+                      space: 8,
+                    ),
+                    TextFormField(
+                      controller: confirmPassword,
+                      obscureText: true,
+                      enableSuggestions: false,
+                      autocorrect: false,
+                      validator: (confirmPassword) {
+                        if (newPassword.text != confirmPassword) {
+                          return 'Veuillez confirmer le nouveau mot de passe';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      maxLines: 1,
+                    ),
+                  ],
+                ),
+                const SpacerWidget(
+                  space: 24,
+                ),
+                RaisedButton(
+                  color: const Color.fromRGBO(143, 148, 251, 1),
+                  splashColor: const Color.fromRGBO(143, 148, 251, 0.3),
+                  child: const Center(
+                    child: Text(
+                      "Mise a jour",
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      context
+                          .read<DataLoader>()
+                          .updateUser(
+                              widget.user!.id,
+                              fullname.text,
+                              email.text,
+                              username.text,
+                              password.text,
+                              newPassword.text,
+                              confirmPassword.text,
+                              widget.user!.token)
+                          .then(
+                        (rep) {
+                          if (rep) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  "Profil mis à jour",
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 255, 255, 255),
+                                  ),
+                                ),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content:
+                                    Text("Oups quelque chose s'est mal passé"),
+                                backgroundColor: Colors.red,
+                              ),
                             );
                           }
                         },
-                      ),
-                      const SpacerWidget(
-                        space: 30,
-                      ),
-                    ],
-                  ),
+                      );
+                    }
+                  },
                 ),
-              );
-            }
-          },
+                const SpacerWidget(
+                  space: 30,
+                ),
+              ],
+            ),
+          ),
         ),
       );
 }

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:reunionou/models/event.dart';
 import 'package:reunionou/widgets/spacer.dart';
+
+import '../data/dataLoader.dart';
+import '../models/member.dart';
 
 class ParticipantsList extends StatelessWidget {
   const ParticipantsList({
@@ -9,6 +13,10 @@ class ParticipantsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Iterable<Member> confirmedParts =
+        context.read<DataLoader>().getMemberByStatus("1");
+    Iterable<Member> declinedParts =
+        context.read<DataLoader>().getMemberByStatus("0");
     return Center(
       child: Column(
         children: <Widget>[
@@ -24,17 +32,17 @@ class ParticipantsList extends StatelessWidget {
                 fontWeight: FontWeight.w400),
           ),
           Expanded(
-            child: ListView(
-              padding: const EdgeInsets.all(8),
-              children: const <Widget>[
-                Card(
+            child: ListView.builder(
+              itemCount: confirmedParts.length,
+              itemBuilder: (context, index) {
+                return Card(
                   child: ListTile(
                     title: Text(
-                      "Anchor",
+                      confirmedParts.elementAt(index).pseudo.toString(),
                     ),
                   ),
-                ),
-              ],
+                );
+              },
             ),
           ),
           const SpacerWidget(
@@ -49,17 +57,17 @@ class ParticipantsList extends StatelessWidget {
                 fontWeight: FontWeight.w400),
           ),
           Expanded(
-            child: ListView(
-              padding: const EdgeInsets.all(8),
-              children: const <Widget>[
-                Card(
+            child: ListView.builder(
+              itemCount: declinedParts.length,
+              itemBuilder: (context, index) {
+                return Card(
                   child: ListTile(
                     title: Text(
-                      "Anchor",
+                      declinedParts.elementAt(index).pseudo.toString(),
                     ),
                   ),
-                ),
-              ],
+                );
+              },
             ),
           ),
         ],

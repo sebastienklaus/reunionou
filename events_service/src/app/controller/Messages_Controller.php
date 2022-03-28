@@ -92,7 +92,7 @@ class Messages_Controller
                 $this->container->get('logger.error')->error("error input event event_id");
                 return Writer::json_error($resp, 403, '"event_id" : invalid input, string expected');
             }
-            if (isset($errors['media'])) {
+            if (isset($message_req['media']) && isset($errors['media'])) {
                 $this->container->get('logger.error')->error("error input event media");
                 return Writer::json_error($resp, 403, '"media" : invalid input, valid JSON expected');
             }
@@ -114,7 +114,13 @@ class Messages_Controller
             $new_message->content = filter_var($message_req['content'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $new_message->member_id = filter_var($message_req['member_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $new_message->event_id = filter_var($message_req['event_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $new_message->media = filter_var($message_req['media'], FILTER_SANITIZE_FULL_SPECIAL_CHARS); //?to do verification json ?
+    
+            if( (isset($message_req['media']) )) {
+                $new_message->media = $message_req['media'] ; //! controle de format
+            }
+            
+            
+            // $new_message->media = filter_var($message_req['media'], FILTER_SANITIZE_FULL_SPECIAL_CHARS); //?to do verification json ?
 
             $new_message->save();
 

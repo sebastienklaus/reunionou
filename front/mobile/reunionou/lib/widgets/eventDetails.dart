@@ -1,15 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:reunionou/models/event.dart';
 import 'package:reunionou/widgets/spacer.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../data/dataLoader.dart';
+import 'addParticipants.dart';
 import 'map.dart';
+import 'package:flutter_share/flutter_share.dart';
 
-class EventDetails extends StatelessWidget {
+class EventDetails extends StatefulWidget {
   const EventDetails({
     Key? key,
     required this.event,
   }) : super(key: key);
   final EventItem event;
+
+  @override
+  _EventDetailsState createState() => _EventDetailsState();
+}
+
+class _EventDetailsState extends State<EventDetails> {
+  int confirmedParts = 0;
+  int declinedParts = 0;
+  @override
+  void initState() {
+    super.initState();
+    confirmedParts = context.read<DataLoader>().getMemberByStatus("1").length;
+    declinedParts = context.read<DataLoader>().getMemberByStatus("0").length;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +39,8 @@ class EventDetails extends StatelessWidget {
               child: SizedBox(
                 height: 250,
                 child: MapWidget(
-                  event: event,
+                  lat: widget.event.location[0]['latitude'],
+                  long: widget.event.location[0]['longitude'],
                 ),
               ),
             ),
@@ -29,7 +48,7 @@ class EventDetails extends StatelessWidget {
               space: 20,
             ),
             Text(
-              event.title,
+              widget.event.title,
               style: const TextStyle(
                   fontSize: 25.0,
                   color: Colors.blueGrey,
@@ -40,14 +59,18 @@ class EventDetails extends StatelessWidget {
               space: 10,
             ),
             Text(
-              event.date +
-                  "(" +
-                  event.hour +
-                  ")" +
-                  " at " +
-                  event.location[0]['name'],
+              widget.event.date + "(" + widget.event.hour + ")",
               style: const TextStyle(
-                  fontSize: 18.0,
+                  fontSize: 16.0,
+                  color: Colors.black45,
+                  letterSpacing: 2.0,
+                  fontWeight: FontWeight.w300),
+            ),
+            Text(
+              widget.event.location[0]['name'],
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                  fontSize: 16.0,
                   color: Colors.black45,
                   letterSpacing: 2.0,
                   fontWeight: FontWeight.w300),
@@ -56,46 +79,76 @@ class EventDetails extends StatelessWidget {
               space: 10,
             ),
             Text(
-              event.description,
+              widget.event.description,
               style: const TextStyle(
-                  fontSize: 17.0,
-                  color: Colors.black45,
+                  fontSize: 18.0,
+                  color: Colors.black,
                   letterSpacing: 2.0,
                   fontWeight: FontWeight.w300),
             ),
             const SpacerWidget(
               space: 15,
             ),
-            Card(
-              margin:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-              elevation: 2.0,
-              child: InkWell(
-                onTap: () async {
-                  String cord = event.location[0]['latitude'].toString() +
-                      "," +
-                      event.location[0]['longitude'].toString();
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Card(
+                  elevation: 2.0,
+                  child: InkWell(
+                    onTap: () async {
+                      String cord =
+                          widget.event.location[0]['latitude'].toString() +
+                              "," +
+                              widget.event.location[0]['longitude'].toString();
 
-                  var url =
-                      'https://www.google.com/maps/search/?api=1&query=$cord';
-                  var urllaunchable = await canLaunch(
-                      url); //canLaunch is from url_launcher package
-                  if (urllaunchable) {
-                    await launch(
-                        url); //launch is from url_launcher package to launch URL
-                  } else {
-                    print("URL can't be launched.");
-                  }
-                },
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 30),
-                  child: Text(
-                    "Get direction",
-                    style: TextStyle(
-                        letterSpacing: 2.0, fontWeight: FontWeight.w300),
+                      var url =
+                          'https://www.google.com/maps/search/?api=1&query=$cord';
+                      var urllaunchable = await canLaunch(url);
+                      if (urllaunchable) {
+                        await launch(url);
+                      } else {
+                        print("URL can't be launched.");
+                      }
+                    },
+                    child: const Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 12, horizontal: 30),
+                      child: Text(
+                        "Get direction",
+                        style: TextStyle(
+                            letterSpacing: 2.0, fontWeight: FontWeight.w300),
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                Card(
+                  elevation: 2.0,
+                  color: Colors.deepPurple,
+                  child: InkWell(
+                    onTap: () async {
+                      await FlutterShare.share(
+                          title: widget.event.title,
+                          text: widget.event.title,
+                          linkUrl:
+                              'http://docketu.iutnc.univ-lorraine.fr:62015/events/' +
+                                  widget.event.id.toString() //Change me
+                          ,
+                          chooserTitle: 'Partager via');
+                    },
+                    child: const Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 12, horizontal: 30),
+                      child: Text(
+                        "Partager",
+                        style: TextStyle(
+                            letterSpacing: 2.0,
+                            fontWeight: FontWeight.w300,
+                            color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SpacerWidget(
               space: 30,
@@ -118,20 +171,20 @@ class EventDetails extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Column(
-                        children: const [
-                          Text(
+                        children: [
+                          const Text(
                             "Confirmé",
                             style: TextStyle(
                                 color: Colors.deepPurple,
                                 fontSize: 22.0,
                                 fontWeight: FontWeight.w600),
                           ),
-                          SpacerWidget(
+                          const SpacerWidget(
                             space: 7,
                           ),
                           Text(
-                            "15",
-                            style: TextStyle(
+                            confirmedParts.toString(),
+                            style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 22.0,
                                 fontWeight: FontWeight.w300),
@@ -141,20 +194,20 @@ class EventDetails extends StatelessWidget {
                     ),
                     Expanded(
                       child: Column(
-                        children: const [
-                          Text(
+                        children: [
+                          const Text(
                             "Décliner",
                             style: TextStyle(
                                 color: Colors.deepPurple,
                                 fontSize: 22.0,
                                 fontWeight: FontWeight.w600),
                           ),
-                          SpacerWidget(
+                          const SpacerWidget(
                             space: 7,
                           ),
                           Text(
-                            "5",
-                            style: TextStyle(
+                            declinedParts.toString(),
+                            style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 22.0,
                                 fontWeight: FontWeight.w300),
@@ -167,61 +220,95 @@ class EventDetails extends StatelessWidget {
               ),
             ),
             const SpacerWidget(
-              space: 50,
+              space: 30,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                RaisedButton(
-                  onPressed: () {},
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                  color: Colors.green,
-                  child: Ink(
-                    child: Container(
-                      constraints: const BoxConstraints(
-                        maxWidth: 100.0,
-                        maxHeight: 40.0,
+            widget.event.user_id != context.read<DataLoader>().getUser().id
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      RaisedButton(
+                        onPressed: () {
+                          context
+                              .read<DataLoader>()
+                              .updateAttendance("confirm", widget.event.id!)
+                              .then((value) {
+                            if (value) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    "Bien reçu, bienvenue à notre événement",
+                                    style: TextStyle(
+                                      color: Color.fromARGB(255, 255, 255, 255),
+                                    ),
+                                  ),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                      "Quelque chose s'est mal passé essaie une autre fois"),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          });
+                        },
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                        color: Colors.green,
+                        child: Ink(
+                          child: Container(
+                            constraints: const BoxConstraints(
+                              maxWidth: 100.0,
+                              maxHeight: 40.0,
+                            ),
+                            alignment: Alignment.center,
+                            child: const Text(
+                              "Je participe",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12.0,
+                                  letterSpacing: 2.0,
+                                  fontWeight: FontWeight.w300),
+                            ),
+                          ),
+                        ),
                       ),
-                      alignment: Alignment.center,
-                      child: const Text(
-                        "Je participe",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12.0,
-                            letterSpacing: 2.0,
-                            fontWeight: FontWeight.w300),
+                      RaisedButton(
+                        onPressed: () {},
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                        color: Colors.red,
+                        child: Ink(
+                          child: Container(
+                            constraints: const BoxConstraints(
+                              maxWidth: 100.0,
+                              maxHeight: 40.0,
+                            ),
+                            alignment: Alignment.center,
+                            child: const Text(
+                              "Je refuse",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12.0,
+                                  letterSpacing: 2.0,
+                                  fontWeight: FontWeight.w300),
+                            ),
+                          ),
+                        ),
                       ),
+                    ],
+                  )
+                : SizedBox(
+                    height: 400,
+                    child: AddParticipantsWidget(
+                      event: widget.event,
                     ),
                   ),
-                ),
-                RaisedButton(
-                  onPressed: () {},
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                  color: Colors.red,
-                  child: Ink(
-                    child: Container(
-                      constraints: const BoxConstraints(
-                        maxWidth: 100.0,
-                        maxHeight: 40.0,
-                      ),
-                      alignment: Alignment.center,
-                      child: const Text(
-                        "Je refuse",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12.0,
-                            letterSpacing: 2.0,
-                            fontWeight: FontWeight.w300),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
             const SpacerWidget(
               space: 30,
             ),

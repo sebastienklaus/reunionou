@@ -14,10 +14,13 @@ class GuestLoginScreen extends StatefulWidget {
 }
 
 class _GuestLoginScreenState extends State<GuestLoginScreen> {
+  final username = TextEditingController();
+  final evenUrl = TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
-    final fullname = TextEditingController();
-    final _formKey = GlobalKey<FormState>();
     return WillPopScope(
       onWillPop: () async => false,
       child: FutureBuilder(
@@ -137,36 +140,62 @@ class _GuestLoginScreenState extends State<GuestLoginScreen> {
                                 ],
                               ),
                               child: Form(
-                                  key: _formKey,
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(8.0),
-                                        decoration: const BoxDecoration(
-                                          border: Border(
-                                            bottom:
-                                                BorderSide(color: Colors.grey),
-                                          ),
+                                key: _formKey,
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(8.0),
+                                      decoration: const BoxDecoration(
+                                        border: Border(
+                                          bottom:
+                                              BorderSide(color: Colors.grey),
                                         ),
-                                        child: TextFormField(
-                                          controller: fullname,
-                                          validator: (fullname) {
-                                            if (fullname!.isEmpty) {
-                                              return 'Veuillez insérer votre nom complete';
-                                            }
-                                            return null;
-                                          },
-                                          decoration: InputDecoration(
-                                            border: InputBorder.none,
-                                            hintText: "Votre nom complete",
-                                            hintStyle: TextStyle(
-                                              color: Colors.grey[400],
-                                            ),
+                                      ),
+                                      child: TextFormField(
+                                        controller: username,
+                                        validator: (username) {
+                                          if (username!.isEmpty) {
+                                            return 'Veuillez insérer votre nom complete';
+                                          }
+                                          return null;
+                                        },
+                                        decoration: InputDecoration(
+                                          border: InputBorder.none,
+                                          hintText: "Votre nom complete",
+                                          hintStyle: TextStyle(
+                                            color: Colors.grey[400],
                                           ),
                                         ),
                                       ),
-                                    ],
-                                  )),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.all(8.0),
+                                      decoration: const BoxDecoration(
+                                        border: Border(
+                                          bottom:
+                                              BorderSide(color: Colors.grey),
+                                        ),
+                                      ),
+                                      child: TextFormField(
+                                        controller: evenUrl,
+                                        validator: (evenUrl) {
+                                          if (evenUrl!.isEmpty) {
+                                            return "Veuillez insérer le lien d'invitation";
+                                          }
+                                          return null;
+                                        },
+                                        decoration: InputDecoration(
+                                          border: InputBorder.none,
+                                          hintText: "Lien d'invitation",
+                                          hintStyle: TextStyle(
+                                            color: Colors.grey[400],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
                           const SpacerWidget(
@@ -190,7 +219,8 @@ class _GuestLoginScreenState extends State<GuestLoginScreen> {
                                 if (_formKey.currentState!.validate()) {
                                   var rep = await context
                                       .read<DataLoader>()
-                                      .authentificateGuest(fullname.text)
+                                      .authentificateGuest(
+                                          username.text, evenUrl.text)
                                       .then(
                                     (rep) {
                                       if (rep) {

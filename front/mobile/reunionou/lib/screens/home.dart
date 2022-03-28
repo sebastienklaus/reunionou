@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../data/dataLoader.dart';
-import '../models/event.dart';
 import '../models/user.dart';
 import '../widgets/eventCard.dart';
 import '../widgets/navigation_drawer_widget.dart';
@@ -34,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
         body: FutureBuilder(
           future: context.read<DataLoader>().getEvents(),
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-            if (snapshot.data == null) {
+            if (!snapshot.hasData) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
@@ -55,6 +54,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               );
             }
+          },
+        ),
+        floatingActionButton: FloatingActionButton(
+          tooltip: "Ajouter un événement",
+          child: const Icon(Icons.add),
+          onPressed: () {
+            Navigator.pushNamed(
+              context,
+              '/addEvent',
+            );
           },
         ),
       );
