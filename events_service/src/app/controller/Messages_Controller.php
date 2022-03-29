@@ -439,7 +439,6 @@ class Messages_Controller
             $nbMessage = count($messages);
 
         $messages_resp = [];
-        // TODO : Faire en une seule requête
         foreach ($messages as $message) {
                 if ($message->delete())
                 {

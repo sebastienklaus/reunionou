@@ -418,8 +418,16 @@ class Members_Controller
             $members = $event->members()->select()->get();
             $nbMember = count($members);
 
+            
+
         $members_resp = [];
         foreach ($members as $member) {
+
+            $pathForMember = $this->container->router->pathFor(
+                'getMember',
+                ['id' => $member->id]
+            );
+
             $members_resp[] = [
                 'id' => $member->id,
                 'user_id' => $member->user_id,
@@ -427,8 +435,11 @@ class Members_Controller
                 'pseudo' => $member->pseudo,
                 'created_at' => $member->created_at,
                 'updated_at' => $member->updated_at,
-                'status' => $member->status
-            ]; // TODO rajouter lien self pour chaque member
+                'status' => $member->status,
+                'links' => [
+                    "self" => ["href" => $pathForMember]
+                ]
+            ];
         }
 
             // Récupération de la route getMembersByEvent                            
@@ -542,7 +553,6 @@ class Members_Controller
             $nbMember = count($members);
 
         $messages_resp = [];
-        // TODO : Faire en une seule requête
         foreach ($members as $member) {
                 if ($member->delete())
                 {
@@ -573,7 +583,7 @@ class Members_Controller
         $id_user = $args['id'];
         
         try {
-            $user_members = Members::select()->where('user_id','like','%' . $id_user)->get();
+            $user_members = Members::select()->where('user_id', $id_user)->get();
             $nbUser_Member = count($user_members);
 
         $user_members_resp = [];
@@ -592,7 +602,7 @@ class Members_Controller
             $user_members_resp[] = [
                 'id' => $member->id,
                 'user_id' => $member->user_id,
-                'event_id' => $member->event_id, //? to be or not to be ?
+                'event_id' => $member->event_id,
                 'pseudo' => $member->pseudo,
                 'created_at' => $member->created_at,
                 'updated_at' => $member->updated_at,
@@ -601,7 +611,7 @@ class Members_Controller
                     "self" => ["href" => $pathForMember],
                     "event" => ["href" => $pathForEvent]
                 ]
-            ]; // TODO rajouter lien self pour chaque member
+            ];
         }
 
             // Création du body de la réponse

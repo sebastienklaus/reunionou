@@ -570,7 +570,7 @@ class Events_Controller
         
         try {
             $event_id_list = Events::select(['id'])
-                                    ->where('user_id', 'like', '%'.$user_id)
+                                    ->where('user_id', $user_id)
                                     ->get();
 
             $events = Events::select(['id', 'title', 'description', 'user_id', 'location', 'date', 'heure', 'created_at', 'updated_at'])
@@ -720,20 +720,23 @@ class Events_Controller
     public function getAllEventsByMember(Request $req, Response $resp, array $args): Response
     {
         $id_member = $args['id'];
-        
-        // TODO : A optimiser
-        // TODO : Retourner seul event si user_id NULL
 
         try {
             $member = Members::findOrFail($id_member);
-            $members = Members::select()->where('user_id', $user->user_id)->get();
             
-            $id_events = [];
+            if(is_null($member->user_id)) {
+                $id_event = $member->event_id;
+                $events = Events::select()->where('id',$id_event)->get();
+            }
+            else {
+                $members = Members::select()->where('user_id', $member->user_id)->get();
+                $id_events = [];
             foreach($members as $member_data){
                 $id_events[] = $member_data->event_id;
             }
-            
             $events = Events::select()->whereIn('id',$id_events)->get();
+            }
+            
             $nbEvents = count($events);
 
         $events_resp = [];
@@ -780,7 +783,7 @@ class Events_Controller
         $id_user = $args['id'];
 
         try {
-            $members = Members::select()->where('user_id','like', '%'.$id_user.'%')->get();
+            $members = Members::select()->where('user_id', $id_user)->get();
             
             $id_events = [];
             foreach($members as $member_data){
