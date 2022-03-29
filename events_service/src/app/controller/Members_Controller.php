@@ -217,19 +217,11 @@ class Members_Controller
             if (isset($errors['event_id'])) {
                 $this->container->get('logger.error')->error("error input event event_id");
                 return Writer::json_error($resp, 403, '"event_id" : invalid input, string expected');
-<<<<<<< HEAD
             }
             if (isset($errors['pseudo'])) {
                 $this->container->get('logger.error')->error("error input event pseudo");
                 return Writer::json_error($resp, 403, '"pseudo" : invalid input, valid pseudo expected');
             }
-=======
-            }
-            if (isset($errors['pseudo'])) {
-                $this->container->get('logger.error')->error("error input event pseudo");
-                return Writer::json_error($resp, 403, '"pseudo" : invalid input, valid pseudo expected');
-            }
->>>>>>> b8706309de4a6b372ebe57ca44ef7847ded5dbd0
             if (isset($errors['status'])) {
                 $this->container->get('logger.error')->error("error input member's status");
                 return Writer::json_error($resp, 403, '"status" : invalid input, -1,0 or 1 expected');
@@ -413,10 +405,6 @@ class Members_Controller
             $members = $event->members()->select()->get();
             $nbMember = count($members);
 
-<<<<<<< HEAD
-            $members_resp = [];
-            foreach ($members as $member) {
-=======
 
 
             $members_resp = [];
@@ -427,7 +415,6 @@ class Members_Controller
                     ['id' => $member->id]
                 );
 
->>>>>>> b8706309de4a6b372ebe57ca44ef7847ded5dbd0
                 $members_resp[] = [
                     'id' => $member->id,
                     'user_id' => $member->user_id,
@@ -435,16 +422,11 @@ class Members_Controller
                     'pseudo' => $member->pseudo,
                     'created_at' => $member->created_at,
                     'updated_at' => $member->updated_at,
-<<<<<<< HEAD
-                    'status' => $member->status
-                ]; // TODO rajouter lien self pour chaque member
-=======
                     'status' => $member->status,
                     'links' => [
                         "self" => ["href" => $pathForMember]
                     ]
                 ];
->>>>>>> b8706309de4a6b372ebe57ca44ef7847ded5dbd0
             }
 
             // Récupération de la route getMembersByEvent                            
@@ -555,10 +537,6 @@ class Members_Controller
             $nbMember = count($members);
 
             $messages_resp = [];
-<<<<<<< HEAD
-            // TODO : Faire en une seule requête
-=======
->>>>>>> b8706309de4a6b372ebe57ca44ef7847ded5dbd0
             foreach ($members as $member) {
                 if ($member->delete()) {
                     $datas_resp = [
@@ -587,11 +565,7 @@ class Members_Controller
         $id_user = $args['id'];
 
         try {
-<<<<<<< HEAD
-            $user_members = Members::select()->where('user_id', 'like', '%' . $id_user)->get();
-=======
             $user_members = Members::select()->where('user_id', $id_user)->get();
->>>>>>> b8706309de4a6b372ebe57ca44ef7847ded5dbd0
             $nbUser_Member = count($user_members);
 
             $user_members_resp = [];
@@ -610,11 +584,7 @@ class Members_Controller
                 $user_members_resp[] = [
                     'id' => $member->id,
                     'user_id' => $member->user_id,
-<<<<<<< HEAD
-                    'event_id' => $member->event_id, //? to be or not to be ?
-=======
                     'event_id' => $member->event_id,
->>>>>>> b8706309de4a6b372ebe57ca44ef7847ded5dbd0
                     'pseudo' => $member->pseudo,
                     'created_at' => $member->created_at,
                     'updated_at' => $member->updated_at,
@@ -623,11 +593,7 @@ class Members_Controller
                         "self" => ["href" => $pathForMember],
                         "event" => ["href" => $pathForEvent]
                     ]
-<<<<<<< HEAD
-                ]; // TODO rajouter lien self pour chaque member
-=======
                 ];
->>>>>>> b8706309de4a6b372ebe57ca44ef7847ded5dbd0
             }
 
             // Création du body de la réponse
