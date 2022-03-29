@@ -69,7 +69,7 @@ class BackOfficeMembersController
         //         $pathForUser = null;
         //     };
 
-        if (!isset($received_member['user_id'])) {
+        if (!isset($received_member['user_id']) ) {
             $received_member['user_id'] = null;
         }
 
