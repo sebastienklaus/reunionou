@@ -164,10 +164,8 @@ class _EventDetailsState extends State<EventDetails> {
                       await FlutterShare.share(
                           title: widget.event.title,
                           text: widget.event.title,
-                          linkUrl:
-                              'http://docketu.iutnc.univ-lorraine.fr:62015/events/' +
-                                  widget.event.id.toString() //Change me
-                          ,
+                          linkUrl: 'https://reunionou.netlify.app/#/invite/' +
+                              widget.event.id.toString(),
                           chooserTitle: 'Partager via');
                     },
                     child: const Padding(

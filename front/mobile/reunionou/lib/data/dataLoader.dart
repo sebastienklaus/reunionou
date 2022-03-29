@@ -18,9 +18,6 @@ class DataLoader extends ChangeNotifier {
   final String _usersUri = "http://docketu.iutnc.univ-lorraine.fr:62015/users/";
 
   //Events links
-  final String _getUserEvents =
-      "http://docketu.iutnc.univ-lorraine.fr:62015/users/{id}/created_events";
-  //Events links
   final String _getUserParticipate =
       "http://docketu.iutnc.univ-lorraine.fr:62015/users/{id}/events";
   final String _eventsUri =
@@ -322,56 +319,11 @@ class DataLoader extends ChangeNotifier {
     try {
       myEvents = [];
       if (_user.type == "user") {
-        //get user event (creator)
-        await getUserEvents();
-
         //get memebr event (by user_id )
         await getMemberEvents("user");
       } else {
         //get memebr event (by pseudo)
         await getMemberEvents("psuedo");
-      }
-      return myEvents;
-    } catch (e) {
-      throw Exception('Failed to load events');
-    }
-  }
-
-  //Get user events
-  Future<List<EventItem>> getUserEvents() async {
-    try {
-      //Call api
-      var _getUserEvents = this._getUserEvents.replaceAll('{id}', _user.id);
-
-      var response = await Dio().get(
-        _getUserEvents,
-        options: Options(
-          headers: <String, String>{'Origin': "flutter"},
-        ),
-      );
-
-      if (response.statusCode == 200) {
-        for (var event in response.data['events']) {
-          var temp = EventItem(
-            id: event['id'],
-            title: event['title'],
-            description: event['description'],
-            location: [
-              {
-                "name": event['location']['name'],
-                "latitude": event['location']['latitude'],
-                "longitude": event['location']['longitude'],
-              }
-            ],
-            user_id: event['user_id'],
-            hour: event['heure'],
-            date: event['date'],
-            created_at: event['created_at'],
-            updated_at: event['updated_at'],
-          );
-          //Add to myEvents
-          myEvents.add(temp);
-        }
       }
       return myEvents;
     } catch (e) {
@@ -397,7 +349,7 @@ class DataLoader extends ChangeNotifier {
       );
 
       if (response.statusCode == 200) {
-        for (var event in response.data['member']) {
+        for (var event in response.data['events']) {
           var temp = EventItem(
             id: event['id'],
             title: event['title'],
@@ -416,14 +368,13 @@ class DataLoader extends ChangeNotifier {
             updated_at: event['updated_at'],
           );
 
-          //Check duplication
-          if (myEvents.indexWhere((v) {
-                return v.id == temp.id;
-              }) ==
-              -1) {
-            //Add to myEvents
-            myEvents.add(temp);
-          }
+          // //Check duplication
+          // if (myEvents.indexWhere((v) {
+          //       return v.id == temp.id;
+          //     }) ==
+          //     -1) {}
+          //Add to myEvents
+          myEvents.add(temp);
         }
       }
       return myEvents;
