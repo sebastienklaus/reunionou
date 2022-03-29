@@ -684,6 +684,7 @@ class DataLoader extends ChangeNotifier {
             id: msg['id'],
             event_id: msg['event_id'],
             member_id: msg['member_id'],
+            pseudo: msg['pseudo'],
             content: msg['content'],
             created_at: msg['created_at'],
             media: msg['media'],
