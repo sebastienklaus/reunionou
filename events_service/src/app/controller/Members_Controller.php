@@ -647,9 +647,6 @@ class Members_Controller
     
                 return $resp;
             }
-            
-            
-            
 
         } catch (ModelNotFoundException $e) {
 
