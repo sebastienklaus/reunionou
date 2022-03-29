@@ -811,7 +811,7 @@ class Events_Controller
             $datas_resp = [
                 "type" => "collection",
                 "count" => $nbEvents,
-                "member" => $events_resp
+                "events" => $events_resp
             ];
 
             //? Ressources imbriquées ? à priori non.
