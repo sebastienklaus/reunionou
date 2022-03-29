@@ -11,7 +11,10 @@ class Events extends \Illuminate\Database\Eloquent\Model
     public  $incrementing = false;      //pour primarykey, on annule l'auto_increment
     public $keyType = 'string';
 
-    // fillable ?
+    protected $fillable = array(
+        'id', 'title', 'description', 'user_id', 'location', 'date', 'heure', 'created_at', 'updated_at'
+    );
+
 
     public function messages()
     {

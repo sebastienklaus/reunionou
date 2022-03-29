@@ -83,16 +83,12 @@ class Events_Controller
      */
     public function createEvent(Request $req, Response $resp, array $args): Response
     {
-
-        //TODO: - Création d'une nvlle commande => génération d'un token unique, cryptographique, retourné dans la rep
-        //TODO: et utilisé pour valider les prochaines requête de cette même commande
-        //TODO: Remplace FILTER_SANITIZE_STRING par htmlentities, ou htmlspecialchars (check param) ou strip_tags.
         //? check_Token : middleware, mais createToken-> middleware ??
 
         // Récupération du body de la requête
         $event_req = $req->getParsedBody();
-        
-        
+
+
         if ($req->getAttribute('has_errors')) {
 
             $errors = $req->getAttribute('errors');
@@ -124,10 +120,10 @@ class Events_Controller
         };
 
         try {
-            
+
             // Création d'un event via le model
             $new_event = new Events();
-            
+
             // Récupération de la fonction UUID generator depuis le container
             $new_uuid = $this->container->uuid;
             // génération id basé sur un aléa : UUID v4
@@ -176,10 +172,8 @@ class Events_Controller
 
             return $resp;
         } catch (ModelNotFoundException $e) {
-            //todo: logError
             return Writer::json_error($resp, 404, 'Ressource not found : event ID = ' . $new_event->id);
         } catch (\Exception $th) {
-            //todo : log Error
             return Writer::json_error($resp, 500, 'Server Error : Can\'t create event');
         }
         //
@@ -245,7 +239,7 @@ class Events_Controller
 
         // Récupération du body de la requête
         $received_event = $req->getParsedBody();
-        
+
         if ($req->getAttribute('has_errors')) {
 
             $errors = $req->getAttribute('errors');
@@ -323,10 +317,8 @@ class Events_Controller
 
             return $resp;
         } catch (ModelNotFoundException $e) {
-            //todo: logError
             return Writer::json_error($resp, 404, 'Ressource not found : event ID = ' . $event->id);
         } catch (\Exception $th) {
-            //todo : log Error
             return Writer::json_error($resp, 500, 'Server Error : Can\'t update event');
         }
         //
@@ -369,15 +361,12 @@ class Events_Controller
     public function getEvent(Request $req, Response $resp, array $args): Response
     {
         $id_event = $args['id'];
-        
-        try {
-            
-            $event = Events::select(['id', 'title', 'description', 'user_id', 'location', 'date', 'heure', 'created_at', 'updated_at'])
-            ->where('id', '=', $id_event)
-            ->firstOrFail();
 
-            //TODO Vérifier type de controle depuis réception base de donnée dans cours
-            //TODO étape filtrage à garder ou améliorer ?
+        try {
+
+            $event = Events::select(['id', 'title', 'description', 'user_id', 'location', 'date', 'heure', 'created_at', 'updated_at'])
+                ->where('id', '=', $id_event)
+                ->firstOrFail();
 
             $event_resp = [
                 'id' => $event->id,
@@ -428,7 +417,7 @@ class Events_Controller
             //? Ressources imbriquées ? à priori non.
 
             $resp = Writer::json_output($resp, 200);
-            
+
             $resp->getBody()->write(json_encode($datas_resp));
 
             return $resp;
@@ -479,48 +468,46 @@ class Events_Controller
     public function getEventByMemberPseudo(Request $req, Response $resp, array $args): Response
     {
         $pseudo_member = $args['pseudo'];
-        
+
         try {
             $event_id_list = Members::select(['event_id'])
-                                    ->where('pseudo', '=', $pseudo_member)
-                                    ->get();
+                ->where('pseudo', '=', $pseudo_member)
+                ->get();
 
             $events = Events::select(['id', 'title', 'description', 'user_id', 'location', 'date', 'heure', 'created_at', 'updated_at'])
-                        ->whereIn('id', $event_id_list)
-                        ->get();
+                ->whereIn('id', $event_id_list)
+                ->get();
 
-        //TODO Vérifier type de controle depuis réception base de donnée dans cours
-        //TODO étape filtrage à garder ou améliorer ?
             $nbEvents = count($events);
             $events_resp = [];
             foreach ($events as $event) {
                 $events_resp[] = [
-                'id' => $event->id,
-                'title' => $event->title,
-                'description' => $event->description,
-                'user_id' => $event->user_id,
-                'location' => json_decode($event->location),
-                'date' => $event->date,
-                'heure' => $event->heure,
-                'created_at' => $event->created_at->format('Y-m-d H:i:s'),
-                'updated_at' => $event->updated_at->format('Y-m-d H:i:s'), //?rajouter un link avec pathfor ?
-                'href' => $this->container->router->pathFor('getEvent',['id' => $event->id])
+                    'id' => $event->id,
+                    'title' => $event->title,
+                    'description' => $event->description,
+                    'user_id' => $event->user_id,
+                    'location' => json_decode($event->location),
+                    'date' => $event->date,
+                    'heure' => $event->heure,
+                    'created_at' => $event->created_at->format('Y-m-d H:i:s'),
+                    'updated_at' => $event->updated_at->format('Y-m-d H:i:s'), //?rajouter un link avec pathfor ?
+                    'href' => $this->container->router->pathFor('getEvent', ['id' => $event->id])
                 ];
             }
 
-        // Construction des donnés à retourner dans le body
-        $datas_resp = [
-            "type" => "collection",
-            "count" => $nbEvents,
-            "events" => $events_resp
-        ];
+            // Construction des donnés à retourner dans le body
+            $datas_resp = [
+                "type" => "collection",
+                "count" => $nbEvents,
+                "events" => $events_resp
+            ];
 
-        $resp = Writer::json_output($resp, 200);
+            $resp = Writer::json_output($resp, 200);
 
-        $resp->getBody()->write(json_encode($datas_resp));
+            $resp->getBody()->write(json_encode($datas_resp));
 
-        return $resp;
-    } catch (ModelNotFoundException $e) {
+            return $resp;
+        } catch (ModelNotFoundException $e) {
 
             $clientError = $this->container->clientError;
             return $clientError($req, $resp, 404, "Event not found");
@@ -567,46 +554,46 @@ class Events_Controller
     public function getEventCreatedByUserId(Request $req, Response $resp, array $args): Response
     {
         $user_id = $args['id'];
-        
+
         try {
             $event_id_list = Events::select(['id'])
-                                    ->where('user_id', 'like', '%'.$user_id)
-                                    ->get();
+                ->where('user_id', $user_id)
+                ->get();
 
             $events = Events::select(['id', 'title', 'description', 'user_id', 'location', 'date', 'heure', 'created_at', 'updated_at'])
-                        ->whereIn('id', $event_id_list)
-                        ->get();
+                ->whereIn('id', $event_id_list)
+                ->get();
 
             $nbEvents = count($events);
             $events_resp = [];
             foreach ($events as $event) {
                 $events_resp[] = [
-                'id' => $event->id,
-                'title' => $event->title,
-                'description' => $event->description,
-                'user_id' => $event->user_id,
-                'location' => json_decode($event->location),
-                'date' => $event->date,
-                'heure' => $event->heure,
-                'created_at' => $event->created_at->format('Y-m-d H:i:s'),
-                'updated_at' => $event->updated_at->format('Y-m-d H:i:s'),
-                'href' => $this->container->router->pathFor('getEvent',['id' => $event->id])
+                    'id' => $event->id,
+                    'title' => $event->title,
+                    'description' => $event->description,
+                    'user_id' => $event->user_id,
+                    'location' => json_decode($event->location),
+                    'date' => $event->date,
+                    'heure' => $event->heure,
+                    'created_at' => $event->created_at->format('Y-m-d H:i:s'),
+                    'updated_at' => $event->updated_at->format('Y-m-d H:i:s'),
+                    'href' => $this->container->router->pathFor('getEvent', ['id' => $event->id])
                 ];
             }
 
-        // Construction des donnés à retourner dans le body
-        $datas_resp = [
-            "type" => "collection",
-            "count" => $nbEvents,
-            "events" => $events_resp
-        ];
+            // Construction des donnés à retourner dans le body
+            $datas_resp = [
+                "type" => "collection",
+                "count" => $nbEvents,
+                "events" => $events_resp
+            ];
 
-        $resp = Writer::json_output($resp, 200);
+            $resp = Writer::json_output($resp, 200);
 
-        $resp->getBody()->write(json_encode($datas_resp));
+            $resp->getBody()->write(json_encode($datas_resp));
 
-        return $resp;
-    } catch (ModelNotFoundException $e) {
+            return $resp;
+        } catch (ModelNotFoundException $e) {
 
             $clientError = $this->container->clientError;
             return $clientError($req, $resp, 404, "Event not found");
@@ -650,14 +637,11 @@ class Events_Controller
      */
     public function getAllEvent(Request $req, Response $resp): Response
     {
-        //todo: try catch
 
         // Récupérer les commandes depuis le model
         $events = Events::select(['id', 'title', 'description', 'user_id', 'location', 'date', 'heure', 'created_at', 'updated_at'])
-                          ->get();
+            ->get();
 
-        //TODO Vérifier type de controle depuis réception base de donnée dans cours
-        //TODO étape filtrage à garder ou améliorer ?
         $nbEvents = count($events);
         $events_resp = [];
         foreach ($events as $event) {
@@ -671,7 +655,7 @@ class Events_Controller
                 'heure' => $event->heure,
                 'created_at' => $event->created_at->format('Y-m-d H:i:s'),
                 'updated_at' => $event->updated_at->format('Y-m-d H:i:s'), //?rajouter un link avec pathfor ?
-                'href' => $this->container->router->pathFor('getEvent',['id' => $event->id])
+                'href' => $this->container->router->pathFor('getEvent', ['id' => $event->id])
             ];
         }
 
@@ -694,15 +678,13 @@ class Events_Controller
         $id_event = $args['id'] ?? null;
         try {
             $event = Events::findOrFail($id_event);
-            if ($event->delete())
-            {
+            if ($event->delete()) {
                 $datas_resp = [
                     "type" => "event",
                     "event" => $event,
                     "response" => "event deleted",
                 ];
-            } else 
-            {
+            } else {
                 $datas_resp = [
                     "type" => "event",
                     "event" => $event,
@@ -720,37 +702,39 @@ class Events_Controller
     public function getAllEventsByMember(Request $req, Response $resp, array $args): Response
     {
         $id_member = $args['id'];
-        
-        // TODO : A optimiser
-        // TODO : Retourner seul event si user_id NULL
 
         try {
             $member = Members::findOrFail($id_member);
-            $members = Members::select()->where('user_id', $user->user_id)->get();
-            
-            $id_events = [];
-            foreach($members as $member_data){
-                $id_events[] = $member_data->event_id;
+
+            if (is_null($member->user_id)) {
+                $id_event = $member->event_id;
+                $events = Events::select()->where('id', $id_event)->get();
+            } else {
+                $members = Members::select()->where('user_id', $member->user_id)->get();
+                $id_events = [];
+                foreach ($members as $member_data) {
+                    $id_events[] = $member_data->event_id;
+                }
+                $events = Events::select()->whereIn('id', $id_events)->get();
             }
-            
-            $events = Events::select()->whereIn('id',$id_events)->get();
+
             $nbEvents = count($events);
 
-        $events_resp = [];
-        foreach ($events as $event) {
-            $events_resp[] = [
-                'id' => $event->id,
-                'title' => $event->title,
-                'description' => $event->description,
-                'user_id' => $event->user_id,
-                'location' => json_decode($event->location),
-                'date' => $event->date,
-                'heure' => $event->heure,
-                'created_at' => $event->created_at->format('Y-m-d H:i:s'),
-                'updated_at' => $event->updated_at->format('Y-m-d H:i:s'), //?rajouter un link avec pathfor ?
-                'href' => $this->container->router->pathFor('getEvent',['id' => $event->id])
-            ];
-        }
+            $events_resp = [];
+            foreach ($events as $event) {
+                $events_resp[] = [
+                    'id' => $event->id,
+                    'title' => $event->title,
+                    'description' => $event->description,
+                    'user_id' => $event->user_id,
+                    'location' => json_decode($event->location),
+                    'date' => $event->date,
+                    'heure' => $event->heure,
+                    'created_at' => $event->created_at->format('Y-m-d H:i:s'),
+                    'updated_at' => $event->updated_at->format('Y-m-d H:i:s'), //?rajouter un link avec pathfor ?
+                    'href' => $this->container->router->pathFor('getEvent', ['id' => $event->id])
+                ];
+            }
 
             // Création du body de la réponse
             //? Renomer les keys ou laisser les noms issus de la DB ?
@@ -763,7 +747,7 @@ class Events_Controller
             //? Ressources imbriquées ? à priori non.
 
             $resp = Writer::json_output($resp, 200);
-            
+
             $resp->getBody()->write(json_encode($datas_resp));
 
             return $resp;
@@ -771,7 +755,6 @@ class Events_Controller
 
             $clientError = $this->container->clientError;
             return $clientError($req, $resp, 404, "member not found");
-
         }
     }
 
@@ -780,44 +763,44 @@ class Events_Controller
         $id_user = $args['id'];
 
         try {
-            $members = Members::select()->where('user_id','like', '%'.$id_user.'%')->get();
-            
+            $members = Members::select()->where('user_id', $id_user)->get();
+
             $id_events = [];
-            foreach($members as $member_data){
+            foreach ($members as $member_data) {
                 $id_events[] = $member_data->event_id;
             }
-            
-            $events = Events::select()->whereIn('id',$id_events)->get();
+
+            $events = Events::select()->whereIn('id', $id_events)->get();
             $nbEvents = count($events);
 
-        $events_resp = [];
-        foreach ($events as $event) {
-            $events_resp[] = [
-                'id' => $event->id,
-                'title' => $event->title,
-                'description' => $event->description,
-                'user_id' => $event->user_id,
-                'location' => json_decode($event->location),
-                'date' => $event->date,
-                'heure' => $event->heure,
-                'created_at' => $event->created_at->format('Y-m-d H:i:s'),
-                'updated_at' => $event->updated_at->format('Y-m-d H:i:s'), //?rajouter un link avec pathfor ?
-                'href' => $this->container->router->pathFor('getEvent',['id' => $event->id])
-            ];
-        }
+            $events_resp = [];
+            foreach ($events as $event) {
+                $events_resp[] = [
+                    'id' => $event->id,
+                    'title' => $event->title,
+                    'description' => $event->description,
+                    'user_id' => $event->user_id,
+                    'location' => json_decode($event->location),
+                    'date' => $event->date,
+                    'heure' => $event->heure,
+                    'created_at' => $event->created_at->format('Y-m-d H:i:s'),
+                    'updated_at' => $event->updated_at->format('Y-m-d H:i:s'), //?rajouter un link avec pathfor ?
+                    'href' => $this->container->router->pathFor('getEvent', ['id' => $event->id])
+                ];
+            }
 
             // Création du body de la réponse
             //? Renomer les keys ou laisser les noms issus de la DB ?
             $datas_resp = [
                 "type" => "collection",
                 "count" => $nbEvents,
-                "member" => $events_resp
+                "events" => $events_resp
             ];
 
             //? Ressources imbriquées ? à priori non.
 
             $resp = Writer::json_output($resp, 200);
-            
+
             $resp->getBody()->write(json_encode($datas_resp));
 
             return $resp;
@@ -825,7 +808,6 @@ class Events_Controller
 
             $clientError = $this->container->clientError;
             return $clientError($req, $resp, 404, "member not found");
-
         }
     }
 }
