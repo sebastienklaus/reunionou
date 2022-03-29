@@ -628,47 +628,67 @@ class Members_Controller
 
 
     public function getOneMember(Request $req, Response $resp, array $args): Response {
+        try{
+            $query= $req->getQueryParams();
 
-        $query= $req->getQueryParams();
+            $event = Events::findOrFail($query['event'])->members();
 
-        // $event = Events::select();
-        $event = Events::findOrFail($query['event'])->members();
-        
-        if (isset($query['pseudo'])) {
-            // $event = $event->with('members')->get();
-            $query['user_id'] = null;
-            $event = $event->where('pseudo', '=', $query['pseudo'])->first();
+            if (isset($query['pseudo']) && isset($query['user_id'])) {
+                $clientError = $this->container->clientError;
+                return $clientError($req, $resp, 404, "Can't search user_id & pseudo at the same time");
+            } else {
+                if (isset($query['pseudo'])) {
+                    // $event = $event->with('members')->get();
+                    $query['user_id'] = null;
+                    $event = $event->where('pseudo', '=', $query['pseudo'])->first();
+                }
+                if (isset($query['user_id'])) {
+                    $query['pseudo'] = null;
+                    $event = $event->where('user_id', '=', $query['user_id'])->first();
+                }
+    
+                $resp = Writer::json_output($resp, 200);
+                    
+                $resp->getBody()->write(json_encode($event));
+    
+                return $resp;
+            }
+
+        } catch (ModelNotFoundException $e) {
+
+            $clientError = $this->container->clientError;
+            return $clientError($req, $resp, 404, "Member not found");
+
         }
-        if (isset($query['user_id'])) {
-            $query['pseudo'] = null;
-            $event = $event->where('user_id', '=', $query['user_id'])->first();
-        }
-
-        // $event = $event->get();
-        $resp = Writer::json_output($resp, 200);
-            
-        $resp->getBody()->write(json_encode($event));
-
-        return $resp;
     }
 
 
 
     public function getAllMembers(Request $req, Response $resp, array $args): Response {
-        $allMembers = Members::select(['id', 'pseudo','updated_at', 'status'])->orderBy('updated_at')->get();
-        $count = count($allMembers);
 
-        $data = [
-            'type'=>'collection',
-            'count'=>$count,
-            'members'=>$allMembers
-        ];
+        try{
+            $allMembers = Members::select(['id', 'pseudo','updated_at', 'status'])->orderBy('updated_at')->get();
+            $count = count($allMembers);
 
-        $resp = Writer::json_output($resp, 200);
-            
-        $resp->getBody()->write(json_encode($data));
+            $data = [
+                'type'=>'collection',
+                'count'=>$count,
+                'members'=>$allMembers
+            ];
 
-        return $resp;
+            $resp = Writer::json_output($resp, 200);
+                
+            $resp->getBody()->write(json_encode($data));
+
+            return $resp;
+
+        } catch (ModelNotFoundException $e) {
+
+            $clientError = $this->container->clientError;
+            return $clientError($req, $resp, 404, "userid not found");
+
+        }
+        
     }
     
 }
