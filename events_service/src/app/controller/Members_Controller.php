@@ -162,7 +162,7 @@ class Members_Controller
             return Writer::json_error($resp, 404, 'Ressource not found : message ID = ' . $new_member->id);
         } catch (\Exception $th) {
             //todo : log Error
-            return Writer::json_error($resp, 500, 'Server Error : Can\'t create member ' . $th->getMessage());
+            return Writer::json_error($resp, 500, 'Server Error : Can\'t create member');
         }
         //
     }
