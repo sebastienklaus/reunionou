@@ -136,8 +136,8 @@ class BackOfficeMembersController
             $resp->getBody()->write($response->getBody());
             return $resp;
         } catch (ClientException $e) {
-            $responseBodyAsString = $e->getResponse()->getBody()->getContents();
-            return Writer::json_error_data($resp, 401, $responseBodyAsString);
+            // $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+            return Writer::json_error_data($resp, 401, "missing datas");
         } catch (ServerException $e) {
             $responseBodyAsString = $e->getResponse()->getBody()->getContents();
             return Writer::json_error_data($resp, 500, $responseBodyAsString);
