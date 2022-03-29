@@ -631,11 +631,11 @@ class Members_Controller
         if (isset($query['pseudo'])) {
             // $event = $event->with('members')->get();
             $query['user_id'] = null;
-            $event = $event->where('pseudo', 'like', '%'.$query['pseudo'])->first();
+            $event = $event->where('pseudo', '=', $query['pseudo'])->first();
         }
         if (isset($query['user_id'])) {
             $query['pseudo'] = null;
-            $event = $event->where('user_id', 'like', '%/users/'.$query['user_id'])->first();
+            $event = $event->where('user_id', '=', $query['user_id'])->first();
         }
 
         // $event = $event->get();
