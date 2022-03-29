@@ -74,12 +74,12 @@ class Messages_Controller
 
         // Récupération du body de la requête
         $message_req = $req->getParsedBody();
-        
-        
+
+
         if ($req->getAttribute('has_errors')) {
 
             $errors = $req->getAttribute('errors');
-        
+
             if (isset($errors['content'])) {
                 $this->container->get('logger.error')->error("error input event content");
                 return Writer::json_error($resp, 403, '"content" : invalid input, string expected');
@@ -96,16 +96,15 @@ class Messages_Controller
                 $this->container->get('logger.error')->error("error input event media");
                 return Writer::json_error($resp, 403, '"media" : invalid input, valid JSON expected');
             }
-            
         };
 
-      
+
 
         try {
-            
+
             // Création d'un message via le model
             $new_message = new Messages();
-            
+
             // Récupération de la fonction UUID generator depuis le container
             $new_uuid = $this->container->uuid;
             // génération id basé sur un aléa : UUID v4
@@ -114,13 +113,10 @@ class Messages_Controller
             $new_message->content = filter_var($message_req['content'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $new_message->member_id = filter_var($message_req['member_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $new_message->event_id = filter_var($message_req['event_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    
-            if( (isset($message_req['media']) )) {
-                $new_message->media = $message_req['media'] ; //! controle de format
+
+            if ((isset($message_req['media']))) {
+                $new_message->media = $message_req['media']; //! controle de format
             }
-            
-            
-            // $new_message->media = filter_var($message_req['media'], FILTER_SANITIZE_FULL_SPECIAL_CHARS); //?to do verification json ?
 
             $new_message->save();
 
@@ -151,10 +147,8 @@ class Messages_Controller
 
             return $resp;
         } catch (ModelNotFoundException $e) {
-            //todo: logError
             return Writer::json_error($resp, 404, 'Ressource not found : message ID = ' . $new_message->id);
         } catch (\Exception $th) {
-            //todo : log Error
             return Writer::json_error($resp, 500, 'Server Error : Can\'t create message ' . $th->getMessage());
         }
         //
@@ -194,16 +188,14 @@ class Messages_Controller
     public function getMessage(Request $req, Response $resp, array $args): Response
     {
         $id_message = $args['id'];
-        
+
         try {
-            
+
             //* Modification TD4.2
             $message = Messages::select(['id', 'content', 'member_id', 'event_id', 'media', 'created_at', 'updated_at'])
-            ->where('id', '=', $id_message)
-            ->firstOrFail();
+                ->where('id', '=', $id_message)
+                ->firstOrFail();
 
-            //TODO Vérifier type de controle depuis réception base de donnée dans cours
-            //TODO étape filtrage à garder ou améliorer ?
             $message_resp = [
                 'id' => $message->id,
                 'content' => $message->content,
@@ -220,11 +212,7 @@ class Messages_Controller
                 ['id' => $id_message]
             );
 
-            //todo: links hatoas pour autheur vers ficher members
-            //todo: pareil pour lien event
-
-            // // Récupération de la route              
-            // //? route Event Members + Messages pour hateoas ?                  
+            // Récupération de la route                               
             $pathForEventOfMessage = $this->container->router->pathFor(
                 'getEvent',
                 ['id' => $message->event_id]
@@ -244,18 +232,15 @@ class Messages_Controller
 
 
             // Création du body de la réponse
-            //? Renomer les keys ou laisser les noms issus de la DB ?
             $datas_resp = [
                 "type" => "ressource",
                 "message" => $message_resp,
                 "links" => $hateoas
             ];
 
-            //? Ressources imbriquées ? à priori non.
-
             $resp = $resp->withStatus(200);
             $resp = $resp->withHeader("Content-Type", "application/json;charset=utf-8");
-            
+
             $resp->getBody()->write(json_encode($datas_resp));
 
             return $resp;
@@ -263,7 +248,6 @@ class Messages_Controller
 
             $clientError = $this->container->clientError;
             return $clientError($req, $resp, 404, "Message not found");
-
         }
     }
 
@@ -297,7 +281,7 @@ class Messages_Controller
      *         "member_id": "1190e0fc-524f-4c32-a087-4bed56091978",
      *         "event_id": "0447ff47-e257-4bfc-b1a6-913a2c6cbd79",
      *         "media": "{\"img\":\"http://dummyimage.com/122x100.png/cc0000/ffffff\",\"link\":\"http://dummyimage.com/249x100.png/5fa2dd/ffffff\"}",
-    *          "updated_at": "2021-09-16 10:10:39",
+     *          "updated_at": "2021-09-16 10:10:39",
      *         "created_at": "2021-04-03 12:07:25"
      *     }
      *     ...
@@ -305,26 +289,26 @@ class Messages_Controller
     public function getMessagesByEvent(Request $req, Response $resp, array $args): Response
     {
         $id_event = $args['id'];
-        
+
         try {
             $event = Events::findOrFail($id_event);
             $messages = $event->messages()->select()->get();
-            
+
             $nbMessage = count($messages);
 
-        $messages_resp = [];
-        foreach ($messages as $message) {
-            $messages_resp[] = [
-             'id' => $message->id,
-                'content' => $message->content,
-                'pseudo' => $message->member->pseudo,
-                'member_id' => $message->member_id,
-                'event_id' => $message->event_id,
-                'media' => $message->media,
-                'updated_at' => $message->updated_at->format('Y-m-d H:i:s'),
-                'created_at' => $message->created_at->format('Y-m-d H:i:s')
-            ];
-        }
+            $messages_resp = [];
+            foreach ($messages as $message) {
+                $messages_resp[] = [
+                    'id' => $message->id,
+                    'content' => $message->content,
+                    'pseudo' => $message->member->pseudo,
+                    'member_id' => $message->member_id,
+                    'event_id' => $message->event_id,
+                    'media' => $message->media,
+                    'updated_at' => $message->updated_at->format('Y-m-d H:i:s'),
+                    'created_at' => $message->created_at->format('Y-m-d H:i:s')
+                ];
+            }
 
             // Récupération de la route getMessagesByEvent                            
             $pathForMessagesByEvent = $this->container->router->pathFor(
@@ -345,20 +329,18 @@ class Messages_Controller
 
 
             // Création du body de la réponse
-            //? Renomer les keys ou laisser les noms issus de la DB ?
             $datas_resp = [
                 "type" => "collection",
                 "count" => $nbMessage,
                 "message" => $messages_resp,
                 "links" => $hateoas
-   
+
             ];
 
-            //? Ressources imbriquées ? à priori non.
 
             $resp = $resp->withStatus(200);
             $resp = $resp->withHeader("Content-Type", "application/json;charset=utf-8");
-            
+
             $resp->getBody()->write(json_encode($datas_resp));
 
             return $resp;
@@ -366,7 +348,6 @@ class Messages_Controller
 
             $clientError = $this->container->clientError;
             return $clientError($req, $resp, 404, "Event not found");
-
         }
     }
 
@@ -407,15 +388,13 @@ class Messages_Controller
         $id_message = $args['id'] ?? null;
         try {
             $message = Messages::findOrFail($id_message);
-            if ($message->delete())
-            {
+            if ($message->delete()) {
                 $datas_resp = [
                     "type" => "message",
                     "message" => $message,
                     "response" => "message deleted"
                 ];
-            } else
-            {
+            } else {
                 $datas_resp = [
                     "type" => "message",
                     "message" => $message,
@@ -432,24 +411,21 @@ class Messages_Controller
     public function deleteMessagesByEvent(Request $req, Response $resp, array $args): Response
     {
         $id_event = $args['id'];
-        
+
         try {
             $event = Events::findOrFail($id_event);
             $messages = $event->messages()->select()->get();
             $nbMessage = count($messages);
 
-        $messages_resp = [];
-        // TODO : Faire en une seule requête
-        foreach ($messages as $message) {
-                if ($message->delete())
-                {
+            $messages_resp = [];
+            foreach ($messages as $message) {
+                if ($message->delete()) {
                     $datas_resp = [
                         "type" => "message",
                         "message" => $message,
                         "response" => "message deleted"
                     ];
-                } else
-                {
+                } else {
                     $datas_resp = [
                         "type" => "message",
                         "message" => $message,
@@ -458,11 +434,10 @@ class Messages_Controller
                 }
                 $resp->getBody()->write(json_encode($datas_resp));
             }
-            return writer::json_output($resp, 200); 
-        }catch (ModelNotFoundException $e) {
+            return writer::json_output($resp, 200);
+        } catch (ModelNotFoundException $e) {
             $clientError = $this->container->clientError;
             return $clientError($req, $resp, 404, "Event not found");
         }
     }
 }
-

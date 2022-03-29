@@ -188,3 +188,4 @@
 [2022-03-29T10:20:10.360897+00:00] lbs.log.ERROR: bad ressource : http://events.service.local:62010/events/af7e8965-2e26-4b53-8e62-4dbc01de5528 [] []
 [2022-03-29T10:20:14.181695+00:00] lbs.log.ERROR: POST http://events.service.local:62010/events/af7e8965-2e26-4b53-8e62-4dbc01de5528 : bad method - PUT, GET, DELETE wanted [] []
 [2022-03-29T10:20:20.819499+00:00] lbs.log.ERROR: bad ressource : http://events.service.local:62010/events/af7e8965-2e26-4b53-8e62-4dbc01de5528 [] []
+[2022-03-29T13:24:58.357853+00:00] lbs.log.ERROR: error | 500 | internal server error: Argument 1 passed to Illuminate\Database\Query\Builder::cleanBindings() must be of the type array, string given, called in /var/www/src/vendor/illuminate/database/Query/Builder.php on line 997 | /var/www/src/vendor/illuminate/database/Query/Builder.phpline: 3369 [] []
