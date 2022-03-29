@@ -15,7 +15,7 @@ class EventValidator
             'description' => v::stringType()->notEmpty(),
             'user_id' => v::noWhitespace()->length(1, 64),
             'location' => v::json()->notEmpty(),
-            'date' => V::date('Y-m-d'),
+            'date' => V::date('Y-m-d')->min('now'),
             'heure' => V::date('H:i')
         ];
     }

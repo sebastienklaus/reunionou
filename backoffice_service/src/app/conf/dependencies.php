@@ -15,18 +15,6 @@ return [
         return $config['host'];
     },
 
-    // enregistrer msg quand besoind dans l'app
-    // 'logger' => function (Container $container) {
-    //     // évidemment ne pas enregistrer en dur. Configurer les var dans settings
-    //     // On peut créer plusieurs fichier de log
-    //     $log = new Logger($container->settings['log.name']);
-    //     // level :  debug3, info, notice, warning, error, critical_error. Indiquer nv minimum
-    //     // à partir duquel enregistrer          (fichier, niveau)
-    //     $log->pushHandler(new StreamHandler($container->settings['debug.log'],
-    //                                     $container->settings['log.level']));
-    //     return $log;
-    // },
-
     // * au lieur créer un seul 'logger', on en créer un par type : debug, error etc... :
 
     // logger debug
@@ -57,40 +45,6 @@ return [
             $container->settings['error.level']
         ));
         return $log;
-    },
-
-    //markdown 2 html
-    'md2html' => function (Container $container) {
-        return function (string $md) {
-            //     $parser = new Parsedown();
-            //     return $parser->text($md); 
-
-            //* changement de service md2html facile:
-            //* on change les services ici, principe de contenur d'injecteur de dépendance
-
-            return \Michelf\Markdown::defaultTransform($md);
-        };
-    },
-
-    // logger créable autrement
-    // mais placer dans un conteneur, plus flexible
-    // adaptable à la condition dans laquelle on intalle l'app
-
-    // Uuid generator
-    'uuid' => function (Container $container) {
-        return function ($v, $param1 = null, $param2 = null) {
-            $uuidx = 'uuid' . $v;
-            return Uuid::$uuidx($param1, $param2)->toString();
-        };
-    },
-
-    // Token generator : random_byte :
-    'token' => function (Container $container) {
-        return function ($nb_int) {
-            $token = random_bytes($nb_int);
-            $token = bin2hex($token);
-            return $token;
-        };
     },
 
 ];
