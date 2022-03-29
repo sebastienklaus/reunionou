@@ -1,5 +1,7 @@
 <?php
 
+use Slim\Container;
+
 return [
     'settings' => [
         'displayErrorDetails' => true,

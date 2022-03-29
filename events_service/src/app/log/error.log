@@ -185,3 +185,6 @@
 =======
 [2022-03-28T14:08:08.342427+00:00] lbs.log.ERROR: error | 500 | internal server error: Cannot use object of type DateTime as array | /var/www/src/app/controller/Members_Controller.phpline: 655 [] []
 >>>>>>> feature/RouteGetMembersExpired
+[2022-03-29T10:20:10.360897+00:00] lbs.log.ERROR: bad ressource : http://events.service.local:62010/events/af7e8965-2e26-4b53-8e62-4dbc01de5528 [] []
+[2022-03-29T10:20:14.181695+00:00] lbs.log.ERROR: POST http://events.service.local:62010/events/af7e8965-2e26-4b53-8e62-4dbc01de5528 : bad method - PUT, GET, DELETE wanted [] []
+[2022-03-29T10:20:20.819499+00:00] lbs.log.ERROR: bad ressource : http://events.service.local:62010/events/af7e8965-2e26-4b53-8e62-4dbc01de5528 [] []
