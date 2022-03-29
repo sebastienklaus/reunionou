@@ -57,357 +57,385 @@ class _EventDetailsState extends State<EventDetails> {
   }
 
   //Change attendance count
-  getCount() {
+  getCount() async {
+    await getMember();
     setState(() {
-      confirmedParts = context.read<DataLoader>().getMemberByStatus(1).length;
+      confirmedParts = context.read<DataLoader>().getMemberByStatus(1).length -
+          1; //Remove creator
       declinedParts = context.read<DataLoader>().getMemberByStatus(0).length;
+
+      //Creator don't count
+      if (confirmedParts < 0) {
+        confirmedParts = 0;
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Card(
-              child: SizedBox(
-                height: 250,
-                child: MapWidget(
-                  lat: widget.event.location[0]['latitude'],
-                  long: widget.event.location[0]['longitude'],
-                ),
-              ),
-            ),
-            const SpacerWidget(
-              space: 20,
-            ),
-            Text(
-              widget.event.title,
-              style: const TextStyle(
-                  fontSize: 25.0,
-                  color: Colors.blueGrey,
-                  letterSpacing: 2.0,
-                  fontWeight: FontWeight.w400),
-            ),
-            const SpacerWidget(
-              space: 10,
-            ),
-            Text(
-              widget.event.date + "(" + widget.event.hour + ")",
-              style: const TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.black45,
-                  letterSpacing: 2.0,
-                  fontWeight: FontWeight.w300),
-            ),
-            Text(
-              widget.event.location[0]['name'],
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.black45,
-                  letterSpacing: 2.0,
-                  fontWeight: FontWeight.w300),
-            ),
-            const SpacerWidget(
-              space: 10,
-            ),
-            Text(
-              widget.event.description,
-              style: const TextStyle(
-                  fontSize: 18.0,
-                  color: Colors.black,
-                  letterSpacing: 2.0,
-                  fontWeight: FontWeight.w300),
-            ),
-            const SpacerWidget(
-              space: 15,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Card(
-                  elevation: 2.0,
-                  child: InkWell(
-                    onTap: () async {
-                      String cord =
-                          widget.event.location[0]['latitude'].toString() +
-                              "," +
-                              widget.event.location[0]['longitude'].toString();
-
-                      var url =
-                          'https://www.google.com/maps/search/?api=1&query=$cord';
-                      var urllaunchable = await canLaunch(url);
-                      if (urllaunchable) {
-                        await launch(url);
-                      } else {
-                        print("URL can't be launched.");
-                      }
-                    },
-                    child: const Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 12, horizontal: 30),
-                      child: Text(
-                        "Get direction",
-                        style: TextStyle(
-                            letterSpacing: 2.0, fontWeight: FontWeight.w300),
+    return FutureBuilder(
+      future: context.read<DataLoader>().getMember(widget.event.id),
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if (!snapshot.hasData) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          return Center(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Card(
+                    child: SizedBox(
+                      height: 250,
+                      child: MapWidget(
+                        lat: widget.event.location[0]['latitude'],
+                        long: widget.event.location[0]['longitude'],
                       ),
                     ),
                   ),
-                ),
-                Card(
-                  elevation: 2.0,
-                  color: Colors.deepPurple,
-                  child: InkWell(
-                    onTap: () async {
-                      await FlutterShare.share(
-                          title: widget.event.title,
-                          text: widget.event.title,
-                          linkUrl:
-                              'http://docketu.iutnc.univ-lorraine.fr:62015/events/' +
-                                  widget.event.id.toString() //Change me
-                          ,
-                          chooserTitle: 'Partager via');
-                    },
-                    child: const Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 12, horizontal: 30),
-                      child: Text(
-                        "Partager",
-                        style: TextStyle(
-                            letterSpacing: 2.0,
-                            fontWeight: FontWeight.w300,
-                            color: Colors.white),
-                      ),
-                    ),
+                  const SpacerWidget(
+                    space: 20,
                   ),
-                ),
-              ],
-            ),
-            const SpacerWidget(
-              space: 30,
-            ),
-            const Text(
-              "Météo",
-              style: TextStyle(
-                  fontSize: 25.0,
-                  color: Colors.blueGrey,
-                  letterSpacing: 2.0,
-                  fontWeight: FontWeight.w400),
-            ),
-            const SpacerWidget(
-              space: 13,
-            ),
-            Text(
-              weatherStatus,
-              style: const TextStyle(
-                  fontSize: 18.0,
-                  color: Colors.black,
-                  letterSpacing: 2.0,
-                  fontWeight: FontWeight.w300),
-            ),
-            if (weatherIcon != "")
-              Image.network(
-                "https:" + weatherIcon,
-                width: 50,
-              ),
-            const SpacerWidget(
-              space: 30,
-            ),
-            const Text(
-              "Participants",
-              style: TextStyle(
-                  fontSize: 25.0,
-                  color: Colors.blueGrey,
-                  letterSpacing: 2.0,
-                  fontWeight: FontWeight.w400),
-            ),
-            Card(
-              margin:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        children: [
-                          const Text(
-                            "Confirmé",
-                            style: TextStyle(
-                                color: Colors.deepPurple,
-                                fontSize: 22.0,
-                                fontWeight: FontWeight.w600),
-                          ),
-                          const SpacerWidget(
-                            space: 7,
-                          ),
-                          Text(
-                            confirmedParts.toString(),
-                            style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 22.0,
-                                fontWeight: FontWeight.w300),
-                          )
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        children: [
-                          const Text(
-                            "Décliner",
-                            style: TextStyle(
-                                color: Colors.deepPurple,
-                                fontSize: 22.0,
-                                fontWeight: FontWeight.w600),
-                          ),
-                          const SpacerWidget(
-                            space: 7,
-                          ),
-                          Text(
-                            declinedParts.toString(),
-                            style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 22.0,
-                                fontWeight: FontWeight.w300),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SpacerWidget(
-              space: 30,
-            ),
-            widget.event.user_id != context.read<DataLoader>().getUser().id
-                ? Row(
+                  Text(
+                    widget.event.title,
+                    style: const TextStyle(
+                        fontSize: 25.0,
+                        color: Colors.blueGrey,
+                        letterSpacing: 2.0,
+                        fontWeight: FontWeight.w400),
+                  ),
+                  const SpacerWidget(
+                    space: 10,
+                  ),
+                  Text(
+                    widget.event.date + "(" + widget.event.hour + ")",
+                    style: const TextStyle(
+                        fontSize: 16.0,
+                        color: Colors.black45,
+                        letterSpacing: 2.0,
+                        fontWeight: FontWeight.w300),
+                  ),
+                  Text(
+                    widget.event.location[0]['name'],
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        fontSize: 16.0,
+                        color: Colors.black45,
+                        letterSpacing: 2.0,
+                        fontWeight: FontWeight.w300),
+                  ),
+                  const SpacerWidget(
+                    space: 10,
+                  ),
+                  Text(
+                    widget.event.description,
+                    style: const TextStyle(
+                        fontSize: 18.0,
+                        color: Colors.black,
+                        letterSpacing: 2.0,
+                        fontWeight: FontWeight.w300),
+                  ),
+                  const SpacerWidget(
+                    space: 15,
+                  ),
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      RaisedButton(
-                        onPressed: () {
-                          context
-                              .read<DataLoader>()
-                              .updateAttendance(1, widget.event.id!)
-                              .then((value) {
-                            if (value) {
-                              //Refresh count
-                              getCount();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    "Bien reçu, bienvenue à notre événement",
-                                    style: TextStyle(
-                                      color: Color.fromARGB(255, 255, 255, 255),
-                                    ),
-                                  ),
-                                  backgroundColor: Colors.green,
-                                ),
-                              );
+                      Card(
+                        elevation: 2.0,
+                        child: InkWell(
+                          onTap: () async {
+                            String cord = widget.event.location[0]['latitude']
+                                    .toString() +
+                                "," +
+                                widget.event.location[0]['longitude']
+                                    .toString();
+
+                            var url =
+                                'https://www.google.com/maps/search/?api=1&query=$cord';
+                            var urllaunchable = await canLaunch(url);
+                            if (urllaunchable) {
+                              await launch(url);
                             } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                      "Quelque chose s'est mal passé essaie une autre fois"),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
+                              print("URL can't be launched.");
                             }
-                          });
-                        },
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                        color: Colors.green,
-                        child: Ink(
-                          child: Container(
-                            constraints: const BoxConstraints(
-                              maxWidth: 100.0,
-                              maxHeight: 40.0,
-                            ),
-                            alignment: Alignment.center,
-                            child: const Text(
-                              "Je participe",
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 12, horizontal: 30),
+                            child: Text(
+                              "Get direction",
                               style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12.0,
                                   letterSpacing: 2.0,
                                   fontWeight: FontWeight.w300),
                             ),
                           ),
                         ),
                       ),
-                      RaisedButton(
-                        onPressed: () {
-                          context
-                              .read<DataLoader>()
-                              .updateAttendance(0, widget.event.id!)
-                              .then((value) {
-                            if (value) {
-                              //Refresh count
-                              getCount();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    "Bien reçu",
-                                    style: TextStyle(
-                                      color: Color.fromARGB(255, 255, 255, 255),
-                                    ),
-                                  ),
-                                  backgroundColor: Colors.green,
-                                ),
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                      "Quelque chose s'est mal passé essaie une autre fois"),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                            }
-                          });
-                        },
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                        color: Colors.red,
-                        child: Ink(
-                          child: Container(
-                            constraints: const BoxConstraints(
-                              maxWidth: 100.0,
-                              maxHeight: 40.0,
-                            ),
-                            alignment: Alignment.center,
-                            child: const Text(
-                              "Je refuse",
+                      Card(
+                        elevation: 2.0,
+                        color: Colors.deepPurple,
+                        child: InkWell(
+                          onTap: () async {
+                            await FlutterShare.share(
+                                title: widget.event.title,
+                                text: widget.event.title,
+                                linkUrl:
+                                    'https://reunionou.netlify.app/#/invite/' +
+                                        widget.event.id.toString(),
+                                chooserTitle: 'Partager via');
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 12, horizontal: 30),
+                            child: Text(
+                              "Partager",
                               style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12.0,
                                   letterSpacing: 2.0,
-                                  fontWeight: FontWeight.w300),
+                                  fontWeight: FontWeight.w300,
+                                  color: Colors.white),
                             ),
                           ),
                         ),
                       ),
                     ],
-                  )
-                : SizedBox(
-                    height: 400,
-                    child: AddParticipantsWidget(
-                      event: widget.event,
+                  ),
+                  const SpacerWidget(
+                    space: 30,
+                  ),
+                  const Text(
+                    "Météo",
+                    style: TextStyle(
+                        fontSize: 25.0,
+                        color: Colors.blueGrey,
+                        letterSpacing: 2.0,
+                        fontWeight: FontWeight.w400),
+                  ),
+                  const SpacerWidget(
+                    space: 13,
+                  ),
+                  Text(
+                    weatherStatus,
+                    style: const TextStyle(
+                        fontSize: 18.0,
+                        color: Colors.black,
+                        letterSpacing: 2.0,
+                        fontWeight: FontWeight.w300),
+                  ),
+                  if (weatherIcon != "")
+                    Image.network(
+                      "https:" + weatherIcon,
+                      width: 50,
+                    ),
+                  const SpacerWidget(
+                    space: 30,
+                  ),
+                  const Text(
+                    "Participants",
+                    style: TextStyle(
+                        fontSize: 25.0,
+                        color: Colors.blueGrey,
+                        letterSpacing: 2.0,
+                        fontWeight: FontWeight.w400),
+                  ),
+                  Card(
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 8.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              children: [
+                                const Text(
+                                  "Confirmé",
+                                  style: TextStyle(
+                                      color: Colors.deepPurple,
+                                      fontSize: 22.0,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                const SpacerWidget(
+                                  space: 7,
+                                ),
+                                Text(
+                                  confirmedParts.toString(),
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 22.0,
+                                      fontWeight: FontWeight.w300),
+                                )
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Column(
+                              children: [
+                                const Text(
+                                  "Décliner",
+                                  style: TextStyle(
+                                      color: Colors.deepPurple,
+                                      fontSize: 22.0,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                const SpacerWidget(
+                                  space: 7,
+                                ),
+                                Text(
+                                  declinedParts.toString(),
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 22.0,
+                                      fontWeight: FontWeight.w300),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-            const SpacerWidget(
-              space: 50,
+                  const SpacerWidget(
+                    space: 30,
+                  ),
+                  widget.event.user_id !=
+                          context.read<DataLoader>().getUser().id
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            RaisedButton(
+                              onPressed: () {
+                                context
+                                    .read<DataLoader>()
+                                    .updateAttendance(1, widget.event.id!)
+                                    .then((value) {
+                                  if (value) {
+                                    //Refresh count
+                                    getCount();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          "Bien reçu, bienvenue à notre événement",
+                                          style: TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 255, 255, 255),
+                                          ),
+                                        ),
+                                        backgroundColor: Colors.green,
+                                      ),
+                                    );
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                            "Quelque chose s'est mal passé essaie une autre fois"),
+                                        backgroundColor: Colors.red,
+                                      ),
+                                    );
+                                  }
+                                });
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
+                              color:
+                                  _member!.status == 1 || _member!.status == -1
+                                      ? Colors.green
+                                      : Color.fromARGB(74, 30, 209, 6),
+                              child: Ink(
+                                child: Container(
+                                  constraints: const BoxConstraints(
+                                    maxWidth: 100.0,
+                                    maxHeight: 40.0,
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: const Text(
+                                    "Je participe",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12.0,
+                                        letterSpacing: 2.0,
+                                        fontWeight: FontWeight.w300),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            RaisedButton(
+                              onPressed: () {
+                                context
+                                    .read<DataLoader>()
+                                    .updateAttendance(0, widget.event.id!)
+                                    .then((value) {
+                                  if (value) {
+                                    //Refresh count
+                                    getCount();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          "Bien reçu",
+                                          style: TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 255, 255, 255),
+                                          ),
+                                        ),
+                                        backgroundColor: Colors.green,
+                                      ),
+                                    );
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                            "Quelque chose s'est mal passé essaie une autre fois"),
+                                        backgroundColor: Colors.red,
+                                      ),
+                                    );
+                                  }
+                                });
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
+                              color:
+                                  _member!.status == 0 || _member!.status == -1
+                                      ? Colors.red
+                                      : Color.fromARGB(75, 209, 6, 6),
+                              child: Ink(
+                                child: Container(
+                                  constraints: const BoxConstraints(
+                                    maxWidth: 100.0,
+                                    maxHeight: 40.0,
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: const Text(
+                                    "Je refuse",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12.0,
+                                        letterSpacing: 2.0,
+                                        fontWeight: FontWeight.w300),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      : SizedBox(
+                          height: 400,
+                          child: AddParticipantsWidget(
+                            event: widget.event,
+                          ),
+                        ),
+                  const SpacerWidget(
+                    space: 50,
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
+          );
+        }
+      },
     );
   }
 }

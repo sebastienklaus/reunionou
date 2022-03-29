@@ -18,9 +18,6 @@ class DataLoader extends ChangeNotifier {
   final String _usersUri = "http://docketu.iutnc.univ-lorraine.fr:62015/users/";
 
   //Events links
-  final String _getUserEvents =
-      "http://docketu.iutnc.univ-lorraine.fr:62015/users/{id}/created_events";
-  //Events links
   final String _getUserParticipate =
       "http://docketu.iutnc.univ-lorraine.fr:62015/users/{id}/events";
   final String _eventsUri =
@@ -78,6 +75,11 @@ class DataLoader extends ChangeNotifier {
     notifyListeners();
   }
 
+  //Get current _member
+  getCurrentMember() {
+    return _member;
+  }
+
   //Authentificate user
   Future<bool> authentificate(String email, String password) async {
     //Call api
@@ -125,16 +127,13 @@ class DataLoader extends ChangeNotifier {
 
   //Authentificate guest
   Future<bool> authentificateGuest(String username, String eventUri) async {
-    //Call api here
-    if (1 == 1) {
-      handler = DatabaseHandler();
-      String id = const Uuid().v4();
-
+    try {
       username = username.replaceAll(" ", "_");
       String eventId =
           eventUri.substring(eventUri.lastIndexOf("/") + 1, eventUri.length);
 
-      //In case of success store user to db
+      //Create temp user
+      String id = const Uuid().v4();
       _user = User(
         id: id,
         fullname: username,
@@ -143,12 +142,20 @@ class DataLoader extends ChangeNotifier {
       );
       setUser(_user);
 
+      var resp = await getMember(eventId);
+
+      if (resp == null) {
+        //Create member in case he dosen't exist
+        await addMember(eventId, null, username);
+      }
+      handler = DatabaseHandler();
+
       notifyListeners();
       handler.initializeDB().whenComplete(() async {
         await handler.insertUser(_user);
       });
       return true;
-    } else {
+    } catch (e) {
       return false;
     }
   }
@@ -163,7 +170,7 @@ class DataLoader extends ChangeNotifier {
       if (!dbCheck) {
         var user = await handler.getUser();
         if (user is User) {
-          user.type = "user";
+          user.type = user.type;
           setUser(user);
           notifyListeners();
           return _user;
@@ -322,9 +329,6 @@ class DataLoader extends ChangeNotifier {
     try {
       myEvents = [];
       if (_user.type == "user") {
-        //get user event (creator)
-        await getUserEvents();
-
         //get memebr event (by user_id )
         await getMemberEvents("user");
       } else {
@@ -337,16 +341,20 @@ class DataLoader extends ChangeNotifier {
     }
   }
 
-  //Get user events
-  Future<List<EventItem>> getUserEvents() async {
+  //Get member events
+  Future<List<EventItem>> getMemberEvents(type) async {
     try {
-      //Call api
-      var _getUserEvents = this._getUserEvents.replaceAll('{id}', _user.id);
+      String uri;
 
+      if (type == "psuedo") {
+        uri = _eventMemberByPseudo.replaceAll('{pseudo}', _user.username!);
+      } else {
+        uri = _getUserParticipate.replaceAll('{id}', _user.id);
+      }
       var response = await Dio().get(
-        _getUserEvents,
+        uri,
         options: Options(
-          headers: <String, String>{'Origin': "flutter"},
+          headers: {'Origin': "flutter"},
         ),
       );
 
@@ -369,61 +377,9 @@ class DataLoader extends ChangeNotifier {
             created_at: event['created_at'],
             updated_at: event['updated_at'],
           );
+
           //Add to myEvents
           myEvents.add(temp);
-        }
-      }
-      return myEvents;
-    } catch (e) {
-      throw Exception('Failed to load events');
-    }
-  }
-
-  //Get member events
-  Future<List<EventItem>> getMemberEvents(type) async {
-    try {
-      String uri;
-
-      if (type == "psuedo") {
-        uri = _eventMemberByPseudo.replaceAll('{pseudo}', _user.username!);
-      } else {
-        uri = _getUserParticipate.replaceAll('{id}', _user.id);
-      }
-      var response = await Dio().get(
-        uri,
-        options: Options(
-          headers: <String, String>{'Origin': "flutter"},
-        ),
-      );
-
-      if (response.statusCode == 200) {
-        for (var event in response.data['member']) {
-          var temp = EventItem(
-            id: event['id'],
-            title: event['title'],
-            description: event['description'],
-            location: [
-              {
-                "name": event['location']['name'],
-                "latitude": event['location']['latitude'],
-                "longitude": event['location']['longitude'],
-              }
-            ],
-            user_id: event['user_id'],
-            hour: event['heure'],
-            date: event['date'],
-            created_at: event['created_at'],
-            updated_at: event['updated_at'],
-          );
-
-          //Check duplication
-          if (myEvents.indexWhere((v) {
-                return v.id == temp.id;
-              }) ==
-              -1) {
-            //Add to myEvents
-            myEvents.add(temp);
-          }
         }
       }
       return myEvents;
@@ -513,21 +469,28 @@ class DataLoader extends ChangeNotifier {
 
   //Add member to event
   Future<bool> addMember(
-      String? eventId, String userId, String username) async {
+      String? eventId, String? userId, String username) async {
     //Call api
+
+    int status = -1;
+
+    //Check if the new member is the creator
+    if (userId == _user.id) {
+      status = 1;
+    }
+
     try {
       var parsedMember = {
         "event_id": eventId,
         "user_id": userId,
         "pseudo": username,
-        "status": -1
+        "status": status
       };
-
       var response = await Dio().post(
         _membersUri,
         options: Options(
           headers: {
-            'Authorization': "Bearer " + _user.token!,
+            //'Authorization': "Bearer " + _user.token!, Add token here please
             'Origin': "flutter",
             'Content-Type': 'application/json',
           },
@@ -542,6 +505,7 @@ class DataLoader extends ChangeNotifier {
       }
       return false;
     } catch (e) {
+      print(e.toString());
       return false;
     }
   }
@@ -556,7 +520,7 @@ class DataLoader extends ChangeNotifier {
         _newGetUserEvents,
         options: Options(
           headers: {
-            'Authorization': "Bearer " + _user.token!,
+            //'Authorization': "Bearer " + _user.token!, Replace me
             'Origin': "flutter",
           },
         ),
@@ -599,29 +563,33 @@ class DataLoader extends ChangeNotifier {
       } else {
         _uri = _uri + "&pseudo=" + _user.username!;
       }
+
       //Call  api
       var response = await Dio().get(
         _uri,
         options: Options(
           headers: {
-            'Authorization': "Bearer " + _user.token!,
+            //'Authorization': "Bearer " + _user.token!, remove comment
             'Origin': "flutter",
           },
         ),
       );
 
       if (response.statusCode == 200) {
-        _member = Member(
-          id: response.data['id'],
-          user_id: response.data['user_id'],
-          event_id: response.data['event_id'],
-          pseudo: response.data['pseudo'],
-          status: response.data['status'],
-          created_at: response.data['id'],
-          updated_at: response.data['id'],
-        );
-        return _member;
+        if (response.data != null) {
+          _member = Member(
+            id: response.data['id'],
+            user_id: response.data['user_id'],
+            event_id: response.data['event_id'],
+            pseudo: response.data['pseudo'],
+            status: response.data['status'],
+            created_at: response.data['id'],
+            updated_at: response.data['id'],
+          );
+          return _member;
+        }
       }
+      return null;
     } catch (e) {
       throw ("Failed to fetch member");
     }
@@ -641,7 +609,7 @@ class DataLoader extends ChangeNotifier {
         _membersUri + "/" + _member.id,
         options: Options(
           headers: {
-            'Authorization': "Bearer " + _user.token!,
+            //'Authorization': "Bearer " + _user.token!, Replace me
             'Origin': "flutter",
             'Content-Type': 'application/json',
           },
@@ -713,7 +681,7 @@ class DataLoader extends ChangeNotifier {
         _messageUri,
         options: Options(
           headers: {
-            'Authorization': "Bearer " + _user.token!,
+            //'Authorization': "Bearer " + _user.token!, repalce me
             'Origin': "flutter",
             'Content-Type': 'application/json',
           },

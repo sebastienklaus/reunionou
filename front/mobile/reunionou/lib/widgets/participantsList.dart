@@ -5,11 +5,15 @@ import 'package:reunionou/widgets/spacer.dart';
 
 import '../data/dataLoader.dart';
 import '../models/member.dart';
+import '../models/user.dart';
 
 class ParticipantsList extends StatelessWidget {
-  const ParticipantsList({
+  ParticipantsList({
     Key? key,
+    required this.creator_id,
   }) : super(key: key);
+
+  String creator_id;
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +21,8 @@ class ParticipantsList extends StatelessWidget {
         context.read<DataLoader>().getMemberByStatus(1);
     Iterable<Member> declinedParts =
         context.read<DataLoader>().getMemberByStatus(0);
+    User _user = context.read<DataLoader>().getUser();
+
     return Center(
       child: Column(
         children: <Widget>[
@@ -35,13 +41,17 @@ class ParticipantsList extends StatelessWidget {
             child: ListView.builder(
               itemCount: confirmedParts.length,
               itemBuilder: (context, index) {
-                return Card(
-                  child: ListTile(
-                    title: Text(
-                      confirmedParts.elementAt(index).pseudo.toString(),
+                if (confirmedParts.elementAt(index).user_id != creator_id) {
+                  return Card(
+                    child: ListTile(
+                      title: Text(
+                        confirmedParts.elementAt(index).pseudo.toString(),
+                      ),
                     ),
-                  ),
-                );
+                  );
+                } else {
+                  return Container();
+                }
               },
             ),
           ),

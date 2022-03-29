@@ -76,7 +76,7 @@ class _HomeScreenState extends State<EventPreviewScreen> {
                   OrganizerDetails(
                     event: widget.event,
                   ),
-                  const ParticipantsList(),
+                  ParticipantsList(creator_id: widget.event.user_id!),
                   CommentsList(
                     event_id: widget.event.id,
                   ),
