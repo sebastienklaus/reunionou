@@ -216,3 +216,4 @@
 [2022-03-29T12:36:17.621691+00:00] lbs.log.ERROR: bad ressource : http://events.service.local/member/?event=abb18196-937c-483a-a7c5-f77337c14f8b&user_id=96271e4b-bd96-4d25-b9ac-efcfa4cd173e&pseudo=wmose0 [] []
 [2022-03-29T12:36:32.971913+00:00] lbs.log.ERROR: bad ressource : http://events.service.local/member/?event=abb18196-937c-483a-a7c5-f77337c14f8b&user_id=96271e4b-bd96-4d25-b9ac-efcfa4cd173e&pseudo=wmose0 [] []
 >>>>>>> 275ea4f85b8a5e81d11375ca371a185b3be93a2f
+[2022-03-29T15:26:12.455285+00:00] lbs.log.ERROR: error input user_id UUID [] []

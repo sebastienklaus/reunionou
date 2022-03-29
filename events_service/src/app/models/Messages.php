@@ -13,9 +13,9 @@ class Messages extends \Illuminate\Database\Eloquent\Model
     public  $incrementing = false;      //pour primarykey, on annule l'auto_increment
     public $timestamps = true;
 
-    // protected $fillable = array(
-    //     'id', 'uri', 'libelle', 'tarif', 'quantite', 'command_id'
-    // );
+    protected $fillable = array(
+        'id', 'content', 'member_id', 'event_id', 'media', 'created_at', 'updated_at'
+    );
 
 
 
