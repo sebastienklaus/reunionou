@@ -118,9 +118,6 @@ class Messages_Controller
             if( (isset($message_req['media']) )) {
                 $new_message->media = $message_req['media'] ; //! controle de format
             }
-            
-            
-            // $new_message->media = filter_var($message_req['media'], FILTER_SANITIZE_FULL_SPECIAL_CHARS); //?to do verification json ?
 
             $new_message->save();
 
@@ -151,10 +148,8 @@ class Messages_Controller
 
             return $resp;
         } catch (ModelNotFoundException $e) {
-            //todo: logError
             return Writer::json_error($resp, 404, 'Ressource not found : message ID = ' . $new_message->id);
         } catch (\Exception $th) {
-            //todo : log Error
             return Writer::json_error($resp, 500, 'Server Error : Can\'t create message ' . $th->getMessage());
         }
         //
@@ -220,11 +215,7 @@ class Messages_Controller
                 ['id' => $id_message]
             );
 
-            //todo: links hatoas pour autheur vers ficher members
-            //todo: pareil pour lien event
-
-            // // Récupération de la route              
-            // //? route Event Members + Messages pour hateoas ?                  
+            // Récupération de la route                               
             $pathForEventOfMessage = $this->container->router->pathFor(
                 'getEvent',
                 ['id' => $message->event_id]
@@ -244,14 +235,11 @@ class Messages_Controller
 
 
             // Création du body de la réponse
-            //? Renomer les keys ou laisser les noms issus de la DB ?
             $datas_resp = [
                 "type" => "ressource",
                 "message" => $message_resp,
                 "links" => $hateoas
             ];
-
-            //? Ressources imbriquées ? à priori non.
 
             $resp = $resp->withStatus(200);
             $resp = $resp->withHeader("Content-Type", "application/json;charset=utf-8");
@@ -345,7 +333,6 @@ class Messages_Controller
 
 
             // Création du body de la réponse
-            //? Renomer les keys ou laisser les noms issus de la DB ?
             $datas_resp = [
                 "type" => "collection",
                 "count" => $nbMessage,
@@ -354,7 +341,6 @@ class Messages_Controller
    
             ];
 
-            //? Ressources imbriquées ? à priori non.
 
             $resp = $resp->withStatus(200);
             $resp = $resp->withHeader("Content-Type", "application/json;charset=utf-8");

@@ -176,10 +176,8 @@ class Events_Controller
 
             return $resp;
         } catch (ModelNotFoundException $e) {
-            //todo: logError
             return Writer::json_error($resp, 404, 'Ressource not found : event ID = ' . $new_event->id);
         } catch (\Exception $th) {
-            //todo : log Error
             return Writer::json_error($resp, 500, 'Server Error : Can\'t create event');
         }
         //
@@ -323,10 +321,8 @@ class Events_Controller
 
             return $resp;
         } catch (ModelNotFoundException $e) {
-            //todo: logError
             return Writer::json_error($resp, 404, 'Ressource not found : event ID = ' . $event->id);
         } catch (\Exception $th) {
-            //todo : log Error
             return Writer::json_error($resp, 500, 'Server Error : Can\'t update event');
         }
         //
@@ -650,14 +646,11 @@ class Events_Controller
      */
     public function getAllEvent(Request $req, Response $resp): Response
     {
-        //todo: try catch
 
         // Récupérer les commandes depuis le model
         $events = Events::select(['id', 'title', 'description', 'user_id', 'location', 'date', 'heure', 'created_at', 'updated_at'])
                           ->get();
 
-        //TODO Vérifier type de controle depuis réception base de donnée dans cours
-        //TODO étape filtrage à garder ou améliorer ?
         $nbEvents = count($events);
         $events_resp = [];
         foreach ($events as $event) {

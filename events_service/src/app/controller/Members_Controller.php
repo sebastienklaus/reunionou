@@ -158,10 +158,8 @@ class Members_Controller
             }
 
         } catch (ModelNotFoundException $e) {
-            //todo: logError
             return Writer::json_error($resp, 404, 'Ressource not found : message ID = ' . $new_member->id);
         } catch (\Exception $th) {
-            //todo : log Error
             return Writer::json_error($resp, 500, 'Server Error : Can\'t create member ' . $th->getMessage());
         }
         //
@@ -277,10 +275,8 @@ class Members_Controller
     
                 return $resp;
             } catch (ModelNotFoundException $e) {
-                //todo: logError
                 return Writer::json_error($resp, 404, 'Ressource not found : member ID = ' . $member->id);
             } catch (\Exception $th) {
-                //todo : log Error
                 return Writer::json_error($resp, 500, 'Server Error : Can\'t update member ' . $th->getMessage());
             }
             //
@@ -353,7 +349,6 @@ class Members_Controller
             $hateoas = [
                 "self" => ["href" => $pathForMember],
                 "event" => ["href" => $pathForEvent]
-                //todo: ?? maybe "messages" => ["href" => $pathForMessagesByMember]
             ];
 
 
