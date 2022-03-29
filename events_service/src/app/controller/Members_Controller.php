@@ -2,6 +2,7 @@
 
 namespace reu\events\app\controller;
 
+use DateInterval;
 use DateTime;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -27,7 +28,44 @@ class Members_Controller
         $this->container = $container;
     }
 
-    // Créer un event
+   /**
+     * 
+     * @api {POST} /members createMember
+     * @apiName CreateMember
+     * @apiGroup Member
+     * @apiVersion  1.0.0
+     * 
+     * @apiParam {String} user_id ID de l'utilisateur associé au member
+     * @apiParam {String} event_id ID de l'event associé au member
+     * @apiParam {String} pseudo Pseudo du member
+     * 
+     * 
+     * {
+     * "user_id": "/users/b1858803-2305-47f4-be67-1efc10a91da7",
+     * "event_id": "7be3efde-34b1-4cc8-a52f-1429bdee413b",
+     * "pseudo": "HARMand"
+     * }
+     * 
+     * @apiSuccess (Success (200)) {String} id ID du member
+     * @apiSuccess (Success (200)) {String} user_id ID de l'utilisateur associé au member
+     * @apiSuccess (Success (200)) {String} event_id ID de l'event associé au member
+     * @apiSuccess (Success (200)) {String} pseudo Pseudo du member
+     * @apiSuccess (Success (200)) {date} created_at Date de création du member
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification du member
+     * 
+     * @apiSuccessExample Success-Response:
+     *  {
+     * "type": "ressource",
+     * "member": {
+     *     "id": "a9840463-19a3-4d3c-9cc4-c12fdfed0c35",
+     *     "user_id": "/users/b1858803-2305-47f4-be67-1efc10a91da7",
+     *     "event_id": "7be3efde-34b1-4cc8-a52f-1429bdee413b",
+     *     "pseudo": "HARMand",
+     *     "updated_at": "2022-03-28 09:01:22",
+     *     "created_at": "2022-03-28 09:01:22"
+     *           }
+     * }
+     */
     public function createMember(Request $req, Response $resp, array $args): Response
     {
 
@@ -39,16 +77,20 @@ class Members_Controller
                 $errors = $req->getAttribute('errors');
             
                 if (isset($errors['user_id'])) {
-                    $this->container->get('logger.error')->error("error input event user_id");
-                    return Writer::json_error($resp, 403, '"user_id" : invalid input, valid user_id expected');
+                    $this->container->get('logger.error')->error("error input member's user_id");
+                    return Writer::json_error($resp, 403, '"user_id" : invalid input, uuid expected');
                 }
                 if (isset($errors['event_id'])) {
-                    $this->container->get('logger.error')->error("error input event event_id");
-                    return Writer::json_error($resp, 403, '"event_id" : invalid input, string expected');
+                    $this->container->get('logger.error')->error("error input member's event_id");
+                    return Writer::json_error($resp, 403, '"event_id" : invalid input, uuid expected');
                 }
                 if (isset($errors['pseudo'])) {
-                    $this->container->get('logger.error')->error("error input event pseudo");
-                    return Writer::json_error($resp, 403, '"pseudo" : invalid input, valid pseudo expected');
+                    $this->container->get('logger.error')->error("error input member's pseudo");
+                    return Writer::json_error($resp, 403, '"pseudo" : invalid input, String expected');
+                }
+               if (isset($errors['status'])) {
+                    $this->container->get('logger.error')->error("error input member's status");
+                    return Writer::json_error($resp, 403, '"status" : invalid input, -1,0 or 1 expected');
                 }
                 
             };
@@ -57,15 +99,23 @@ class Members_Controller
             
             // Création d'un message via le model
             $new_member = new Members();
+
+            $check_member = Members::select()->where('user_id',$member_req['user_id'])->where('event_id',$member_req['event_id'])->first();
             
+            if (is_null($check_member)) {
             // Récupération de la fonction UUID generator depuis le container
             $new_uuid = $this->container->uuid;
             // génération id basé sur un aléa : UUID v4
             $new_member->id = $new_uuid(4);
 
-            $new_member->user_id = filter_var($member_req['user_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $new_member->event_id = filter_var($member_req['event_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            if (isset($member_req['user_id'])) {
+                $new_member->user_id = filter_var($member_req['user_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            }
+            if (isset($member_req['event_id'])) {
+                $new_member->event_id = filter_var($member_req['event_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            }
             $new_member->pseudo = filter_var($member_req['pseudo'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $new_member->status = filter_var($member_req['status'], FILTER_SANITIZE_NUMBER_FLOAT); //? Maybe there is a better way to controle -1,0 1
 
             $new_member->save();
 
@@ -84,6 +134,7 @@ class Members_Controller
                     "pseudo" => $new_member->pseudo,
                     "updated_at" => $new_member->updated_at->format('Y-m-d H:i:s'),
                     "created_at" => $new_member->created_at->format('Y-m-d H:i:s'),
+                    "status" => $new_member->status
                 ]
             ];
 
@@ -94,6 +145,12 @@ class Members_Controller
             $resp->getBody()->write(json_encode($datas_resp));
 
             return $resp;
+            
+            }
+            else{
+                return Writer::json_error($resp, 500, 'This member already exist');
+            }
+
         } catch (ModelNotFoundException $e) {
             //todo: logError
             return Writer::json_error($resp, 404, 'Ressource not found : message ID = ' . $new_member->id);
@@ -104,7 +161,44 @@ class Members_Controller
         //
     }
 
-        // Créer un event
+        /**
+     * 
+     * @api {PUT} /members/{id} updateMember
+     * @apiName UpdateMember
+     * @apiGroup Member
+     * @apiVersion  1.0.0
+     * 
+     * @apiParam {String} user_id ID de l'utilisateur associé au member
+     * @apiParam {String} event_id ID de l'event associé au member
+     * @apiParam {String} pseudo Pseudo du member
+     * 
+     * 
+     * {
+     * "user_id": "/users/b1858803-2305-47f4-be67-1efc10a91da7",
+     * "event_id": "7be3efde-34b1-4cc8-a52f-1429bdee413b",
+     * "pseudo": "HARMand"
+     * }
+     * 
+     * @apiSuccess (Success (200)) {String} id ID du member
+     * @apiSuccess (Success (200)) {String} user_id ID de l'utilisateur associé au member
+     * @apiSuccess (Success (200)) {String} event_id ID de l'event associé au member
+     * @apiSuccess (Success (200)) {String} pseudo Pseudo du member
+     * @apiSuccess (Success (200)) {date} created_at Date de création du member
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification du member
+     * 
+     * @apiSuccessExample Success-Response:
+     *  {
+     * "type": "ressource",
+     * "member": {
+     *     "id": "a9840463-19a3-4d3c-9cc4-c12fdfed0c35",
+     *     "user_id": "/users/b1858803-2305-47f4-be67-1efc10a91da7",
+     *     "event_id": "7be3efde-34b1-4cc8-a52f-1429bdee413b",
+     *     "pseudo": "HARMand",
+     *     "updated_at": "2022-03-28 09:01:22",
+     *     "created_at": "2022-03-28 09:01:22"
+     *           }
+     * }
+     */
         public function updateMember(Request $req, Response $resp, array $args): Response
         {
     
@@ -128,6 +222,10 @@ class Members_Controller
                     $this->container->get('logger.error')->error("error input event pseudo");
                     return Writer::json_error($resp, 403, '"pseudo" : invalid input, valid pseudo expected');
                 }
+                if (isset($errors['status'])) {
+                    $this->container->get('logger.error')->error("error input member's status");
+                    return Writer::json_error($resp, 403, '"status" : invalid input, -1,0 or 1 expected');
+                }
                 
             };
     
@@ -142,7 +240,8 @@ class Members_Controller
                 $member->user_id = filter_var($member_req['user_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                 $member->event_id = filter_var($member_req['event_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                 $member->pseudo = filter_var($member_req['pseudo'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    
+                $member->status = filter_var($member_req['status'], FILTER_SANITIZE_NUMBER_FLOAT); //? Maybe there is a better way to controle -1,0 1
+
                 $member->save();
     
                 // Récupération du path pour le location dans header
@@ -160,6 +259,7 @@ class Members_Controller
                         "pseudo" => $member->pseudo,
                         "updated_at" => $member->updated_at->format('Y-m-d H:i:s'),
                         "created_at" => $member->created_at->format('Y-m-d H:i:s'),
+                        "status" => $member->status
                     ]
                 ];
     
@@ -180,6 +280,35 @@ class Members_Controller
             //
         }
 
+    /**
+     * 
+     * @api {GET} /members/{id} getMemberById
+     * @apiName GetMemberById
+     * @apiGroup Member
+     * @apiVersion  1.0.0
+     * 
+     * @apiParam  {String} id ID du member
+     * 
+     * @apiSuccess (Success (200)) {String} id ID du member
+     * @apiSuccess (Success (200)) {String} member_id ID de l'utilisateur associé au member
+     * @apiSuccess (Success (200)) {String} event_id ID de l'event associé au member
+     * @apiSuccess (Success (200)) {String} pseudo Pseudo du member
+     * @apiSuccess (Success (200)) {date} created_at Date de création du member
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification du member
+     * 
+     * @apiSuccessExample Success-Response:
+     *  {
+     * "type": "ressource",
+     * "member": {
+     *     "id": "314fc1b2-a413-481e-b570-c9c2c52e9e07",
+     *     "user_id": "/users/9c2eca18-28ba-4c36-90c7-f0cb1d5e122b",
+     *     "event_id": "1590272b-2f38-4d59-9f49-fe0dde3e2ea1",
+     *     "pseudo": "hmerwoody",
+     *     "created_at": "2021-08-04 01:16:08",
+     *     "updated_at": "2021-12-16 10:01:06"
+     * }
+     * ...
+     */
     public function getMember(Request $req, Response $resp, array $args): Response
     {
         $id_member = $args['id'];
@@ -187,7 +316,7 @@ class Members_Controller
         try {
             
             //* Modification TD4.2
-            $member = Members::select(['id', 'user_id', 'event_id', 'pseudo', 'created_at', 'updated_at'])
+            $member = Members::select(['id', 'user_id', 'event_id', 'pseudo', 'created_at', 'updated_at', 'status'])
             ->where('id', '=', $id_member)
             ->firstOrFail();
 
@@ -199,7 +328,8 @@ class Members_Controller
                 'event_id' => $member->event_id, //? to be or not to be ?
                 'pseudo' => $member->pseudo,
                 'created_at' => $member->created_at->format('Y-m-d H:i:s'),
-                'updated_at' => $member->updated_at->format('Y-m-d H:i:s')
+                'updated_at' => $member->updated_at->format('Y-m-d H:i:s'),
+                'status' => $member->status
             ];
 
             // Récupération de la route member                          
@@ -244,7 +374,36 @@ class Members_Controller
         }
     }
 
-   public function getMembersByEvent(Request $req, Response $resp, array $args): Response
+    /**
+     * 
+     * @api {GET} /events/{id}/members getMembersByEventId
+     * @apiName GetMembersByEventId
+     * @apiGroup Member
+     * @apiVersion  1.0.0
+     * 
+     * @apiParam  {String} id ID de l'event
+     * 
+     * @apiSuccess (Success (200)) {String} id ID du member
+     * @apiSuccess (Success (200)) {String} member_id ID de l'utilisateur associé au member
+     * @apiSuccess (Success (200)) {String} event_id ID de l'event associé au member
+     * @apiSuccess (Success (200)) {String} pseudo Pseudo du member
+     * @apiSuccess (Success (200)) {date} created_at Date de création du member
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification du member
+     * 
+     * @apiSuccessExample Success-Response:
+     *  {
+     * "type": "ressource",
+     * "member": {
+     *     "id": "314fc1b2-a413-481e-b570-c9c2c52e9e07",
+     *     "user_id": "/users/9c2eca18-28ba-4c36-90c7-f0cb1d5e122b",
+     *     "event_id": "1590272b-2f38-4d59-9f49-fe0dde3e2ea1",
+     *     "pseudo": "hmerwoody",
+     *     "created_at": "2021-08-04 01:16:08",
+     *     "updated_at": "2021-12-16 10:01:06"
+     * }
+     * ...
+     */
+    public function getMembersByEvent(Request $req, Response $resp, array $args): Response
     {
         $id_event = $args['id'];
         
@@ -261,7 +420,8 @@ class Members_Controller
                 'event_id' => $member->event_id, //? to be or not to be ?
                 'pseudo' => $member->pseudo,
                 'created_at' => $member->created_at,
-                'updated_at' => $member->updated_at
+                'updated_at' => $member->updated_at,
+                'status' => $member->status
             ]; // TODO rajouter lien self pour chaque member
         }
 
@@ -308,6 +468,36 @@ class Members_Controller
         }
     }
 
+    /**
+     * 
+     * @api {DELETE} /members/{id} deleteMember
+     * @apiName DeleteMemberById
+     * @apiGroup Member
+     * @apiVersion  1.0.0
+     * 
+     * @apiParam  {String} id ID du member
+     * 
+     * @apiSuccess (Success (200)) {String} id ID du member
+     * @apiSuccess (Success (200)) {String} user_id ID de l'utilisateur ayant créé le member
+     * @apiSuccess (Success (200)) {String} event_id ID de l'event associé au member
+     * @apiSuccess (Success (200)) {JSON} media Media contenu dans le member
+     * @apiSuccess (Success (200)) {date} created_at Date de création du member
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification du member
+     * 
+     * @apiSuccessExample Success-Response:
+     *  {
+     * "type": "member",
+     * "member": {
+     *     "id": "a9840463-19a3-4d3c-9cc4-c12fdfed0c35",
+     *     "user_id": "/users/b1858803-2305-47f4-be67-1efc10a91da7",
+     *     "event_id": "7be3efde-34b1-4cc8-a52f-1429bdee413b",
+     *     "pseudo": "HARMand",
+     *     "created_at": "2022-03-28T09:01:22.000000Z",
+     *     "updated_at": "2022-03-28T09:01:22.000000Z"
+     * },
+     * "response": "member deleted"
+     * }
+     */
     public function deleteMemberById(Request $req, Response $resp, array $args): Response
     {
         $id_member = $args['id'] ?? null;
@@ -334,6 +524,7 @@ class Members_Controller
             return Writer::json_error($resp, 404, "member not found");
         }
     }
+
 
     public function deleteMembersByEvent(Request $req, Response $resp, array $args): Response
     {
@@ -399,6 +590,7 @@ class Members_Controller
                 'pseudo' => $member->pseudo,
                 'created_at' => $member->created_at,
                 'updated_at' => $member->updated_at,
+                'status' => $member->status,
                 'links' => [
                     "self" => ["href" => $pathForMember],
                     "event" => ["href" => $pathForEvent]
@@ -426,6 +618,51 @@ class Members_Controller
             return $clientError($req, $resp, 404, "userid not found");
 
         }
+    }
+
+
+    public function getOneMember(Request $req, Response $resp, array $args): Response {
+
+        $query= $req->getQueryParams();
+
+        // $event = Events::select();
+        $event = Events::findOrFail($query['event'])->members();
+        
+        if (isset($query['pseudo'])) {
+            // $event = $event->with('members')->get();
+            $query['user_id'] = null;
+            $event = $event->where('pseudo', '=', $query['pseudo'])->first();
+        }
+        if (isset($query['user_id'])) {
+            $query['pseudo'] = null;
+            $event = $event->where('user_id', '=', $query['user_id'])->first();
+        }
+
+        // $event = $event->get();
+        $resp = Writer::json_output($resp, 200);
+            
+        $resp->getBody()->write(json_encode($event));
+
+        return $resp;
+    }
+
+
+
+    public function getAllMembers(Request $req, Response $resp, array $args): Response {
+        $allMembers = Members::select(['id', 'pseudo','updated_at', 'status'])->orderBy('updated_at')->get();
+        $count = count($allMembers);
+
+        $data = [
+            'type'=>'collection',
+            'count'=>$count,
+            'members'=>$allMembers
+        ];
+
+        $resp = Writer::json_output($resp, 200);
+            
+        $resp->getBody()->write(json_encode($data));
+
+        return $resp;
     }
     
 }

@@ -20,9 +20,3 @@ $app->delete('/members/{id}[/]', BackOfficeMembersController::class . ':deleteMe
 
 $app->get('/users/{id}/members[/]', BackOfficeMembersController::class . ':getMembersByUserId')
     ->setName('getMembersByUserId');
-
-$app->get('/member[/]', BackOfficeMembersController::class . ':getOneMember')
-    ->setName('getOneMember');
-
-$app->get('/members[/]', BackOfficeMembersController::class . ':getMembers')
-    ->setName('getMembers');

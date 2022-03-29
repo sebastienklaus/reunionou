@@ -21,11 +21,5 @@ $app->get('/members/{pseudo}/events[/]', BackOfficeEventsController::class . ':g
 $app->delete('/events/{id}[/]', BackOfficeEventsController::class . ':deleteEventById')
     ->setName('deleteEventById');
 
-$app->get('/users/{id}/created_events[/]', BackOfficeEventsController::class . ':getEventCreatedByUserId')
-    ->setName('getEventCreatedByUserId');
-
-$app->get('/members_users/{id}/events[/]', BackOfficeEventsController::class . ':getAllEventsByMemberId')
-    ->setName('getAllEventsByMemberId');
-
-$app->get('/users/{id}/events[/]', BackOfficeEventsController::class . ':getAllEventsByUserId')
-    ->setName('getAllEventsByUserId');
+$app->get('/users/{id}/events[/]', BackOfficeEventsController::class . ':getEventByUserId')
+    ->setName('getEventByUserId');

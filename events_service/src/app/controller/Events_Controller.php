@@ -29,29 +29,57 @@ class Events_Controller
 
     /**
      * 
-     * @api {post} /event createEvent
-     * @apiName reunionou
-     * @apiGroup group
-     * @apiVersion  0.0.0
+     * @api {POST} /events createEvent
+     * @apiName CreateEvent
+     * @apiGroup Event
+     * @apiVersion  1.0.0
      * 
      * 
-     * @apiParam  {String} title description
-     * @apiParam  {String} description description
-     * @apiParam  {String} user_id description
-     * @apiParam  {json} location description
-     * @apiParam  {date} date description
-     * @apiParam  {date} heure description
+     * @apiParam  {String} title Titre de l'event
+     * @apiParam  {String} description Description de l'event
+     * @apiParam  {String} user_id ID de l'utilisateur ayant créé l'event
+     * @apiParam  {JSON} location Lieu de l'event
+     * @apiParam  {date} date Date de l'event
+     * @apiParam  {date} heure Heure de l'event
+     *
+     * @apiParamExample Request-Example:
+     *{
+     *"title" : "Event_Name",
+     *"description" : "Event_Description",
+     *"user_id" : "/users/User_Id",
+     *"location" : {
+     *    "name":"Location_Name",
+     *    "latitude":00.00,
+     *    "longitude":00.00
+     *    },
+     *"date" : "2000-01-01",
+     *"heure" : "12:00"
+     *}
+     *  
+     * @apiSuccess (Success (201)) {String} title Titre de l'event
+     * @apiSuccess (Success (201)) {String} description Description de l'event
+     * @apiSuccess (Success (201)) {String} user_id ID de l'utilisateur ayant créé l'event
+     * @apiSuccess (Success (201)) {JSON} location Lieu de l'event
+     * @apiSuccess (Success (201)) {date} date Date de l'event
+     * @apiSuccess (Success (201)) {date} heure Heure de l'event
+     * @apiSuccess (Success (201)) {date} created_at Date de création de l'event
+     * @apiSuccess (Success (201)) {date} updated_at Date de la dernière modification de l'event
      * 
-     * @apiSuccess (201) {String} title description
-     * @apiSuccess (201) {String} description description
-     * @apiSuccess (201) {String} user_id description
-     * @apiSuccess (201) {json} location description
-     * @apiSuccess (201) {date} date description
-     * @apiSuccess (201) {date} heure description
-     * @apiSuccess (201) {date} created_at description
-     * @apiSuccess (201) {date} updated_at description
-     * 
-     * 
+     * @apiSuccessExample Success-Response:
+     *{
+     *"type": "ressource",
+     *"event": {
+     *    "id": "Event_Id",
+     *    "title": "Event_Name",
+     *    "description": "Event_Description",
+     *    "user_id": "/users/User_Id",
+     *    "location": "{\"name\":\"Location_Name\",\"latitude\":00.00,\"longitude\":00.00}",
+     *    "date": "2000-01-01",
+     *    "heure": "12:00:00",
+     *    "created_at": "Creation_Date",
+     *    "updated_at": "Creation_Date"
+     *    }
+     *}
      */
     public function createEvent(Request $req, Response $resp, array $args): Response
     {
@@ -94,7 +122,6 @@ class Events_Controller
                 return Writer::json_error($resp, 403, '"heure" : invalid input. format exepected : H:m:i');
             }
         };
-
 
         try {
             
@@ -158,6 +185,61 @@ class Events_Controller
         //
     }
 
+
+    /**
+     * 
+     * @api {PUT} /events updateEvent
+     * @apiName UpdateEvent
+     * @apiGroup Event
+     * @apiVersion  1.0.0
+     * 
+     * 
+     * @apiParam  {String} title Titre de l'event
+     * @apiParam  {String} description Description de l'event
+     * @apiParam  {String} user_id ID de l'utilisateur ayant créé l'event
+     * @apiParam  {JSON} location Lieu de l'event
+     * @apiParam  {date} date Date de l'event
+     * @apiParam  {date} heure Heure de l'event
+     * 
+     * @apiParamExample Request-Example:
+     *{
+     *"title" : "Event_Name",
+     *"description" : "Event_Description",
+     *"user_id" : "/users/User_Id",
+     *"location" : {
+     *    "name":"Location_Name",
+     *    "latitude":00.00,
+     *    "longitude":00.00
+     *    },
+     *"date" : "2000-01-01",
+     *"heure" : "12:00"
+     *}
+     * 
+     * @apiSuccess (Success (201)) {String} title Titre de l'event
+     * @apiSuccess (Success (201)) {String} description Description de l'event
+     * @apiSuccess (Success (201)) {String} user_id ID de l'utilisateur ayant créé l'event
+     * @apiSuccess (Success (201)) {JSON} location Lieu de l'event
+     * @apiSuccess (Success (201)) {date} date Date de l'event
+     * @apiSuccess (Success (201)) {date} heure Heure de l'event
+     * @apiSuccess (Success (201)) {date} created_at Date de création de l'event
+     * @apiSuccess (Success (201)) {date} updated_at Date de la dernière modification de l'event
+     * 
+     * @apiSuccessExample Success-Response:
+     *{
+     *"type": "ressource",
+     *"event": {
+     *    "id": "Event_Id",
+     *    "title": "Event_Name",
+     *    "description": "Event_Description",
+     *    "user_id": "/users/User_Id",
+     *    "location": "{\"name\":\"Location_Name\",\"latitude\":00.00,\"longitude\":00.00}",
+     *    "date": "2000-01-01",
+     *    "heure": "12:00:00",
+     *    "created_at": "Creation_Date",
+     *    "updated_at": "Modification_Date"
+     *    }
+     *}
+     */
     public function updateEvent(Request $req, Response $resp, array $args): Response
     {
 
@@ -250,7 +332,40 @@ class Events_Controller
         //
     }
 
-    
+    /**
+     * 
+     * @api {GET} /events/{id} getEventById
+     * @apiName GetEventById
+     * @apiGroup Event
+     * @apiVersion  1.0.0
+     * 
+     * @apiParam  {id} id id de l'évènement
+     * 
+     * @apiSuccess (Success (200)) {String} title Titre de l'event
+     * @apiSuccess (Success (200)) {String} description Description de l'event
+     * @apiSuccess (Success (200)) {String} user_id ID de l'utilisateur ayant créé l'event
+     * @apiSuccess (Success (200)) {JSON} location Lieu de l'event
+     * @apiSuccess (Success (200)) {date} date Date de l'event
+     * @apiSuccess (Success (200)) {date} heure Heure de l'event
+     * @apiSuccess (Success (200)) {date} created_at Date de création de l'event
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification de l'event
+     * 
+     * @apiSuccessExample Success-Response:
+     *{
+     *"type": "ressource",
+     *"event": {
+     *    "id": "Event_Id",
+     *    "title": "Event_Name",
+     *    "description": "Event_Description",
+     *    "user_id": "/users/User_Id",
+     *    "location": "{\"name\":\"Location_Name\",\"latitude\":00.00,\"longitude\":00.00}",
+     *    "date": "2000-01-01",
+     *    "heure": "12:00:00",
+     *    "created_at": "Creation_Date",
+     *    "updated_at": "Modification_Date"
+     *    }
+     *}
+     */
     public function getEvent(Request $req, Response $resp, array $args): Response
     {
         $id_event = $args['id'];
@@ -327,6 +442,40 @@ class Events_Controller
         }
     }
 
+    /**
+     * 
+     * @api {GET} /members/{pseudo}/events getEventByMemberPseudo
+     * @apiName GetEventByMemberPseudo
+     * @apiGroup Event
+     * @apiVersion  1.0.0
+     * 
+     * @apiParam  {pseudo} pseudo Pseudo du membre
+     * 
+     * @apiSuccess (Success (200)) {String} title Titre de l'event
+     * @apiSuccess (Success (200)) {String} description Description de l'event
+     * @apiSuccess (Success (200)) {String} user_id ID de l'utilisateur ayant créé l'event
+     * @apiSuccess (Success (200)) {JSON} location Lieu de l'event
+     * @apiSuccess (Success (200)) {date} date Date de l'event
+     * @apiSuccess (Success (200)) {date} heure Heure de l'event
+     * @apiSuccess (Success (200)) {date} created_at Date de création de l'event
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification de l'event
+     * 
+     * @apiSuccessExample Success-Response:
+     *{
+     *"type": "ressource",
+     *"event": {
+     *    "id": "Event_Id",
+     *    "title": "Event_Name",
+     *    "description": "Event_Description",
+     *    "user_id": "/users/User_Id",
+     *    "location": "{\"name\":\"Location_Name\",\"latitude\":00.00,\"longitude\":00.00}",
+     *    "date": "2000-01-01",
+     *    "heure": "12:00:00",
+     *    "created_at": "Creation_Date",
+     *    "updated_at": "Modification_Date"
+     *    }
+     *}
+     */
     public function getEventByMemberPseudo(Request $req, Response $resp, array $args): Response
     {
         $pseudo_member = $args['pseudo'];
@@ -381,7 +530,41 @@ class Events_Controller
         }
     }
 
-    public function getEventByUserId(Request $req, Response $resp, array $args): Response
+    /**
+     * 
+     * @api {GET} /users/{id}/events getEventByUserId
+     * @apiName GetEventByUserId
+     * @apiGroup Event
+     * @apiVersion  1.0.0
+     * 
+     * @apiParam  {id} id ID de l'utilisateur
+     * 
+     * @apiSuccess (Success (200)) {String} title Titre de l'event
+     * @apiSuccess (Success (200)) {String} description Description de l'event
+     * @apiSuccess (Success (200)) {String} user_id ID de l'utilisateur ayant créé l'event
+     * @apiSuccess (Success (200)) {JSON} location Lieu de l'event
+     * @apiSuccess (Success (200)) {date} date Date de l'event
+     * @apiSuccess (Success (200)) {date} heure Heure de l'event
+     * @apiSuccess (Success (200)) {date} created_at Date de création de l'event
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification de l'event
+     * 
+     * @apiSuccessExample Success-Response:
+     *{
+     *"type": "ressource",
+     *"event": {
+     *    "id": "Event_Id",
+     *    "title": "Event_Name",
+     *    "description": "Event_Description",
+     *    "user_id": "/users/User_Id",
+     *    "location": "{\"name\":\"Location_Name\",\"latitude\":00.00,\"longitude\":00.00}",
+     *    "date": "2000-01-01",
+     *    "heure": "12:00:00",
+     *    "created_at": "Creation_Date",
+     *    "updated_at": "Modification_Date"
+     *    }
+     *}
+     */
+    public function getEventCreatedByUserId(Request $req, Response $resp, array $args): Response
     {
         $user_id = $args['id'];
         
@@ -433,7 +616,38 @@ class Events_Controller
         }
     }
 
-    // // Toutes les commandes
+    /**
+     * 
+     * @api {GET} /events getAllEvent
+     * @apiName GetAllEvent
+     * @apiGroup Event
+     * @apiVersion  1.0.0
+     * 
+     * @apiSuccess (Success (200)) {String} title Titre de l'event
+     * @apiSuccess (Success (200)) {String} description Description de l'event
+     * @apiSuccess (Success (200)) {String} user_id ID de l'utilisateur ayant créé l'event
+     * @apiSuccess (Success (200)) {JSON} location Lieu de l'event
+     * @apiSuccess (Success (200)) {date} date Date de l'event
+     * @apiSuccess (Success (200)) {date} heure Heure de l'event
+     * @apiSuccess (Success (200)) {date} created_at Date de création de l'event
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification de l'event
+     * 
+     * @apiSuccessExample Success-Response:
+     *{
+     *"type": "ressource",
+     *"event": {
+     *    "id": "Event_Id",
+     *    "title": "Event_Name",
+     *    "description": "Event_Description",
+     *    "user_id": "/users/User_Id",
+     *    "location": "{\"name\":\"Location_Name\",\"latitude\":00.00,\"longitude\":00.00}",
+     *    "date": "2000-01-01",
+     *    "heure": "12:00:00",
+     *    "created_at": "Creation_Date",
+     *    "updated_at": "Modification_Date"
+     *    }
+     *}
+     */
     public function getAllEvent(Request $req, Response $resp): Response
     {
         //todo: try catch
@@ -480,9 +694,7 @@ class Events_Controller
         $id_event = $args['id'] ?? null;
         try {
             $event = Events::findOrFail($id_event);
-            $members = $event->members()->select()->get();
-            $messages = $event->messages()->select()->get();
-            if ($event->delete() && $members->delete() && $messages->delete()) 
+            if ($event->delete())
             {
                 $datas_resp = [
                     "type" => "event",
@@ -502,6 +714,118 @@ class Events_Controller
             return writer::json_output($resp, 200);
         } catch (ModelNotFoundException $e) {
             return Writer::json_error($resp, 404, "event not found");
+        }
+    }
+
+    public function getAllEventsByMember(Request $req, Response $resp, array $args): Response
+    {
+        $id_member = $args['id'];
+        
+        // TODO : A optimiser
+        // TODO : Retourner seul event si user_id NULL
+
+        try {
+            $member = Members::findOrFail($id_member);
+            $members = Members::select()->where('user_id', $user->user_id)->get();
+            
+            $id_events = [];
+            foreach($members as $member_data){
+                $id_events[] = $member_data->event_id;
+            }
+            
+            $events = Events::select()->whereIn('id',$id_events)->get();
+            $nbEvents = count($events);
+
+        $events_resp = [];
+        foreach ($events as $event) {
+            $events_resp[] = [
+                'id' => $event->id,
+                'title' => $event->title,
+                'description' => $event->description,
+                'user_id' => $event->user_id,
+                'location' => json_decode($event->location),
+                'date' => $event->date,
+                'heure' => $event->heure,
+                'created_at' => $event->created_at->format('Y-m-d H:i:s'),
+                'updated_at' => $event->updated_at->format('Y-m-d H:i:s'), //?rajouter un link avec pathfor ?
+                'href' => $this->container->router->pathFor('getEvent',['id' => $event->id])
+            ];
+        }
+
+            // Création du body de la réponse
+            //? Renomer les keys ou laisser les noms issus de la DB ?
+            $datas_resp = [
+                "type" => "collection",
+                "count" => $nbEvents,
+                "member" => $events_resp
+            ];
+
+            //? Ressources imbriquées ? à priori non.
+
+            $resp = Writer::json_output($resp, 200);
+            
+            $resp->getBody()->write(json_encode($datas_resp));
+
+            return $resp;
+        } catch (ModelNotFoundException $e) {
+
+            $clientError = $this->container->clientError;
+            return $clientError($req, $resp, 404, "member not found");
+
+        }
+    }
+
+    public function getAllEventsByUserId(Request $req, Response $resp, array $args): Response
+    {
+        $id_user = $args['id'];
+
+        try {
+            $members = Members::select()->where('user_id','like', '%'.$id_user.'%')->get();
+            
+            $id_events = [];
+            foreach($members as $member_data){
+                $id_events[] = $member_data->event_id;
+            }
+            
+            $events = Events::select()->whereIn('id',$id_events)->get();
+            $nbEvents = count($events);
+
+        $events_resp = [];
+        foreach ($events as $event) {
+            $events_resp[] = [
+                'id' => $event->id,
+                'title' => $event->title,
+                'description' => $event->description,
+                'user_id' => $event->user_id,
+                'location' => json_decode($event->location),
+                'date' => $event->date,
+                'heure' => $event->heure,
+                'created_at' => $event->created_at->format('Y-m-d H:i:s'),
+                'updated_at' => $event->updated_at->format('Y-m-d H:i:s'), //?rajouter un link avec pathfor ?
+                'href' => $this->container->router->pathFor('getEvent',['id' => $event->id])
+            ];
+        }
+
+            // Création du body de la réponse
+            //? Renomer les keys ou laisser les noms issus de la DB ?
+            $datas_resp = [
+                "type" => "collection",
+                "count" => $nbEvents,
+                "member" => $events_resp
+            ];
+
+            //? Ressources imbriquées ? à priori non.
+
+            $resp = Writer::json_output($resp, 200);
+            
+            $resp->getBody()->write(json_encode($datas_resp));
+
+            return $resp;
+        } catch (ModelNotFoundException $e) {
+
+            $clientError = $this->container->clientError;
+            return $clientError($req, $resp, 404, "member not found");
+
         }
     }
 }

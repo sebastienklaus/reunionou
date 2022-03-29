@@ -4,9 +4,13 @@ namespace reunionou\backoffice\app\controller;
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
-use GuzzleHttp\Client as Client;
 
 use reunionou\backoffice\app\utils\Writer;
+
+use GuzzleHttp\Psr7;
+use GuzzleHttp\Client as Client;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 
 class BackOfficeMembersController
 {
@@ -21,7 +25,7 @@ class BackOfficeMembersController
 
     public function getMember(Request $req, Response $resp, $args): Response {
 
-
+        try {
         $client = new \GuzzleHttp\Client([
             'base_uri' => $this->container->get('settings')['events_service'],
             'timeout' => 5.0
@@ -33,12 +37,21 @@ class BackOfficeMembersController
         $resp = Writer::json_output($resp, $response->getStatusCode());
         $resp->getBody()->write($response->getBody());
         return $resp;
+    } 
+    catch (ClientException $e) { 
+        $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+        return Writer::json_error_data($resp, 401, $responseBodyAsString);
+    } 
+    catch (ServerException $e) {
+        $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+        return Writer::json_error_data($resp, 500, $responseBodyAsString);
+    }  
 
     }
 
     public function createMember(Request $req, Response $resp, $args): Response {
 
-
+        try {
         $client = new \GuzzleHttp\Client([
             'base_uri' => $this->container->get('settings')['events_service'],
             'timeout' => 5.0
@@ -46,23 +59,52 @@ class BackOfficeMembersController
 
         $received_member = $req->getParsedBody();
 
+
+        //* Génére automatiquement l'URI avec l'user_id vers la route getUserById
+        // if (isset($received_member['user_id'])) {
+        //         $pathForUser = $this->container->router->pathFor(
+        //         'getUserById',
+        //         ['id' => $received_member['user_id']]);
+        //          } else {
+        //         $pathForUser = null;
+        //     };
+
+        if (!isset($received_member['user_id'])) {
+            $received_member['user_id'] = null;
+        }
+
+        if (!isset($received_member['status']) || ($received_member['status'] == "") ) {
+            $received_member['status'] = "-1";
+        }
+
         $response = $client->request('POST', '/members', [
                 'form_params'=> [
                     'pseudo' => $received_member['pseudo'],
                     'event_id' => $received_member['event_id'],
-                    'user_id' => $received_member['user_id']
+                    // 'user_id' => $pathForUser,
+                    'user_id' => $received_member['user_id'],
+                    'status' => $received_member['status']
                 ]]  );
 
         $resp = Writer::json_output($resp, $response->getStatusCode());
         
         $resp->getBody()->write($response->getBody());
         return $resp;
+    } 
+    catch (ClientException $e) { 
+        $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+        return Writer::json_error_data($resp, 401, $responseBodyAsString);
+    } 
+    catch (ServerException $e) {
+        $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+        return Writer::json_error_data($resp, 500, $responseBodyAsString);
+    }  
 
     }
 
     public function updateMember(Request $req, Response $resp, $args): Response {
 
-
+        try{
         $client = new \GuzzleHttp\Client([
             'base_uri' => $this->container->get('settings')['events_service'],
             'timeout' => 5.0
@@ -70,23 +112,42 @@ class BackOfficeMembersController
 
         $id_event = $args['id'];
         $received_member = $req->getParsedBody();
+
+        // if (isset($received_member['user_id'])) {
+        //         $pathForUser = $this->container->router->pathFor(
+        //         'getUserById',
+        //         ['id' => $received_member['user_id']]);
+        //          } else {
+        //         $pathForUser = null;
+        //     };
+
         
         $response = $client->request('PUT', '/members/' . $id_event, [
             'form_params'=> [
                 'pseudo' => $received_member['pseudo'],
                 'event_id' => $received_member['event_id'],
-                'user_id' => $received_member['user_id']
+                'user_id' => $received_member['user_id'],
+                'status' => $received_member['status']
                 ]]  );
 
         $resp = Writer::json_output($resp, $response->getStatusCode());
         $resp->getBody()->write($response->getBody());
         return $resp;
+    } 
+    catch (ClientException $e) { 
+        $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+        return Writer::json_error_data($resp, 401, $responseBodyAsString);
+    } 
+    catch (ServerException $e) {
+        $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+        return Writer::json_error_data($resp, 500, $responseBodyAsString);
+    }  
 
     }
 
     public function getMembersByEvent(Request $req, Response $resp, $args): Response {
 
-
+        try {
         $client = new \GuzzleHttp\Client([
             'base_uri' => $this->container->get('settings')['events_service'],
             'timeout' => 5.0
@@ -98,14 +159,21 @@ class BackOfficeMembersController
         $resp = Writer::json_output($resp, $response->getStatusCode());
         $resp->getBody()->write($response->getBody());
         return $resp;
-
-        // TODO : Récupérer href des membres
+        } 
+        catch (ClientException $e) { 
+            $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+            return Writer::json_error_data($resp, 401, $responseBodyAsString);
+        } 
+        catch (ServerException $e) {
+            $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+            return Writer::json_error_data($resp, 500, $responseBodyAsString);
+        }  
 
     }
 
     public function deleteMemberById(Request $req, Response $resp, $args): Response {
 
-
+        try {
         $client = new \GuzzleHttp\Client([
             'base_uri' => $this->container->get('settings')['events_service'],
             'timeout' => 5.0
@@ -117,12 +185,21 @@ class BackOfficeMembersController
         $resp = Writer::json_output($resp, $response->getStatusCode());
         $resp->getBody()->write($response->getBody());
         return $resp;
+        } 
+        catch (ClientException $e) { 
+            $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+            return Writer::json_error_data($resp, 401, $responseBodyAsString);
+        } 
+        catch (ServerException $e) {
+            $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+            return Writer::json_error_data($resp, 500, $responseBodyAsString);
+        }  
 
     }
 
     public function getMembersByUserId(Request $req, Response $resp, $args): Response {
 
-
+        try {
         $client = new \GuzzleHttp\Client([
             'base_uri' => $this->container->get('settings')['events_service'],
             'timeout' => 5.0
@@ -134,8 +211,71 @@ class BackOfficeMembersController
         $resp = Writer::json_output($resp, $response->getStatusCode());
         $resp->getBody()->write($response->getBody());
         return $resp;
+    } 
+    catch (ClientException $e) { 
+        $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+        return Writer::json_error_data($resp, 401, $responseBodyAsString);
+    } 
+    catch (ServerException $e) {
+        $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+        return Writer::json_error_data($resp, 500, $responseBodyAsString);
+    }  
 
-        // TODO : Récupérer href des membres
+    }
+
+
+    public function getOneMember(Request $req, Response $resp, $args): Response {
+    try{
+        $query= $req->getQueryParams();
+
+        $client = new \GuzzleHttp\Client([
+            'base_uri' => $this->container->get('settings')['events_service'],
+            'timeout' => 5.0
+        ]);
+
+        $response = $client->request('GET', '/member/', [
+            'query'=>$query
+        ]);
+
+        $resp = Writer::json_output($resp, $response->getStatusCode());
+        $resp->getBody()->write($response->getBody());
+        return $resp;
+
+    } 
+    catch (ClientException $e) { 
+        $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+        return Writer::json_error_data($resp, 401, $responseBodyAsString);
+    } 
+    catch (ServerException $e) {
+        $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+        return Writer::json_error_data($resp, 500, $responseBodyAsString);
+    }  
+
+    }
+
+
+    public function getMembers(Request $req, Response $resp, $args): Response {
+
+        try {
+        $client = new \GuzzleHttp\Client([
+            'base_uri' => $this->container->get('settings')['events_service'],
+            'timeout' => 5.0
+        ]);
+
+        $response = $client->request('GET', '/members/');
+
+        $resp = Writer::json_output($resp, $response->getStatusCode());
+        $resp->getBody()->write($response->getBody());
+        return $resp;
+    } 
+    catch (ClientException $e) { 
+        $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+        return Writer::json_error_data($resp, 401, $responseBodyAsString);
+    } 
+    catch (ServerException $e) {
+        $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+        return Writer::json_error_data($resp, 500, $responseBodyAsString);
+    }  
 
     }
 
