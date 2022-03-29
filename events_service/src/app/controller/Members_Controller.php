@@ -28,7 +28,7 @@ class Members_Controller
         $this->container = $container;
     }
 
-   /**
+    /**
      * 
      * @api {POST} /members createMember
      * @apiName CreateMember
@@ -71,92 +71,87 @@ class Members_Controller
 
         // Récupération du body de la requête
         $member_req = $req->getParsedBody();
-        
-            if ($req->getAttribute('has_errors')) {
 
-                $errors = $req->getAttribute('errors');
-            
-                if (isset($errors['user_id'])) {
-                    $this->container->get('logger.error')->error("error input member's user_id");
-                    return Writer::json_error($resp, 403, '"user_id" : invalid input, uuid expected');
-                }
-                if (isset($errors['event_id'])) {
-                    $this->container->get('logger.error')->error("error input member's event_id");
-                    return Writer::json_error($resp, 403, '"event_id" : invalid input, uuid expected');
-                }
-                if (isset($errors['pseudo'])) {
-                    $this->container->get('logger.error')->error("error input member's pseudo");
-                    return Writer::json_error($resp, 403, '"pseudo" : invalid input, String expected');
-                }
-               if (isset($errors['status'])) {
-                    $this->container->get('logger.error')->error("error input member's status");
-                    return Writer::json_error($resp, 403, '"status" : invalid input, -1,0 or 1 expected');
-                }
-                
-            };
+        if ($req->getAttribute('has_errors')) {
+
+            $errors = $req->getAttribute('errors');
+
+            if (isset($errors['user_id'])) {
+                $this->container->get('logger.error')->error("error input member's user_id");
+                return Writer::json_error($resp, 403, '"user_id" : invalid input, uuid expected');
+            }
+            if (isset($errors['event_id'])) {
+                $this->container->get('logger.error')->error("error input member's event_id");
+                return Writer::json_error($resp, 403, '"event_id" : invalid input, uuid expected');
+            }
+            if (isset($errors['pseudo'])) {
+                $this->container->get('logger.error')->error("error input member's pseudo");
+                return Writer::json_error($resp, 403, '"pseudo" : invalid input, String expected');
+            }
+            if (isset($errors['status'])) {
+                $this->container->get('logger.error')->error("error input member's status");
+                return Writer::json_error($resp, 403, '"status" : invalid input, -1,0 or 1 expected');
+            }
+        };
 
         try {
-            
+
             // Création d'un message via le model
             $new_member = new Members();
 
             if (isset($member_req['user_id'])) {
-                $check_member = Members::select()->where('user_id',$member_req['user_id'])->where('event_id',$member_req['event_id'])->first();
+                $check_member = Members::select()->where('user_id', $member_req['user_id'])->where('event_id', $member_req['event_id'])->first();
+            } else {
+                $check_member = Members::select()->where('user_id', 'd-e-f-a-u-l-t')->where('event_id', $member_req['event_id'])->first();
             }
-            else {
-                $check_member = Members::select()->where('user_id','d-e-f-a-u-l-t')->where('event_id',$member_req['event_id'])->first();
-            }
-            
-            
+
+
             if (is_null($check_member)) {
-            // Récupération de la fonction UUID generator depuis le container
-            $new_uuid = $this->container->uuid;
-            // génération id basé sur un aléa : UUID v4
-            $new_member->id = $new_uuid(4);
+                // Récupération de la fonction UUID generator depuis le container
+                $new_uuid = $this->container->uuid;
+                // génération id basé sur un aléa : UUID v4
+                $new_member->id = $new_uuid(4);
 
-            if (isset($member_req['user_id'])) {
-                $new_member->user_id = filter_var($member_req['user_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            }
-            if (isset($member_req['event_id'])) {
-                $new_member->event_id = filter_var($member_req['event_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            }
-            $new_member->pseudo = filter_var($member_req['pseudo'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $new_member->status = filter_var($member_req['status'], FILTER_SANITIZE_NUMBER_FLOAT); //? Maybe there is a better way to controle -1,0 1
+                if (isset($member_req['user_id'])) {
+                    $new_member->user_id = filter_var($member_req['user_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                }
+                if (isset($member_req['event_id'])) {
+                    $new_member->event_id = filter_var($member_req['event_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                }
+                $new_member->pseudo = filter_var($member_req['pseudo'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                $new_member->status = filter_var($member_req['status'], FILTER_SANITIZE_NUMBER_FLOAT); //? Maybe there is a better way to controle -1,0 1
 
-            $new_member->save();
+                $new_member->save();
 
-            // Récupération du path pour le location dans header
-            $pathForMember = $this->container->router->pathFor(
-                'getMember',
-                ['id' => $new_member->id]
-            );
+                // Récupération du path pour le location dans header
+                $pathForMember = $this->container->router->pathFor(
+                    'getMember',
+                    ['id' => $new_member->id]
+                );
 
-            $datas_resp = [
-                "type" => "ressource",
-                "member" => [
-                    "id" => $new_member->id,
-                    "user_id" => $new_member->user_id,
-                    "event_id" => $new_member->event_id,
-                    "pseudo" => $new_member->pseudo,
-                    "updated_at" => $new_member->updated_at->format('Y-m-d H:i:s'),
-                    "created_at" => $new_member->created_at->format('Y-m-d H:i:s'),
-                    "status" => $new_member->status
-                ]
-            ];
+                $datas_resp = [
+                    "type" => "ressource",
+                    "member" => [
+                        "id" => $new_member->id,
+                        "user_id" => $new_member->user_id,
+                        "event_id" => $new_member->event_id,
+                        "pseudo" => $new_member->pseudo,
+                        "updated_at" => $new_member->updated_at->format('Y-m-d H:i:s'),
+                        "created_at" => $new_member->created_at->format('Y-m-d H:i:s'),
+                        "status" => $new_member->status
+                    ]
+                ];
 
-            $resp = Writer::json_output($resp, 201)
-                ->withAddedHeader('application-header', 'reuninou') // 201 : created
-                ->withHeader("Location", $pathForMember);
+                $resp = Writer::json_output($resp, 201)
+                    ->withAddedHeader('application-header', 'reuninou') // 201 : created
+                    ->withHeader("Location", $pathForMember);
 
-            $resp->getBody()->write(json_encode($datas_resp));
+                $resp->getBody()->write(json_encode($datas_resp));
 
-            return $resp;
-            
-            }
-            else{
+                return $resp;
+            } else {
                 return Writer::json_error($resp, 500, 'This member already exist');
             }
-
         } catch (ModelNotFoundException $e) {
             return Writer::json_error($resp, 404, 'Ressource not found : message ID = ' . $new_member->id);
         } catch (\Exception $th) {
@@ -165,7 +160,7 @@ class Members_Controller
         //
     }
 
-        /**
+    /**
      * 
      * @api {PUT} /members/{id} updateMember
      * @apiName UpdateMember
@@ -203,84 +198,83 @@ class Members_Controller
      *           }
      * }
      */
-        public function updateMember(Request $req, Response $resp, array $args): Response
-        {
-    
-            // Récupération du body de la requête
-            $member_req = $req->getParsedBody();
-            
-            
-            if ($req->getAttribute('has_errors')) {
+    public function updateMember(Request $req, Response $resp, array $args): Response
+    {
 
-                $errors = $req->getAttribute('errors');
-            
-                if (isset($errors['user_id'])) {
-                    $this->container->get('logger.error')->error("error input event user_id");
-                    return Writer::json_error($resp, 403, '"user_id" : invalid input, valid user_id expected');
-                }
-                if (isset($errors['event_id'])) {
-                    $this->container->get('logger.error')->error("error input event event_id");
-                    return Writer::json_error($resp, 403, '"event_id" : invalid input, string expected');
-                }
-                if (isset($errors['pseudo'])) {
-                    $this->container->get('logger.error')->error("error input event pseudo");
-                    return Writer::json_error($resp, 403, '"pseudo" : invalid input, valid pseudo expected');
-                }
-                if (isset($errors['status'])) {
-                    $this->container->get('logger.error')->error("error input member's status");
-                    return Writer::json_error($resp, 403, '"status" : invalid input, -1,0 or 1 expected');
-                }
-                
-            };
-    
-          
-    
-            try {
-                
-                // Création d'un message via le model
-                $member = Members::Select(['id', 'user_id', 'event_id', 'pseudo', 'updated_at', 'created_at'])->findOrFail($args['id']);;
-                
-    
-                $member->user_id = filter_var($member_req['user_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-                $member->event_id = filter_var($member_req['event_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-                $member->pseudo = filter_var($member_req['pseudo'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-                $member->status = filter_var($member_req['status'], FILTER_SANITIZE_NUMBER_FLOAT); //? Maybe there is a better way to controle -1,0 1
+        // Récupération du body de la requête
+        $member_req = $req->getParsedBody();
 
-                $member->save();
-    
-                // Récupération du path pour le location dans header
-                $pathForMember = $this->container->router->pathFor(
-                    'getMember',
-                    ['id' => $member->id]
-                );
-    
-                $datas_resp = [
-                    "type" => "ressource",
-                    "member" => [
-                        "id" => $member->id,
-                        "user_id" => $member->user_id,
-                        "event_id" => $member->event_id,
-                        "pseudo" => $member->pseudo,
-                        "updated_at" => $member->updated_at->format('Y-m-d H:i:s'),
-                        "created_at" => $member->created_at->format('Y-m-d H:i:s'),
-                        "status" => $member->status
-                    ]
-                ];
-    
-                $resp = Writer::json_output($resp, 200)
-                    ->withAddedHeader('application-header', 'reuninou') // 201 : created
-                    ->withHeader("Location", $pathForMember);
-    
-                $resp->getBody()->write(json_encode($datas_resp));
-    
-                return $resp;
-            } catch (ModelNotFoundException $e) {
-                return Writer::json_error($resp, 404, 'Ressource not found : member ID = ' . $member->id);
-            } catch (\Exception $th) {
-                return Writer::json_error($resp, 500, 'Server Error : Can\'t update member ' . $th->getMessage());
+
+        if ($req->getAttribute('has_errors')) {
+
+            $errors = $req->getAttribute('errors');
+
+            if (isset($errors['user_id'])) {
+                $this->container->get('logger.error')->error("error input event user_id");
+                return Writer::json_error($resp, 403, '"user_id" : invalid input, valid user_id expected');
             }
-            //
+            if (isset($errors['event_id'])) {
+                $this->container->get('logger.error')->error("error input event event_id");
+                return Writer::json_error($resp, 403, '"event_id" : invalid input, string expected');
+            }
+            if (isset($errors['pseudo'])) {
+                $this->container->get('logger.error')->error("error input event pseudo");
+                return Writer::json_error($resp, 403, '"pseudo" : invalid input, valid pseudo expected');
+            }
+            if (isset($errors['status'])) {
+                $this->container->get('logger.error')->error("error input member's status");
+                return Writer::json_error($resp, 403, '"status" : invalid input, -1,0 or 1 expected');
+            }
+        };
+
+
+
+        try {
+
+            // Création d'un message via le model
+            $member = Members::Select(['id', 'user_id', 'event_id', 'pseudo', 'updated_at', 'created_at'])->findOrFail($args['id']);;
+
+
+            $member->user_id = filter_var($member_req['user_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $member->event_id = filter_var($member_req['event_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $member->pseudo = filter_var($member_req['pseudo'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $member->status = filter_var($member_req['status'], FILTER_SANITIZE_NUMBER_FLOAT); //? Maybe there is a better way to controle -1,0 1
+
+            $member->save();
+
+            // Récupération du path pour le location dans header
+            $pathForMember = $this->container->router->pathFor(
+                'getMember',
+                ['id' => $member->id]
+            );
+
+            $datas_resp = [
+                "type" => "ressource",
+                "member" => [
+                    "id" => $member->id,
+                    "user_id" => $member->user_id,
+                    "event_id" => $member->event_id,
+                    "pseudo" => $member->pseudo,
+                    "updated_at" => $member->updated_at->format('Y-m-d H:i:s'),
+                    "created_at" => $member->created_at->format('Y-m-d H:i:s'),
+                    "status" => $member->status
+                ]
+            ];
+
+            $resp = Writer::json_output($resp, 200)
+                ->withAddedHeader('application-header', 'reuninou') // 201 : created
+                ->withHeader("Location", $pathForMember);
+
+            $resp->getBody()->write(json_encode($datas_resp));
+
+            return $resp;
+        } catch (ModelNotFoundException $e) {
+            return Writer::json_error($resp, 404, 'Ressource not found : member ID = ' . $member->id);
+        } catch (\Exception $th) {
+            return Writer::json_error($resp, 500, 'Server Error : Can\'t update member ' . $th->getMessage());
         }
+        //
+    }
 
     /**
      * 
@@ -314,13 +308,13 @@ class Members_Controller
     public function getMember(Request $req, Response $resp, array $args): Response
     {
         $id_member = $args['id'];
-        
+
         try {
-            
+
             //* Modification TD4.2
             $member = Members::select(['id', 'user_id', 'event_id', 'pseudo', 'created_at', 'updated_at', 'status'])
-            ->where('id', '=', $id_member)
-            ->firstOrFail();
+                ->where('id', '=', $id_member)
+                ->firstOrFail();
 
             $member_resp = [
                 'id' => $member->id,
@@ -361,7 +355,7 @@ class Members_Controller
             //? Ressources imbriquées ? à priori non.
 
             $resp = Writer::json_output($resp, 200);
-            
+
             $resp->getBody()->write(json_encode($datas_resp));
 
             return $resp;
@@ -369,7 +363,6 @@ class Members_Controller
 
             $clientError = $this->container->clientError;
             return $clientError($req, $resp, 404, "Member not found");
-
         }
     }
 
@@ -405,35 +398,35 @@ class Members_Controller
     public function getMembersByEvent(Request $req, Response $resp, array $args): Response
     {
         $id_event = $args['id'];
-        
+
         try {
             $event = Events::findOrFail($id_event);
             $members = $event->members()->select()->get();
             $nbMember = count($members);
 
-            
 
-        $members_resp = [];
-        foreach ($members as $member) {
 
-            $pathForMember = $this->container->router->pathFor(
-                'getMember',
-                ['id' => $member->id]
-            );
+            $members_resp = [];
+            foreach ($members as $member) {
 
-            $members_resp[] = [
-                'id' => $member->id,
-                'user_id' => $member->user_id,
-                'event_id' => $member->event_id, //? to be or not to be ?
-                'pseudo' => $member->pseudo,
-                'created_at' => $member->created_at,
-                'updated_at' => $member->updated_at,
-                'status' => $member->status,
-                'links' => [
-                    "self" => ["href" => $pathForMember]
-                ]
-            ];
-        }
+                $pathForMember = $this->container->router->pathFor(
+                    'getMember',
+                    ['id' => $member->id]
+                );
+
+                $members_resp[] = [
+                    'id' => $member->id,
+                    'user_id' => $member->user_id,
+                    'event_id' => $member->event_id, //? to be or not to be ?
+                    'pseudo' => $member->pseudo,
+                    'created_at' => $member->created_at,
+                    'updated_at' => $member->updated_at,
+                    'status' => $member->status,
+                    'links' => [
+                        "self" => ["href" => $pathForMember]
+                    ]
+                ];
+            }
 
             // Récupération de la route getMembersByEvent                            
             $pathForMembersByEvent = $this->container->router->pathFor(
@@ -460,13 +453,13 @@ class Members_Controller
                 "count" => $nbMember,
                 "member" => $members_resp,
                 "links" => $hateoas
-   
+
             ];
 
             //? Ressources imbriquées ? à priori non.
 
             $resp = Writer::json_output($resp, 200);
-            
+
             $resp->getBody()->write(json_encode($datas_resp));
 
             return $resp;
@@ -474,7 +467,6 @@ class Members_Controller
 
             $clientError = $this->container->clientError;
             return $clientError($req, $resp, 404, "member not found");
-
         }
     }
 
@@ -513,15 +505,13 @@ class Members_Controller
         $id_member = $args['id'] ?? null;
         try {
             $member = Members::findOrFail($id_member);
-            if ($member->delete())
-            {
+            if ($member->delete()) {
                 $datas_resp = [
                     "type" => "member",
                     "member" => $member,
                     "response" => "member deleted",
                 ];
-            } else
-            {
+            } else {
                 $datas_resp = [
                     "type" => "member",
                     "member" => $member,
@@ -539,23 +529,21 @@ class Members_Controller
     public function deleteMembersByEvent(Request $req, Response $resp, array $args): Response
     {
         $id_event = $args['id'];
-        
+
         try {
             $event = Events::findOrFail($id_event);
             $members = $event->members()->select()->get();
             $nbMember = count($members);
 
-        $messages_resp = [];
-        foreach ($members as $member) {
-                if ($member->delete())
-                {
+            $messages_resp = [];
+            foreach ($members as $member) {
+                if ($member->delete()) {
                     $datas_resp = [
                         "type" => "member",
                         "member" => $member,
                         "response" => "member deleted"
                     ];
-                } else
-                {
+                } else {
                     $datas_resp = [
                         "type" => "member",
                         "member" => $member,
@@ -564,8 +552,8 @@ class Members_Controller
                 }
                 $resp->getBody()->write(json_encode($datas_resp));
             }
-            return writer::json_output($resp, 200); 
-        }catch (ModelNotFoundException $e) {
+            return writer::json_output($resp, 200);
+        } catch (ModelNotFoundException $e) {
             $clientError = $this->container->clientError;
             return $clientError($req, $resp, 404, "Event not found");
         }
@@ -574,38 +562,38 @@ class Members_Controller
     public function getMembersByUserId(Request $req, Response $resp, array $args): Response
     {
         $id_user = $args['id'];
-        
+
         try {
             $user_members = Members::select()->where('user_id', $id_user)->get();
             $nbUser_Member = count($user_members);
 
-        $user_members_resp = [];
-        foreach ($user_members as $member) {
+            $user_members_resp = [];
+            foreach ($user_members as $member) {
 
-            $pathForMember = $this->container->router->pathFor(
-                'getMember',
-                ['id' => $member->id]
-            );
+                $pathForMember = $this->container->router->pathFor(
+                    'getMember',
+                    ['id' => $member->id]
+                );
 
-            $pathForEvent = $this->container->router->pathFor(
-                'getEvent',
-                ['id' => $member->event_id]
-            );
+                $pathForEvent = $this->container->router->pathFor(
+                    'getEvent',
+                    ['id' => $member->event_id]
+                );
 
-            $user_members_resp[] = [
-                'id' => $member->id,
-                'user_id' => $member->user_id,
-                'event_id' => $member->event_id,
-                'pseudo' => $member->pseudo,
-                'created_at' => $member->created_at,
-                'updated_at' => $member->updated_at,
-                'status' => $member->status,
-                'links' => [
-                    "self" => ["href" => $pathForMember],
-                    "event" => ["href" => $pathForEvent]
-                ]
-            ];
-        }
+                $user_members_resp[] = [
+                    'id' => $member->id,
+                    'user_id' => $member->user_id,
+                    'event_id' => $member->event_id,
+                    'pseudo' => $member->pseudo,
+                    'created_at' => $member->created_at,
+                    'updated_at' => $member->updated_at,
+                    'status' => $member->status,
+                    'links' => [
+                        "self" => ["href" => $pathForMember],
+                        "event" => ["href" => $pathForEvent]
+                    ]
+                ];
+            }
 
             // Création du body de la réponse
             //? Renomer les keys ou laisser les noms issus de la DB ?
@@ -613,11 +601,11 @@ class Members_Controller
                 "type" => "collection",
                 "count" => $nbUser_Member,
                 "member" => $user_members_resp,
-   
+
             ];
 
             $resp = Writer::json_output($resp, 200);
-            
+
             $resp->getBody()->write(json_encode($datas_resp));
 
             return $resp;
@@ -625,18 +613,18 @@ class Members_Controller
 
             $clientError = $this->container->clientError;
             return $clientError($req, $resp, 404, "userid not found");
-
         }
     }
 
 
-    public function getOneMember(Request $req, Response $resp, array $args): Response {
+    public function getOneMember(Request $req, Response $resp, array $args): Response
+    {
 
-        $query= $req->getQueryParams();
+        $query = $req->getQueryParams();
 
         // $event = Events::select();
         $event = Events::findOrFail($query['event'])->members();
-        
+
         if (isset($query['pseudo'])) {
             // $event = $event->with('members')->get();
             $query['user_id'] = null;
@@ -649,7 +637,7 @@ class Members_Controller
 
         // $event = $event->get();
         $resp = Writer::json_output($resp, 200);
-            
+
         $resp->getBody()->write(json_encode($event));
 
         return $resp;
@@ -657,21 +645,21 @@ class Members_Controller
 
 
 
-    public function getAllMembers(Request $req, Response $resp, array $args): Response {
-        $allMembers = Members::select(['id', 'pseudo','updated_at', 'status'])->orderBy('updated_at')->get();
+    public function getAllMembers(Request $req, Response $resp, array $args): Response
+    {
+        $allMembers = Members::select(['id', 'pseudo', 'updated_at', 'status'])->orderBy('updated_at')->get();
         $count = count($allMembers);
 
         $data = [
-            'type'=>'collection',
-            'count'=>$count,
-            'members'=>$allMembers
+            'type' => 'collection',
+            'count' => $count,
+            'members' => $allMembers
         ];
 
         $resp = Writer::json_output($resp, 200);
-            
+
         $resp->getBody()->write(json_encode($data));
 
         return $resp;
     }
-    
 }

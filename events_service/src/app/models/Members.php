@@ -27,5 +27,4 @@ class Members extends \Illuminate\Database\Eloquent\Model
     {
         return $this->hasMany('\reu\events\app\models\Messages', 'member_id');
     }
-
 }
