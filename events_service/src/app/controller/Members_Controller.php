@@ -100,7 +100,13 @@ class Members_Controller
             // Création d'un message via le model
             $new_member = new Members();
 
-            $check_member = Members::select()->where('user_id',$member_req['user_id'])->where('event_id',$member_req['event_id'])->first();
+            if (isset($member_req['user_id'])) {
+                $check_member = Members::select()->where('user_id',$member_req['user_id'])->where('event_id',$member_req['event_id'])->first();
+            }
+            else {
+                $check_member = Members::select()->where('user_id','d-e-f-a-u-l-t')->where('event_id',$member_req['event_id'])->first();
+            }
+            
             
             if (is_null($check_member)) {
             // Récupération de la fonction UUID generator depuis le container
