@@ -75,6 +75,11 @@ class DataLoader extends ChangeNotifier {
     notifyListeners();
   }
 
+  //Get current _member
+  getCurrentMember() {
+    return _member;
+  }
+
   //Authentificate user
   Future<bool> authentificate(String email, String password) async {
     //Call api
@@ -466,12 +471,20 @@ class DataLoader extends ChangeNotifier {
   Future<bool> addMember(
       String? eventId, String userId, String username) async {
     //Call api
+
+    int status = -1;
+
+    //Check if the new member is the creator
+    if (userId == _user.id) {
+      status = 1;
+    }
+
     try {
       var parsedMember = {
         "event_id": eventId,
         "user_id": userId,
         "pseudo": username,
-        "status": -1
+        "status": status
       };
 
       var response = await Dio().post(
