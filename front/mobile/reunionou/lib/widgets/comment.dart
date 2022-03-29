@@ -13,7 +13,7 @@ class CommentWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(message.content),
-      subtitle: Text(message.member_id),
+      subtitle: Text(message.pseudo),
       leading: const Icon(
         Icons.person,
         color: Colors.deepPurple,

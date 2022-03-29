@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reunionou/models/event.dart';
+import 'package:reunionou/services/weather.dart';
 import 'package:reunionou/widgets/spacer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../data/dataLoader.dart';
+import '../models/member.dart';
 import 'addParticipants.dart';
 import 'map.dart';
 import 'package:flutter_share/flutter_share.dart';
@@ -22,11 +26,42 @@ class EventDetails extends StatefulWidget {
 class _EventDetailsState extends State<EventDetails> {
   int confirmedParts = 0;
   int declinedParts = 0;
+  String weatherStatus = "";
+  late String weatherIcon = "";
+  late Member? _member;
+
   @override
   void initState() {
     super.initState();
-    confirmedParts = context.read<DataLoader>().getMemberByStatus("1").length;
-    declinedParts = context.read<DataLoader>().getMemberByStatus("0").length;
+    getWeather();
+    getMember();
+    getCount();
+  }
+
+  //Get weather info
+  Future<void> getWeather() async {
+    var temp = await Weather().getWeather(widget.event.location[0]['latitude'],
+        widget.event.location[0]['longitude']);
+    setState(() {
+      weatherStatus = temp['text'];
+      weatherIcon = temp['icon'];
+    });
+  }
+
+  //Get member
+  Future<void> getMember() async {
+    Member? temp = await context.read<DataLoader>().getMember(widget.event.id!);
+    setState(() {
+      _member = temp;
+    });
+  }
+
+  //Change attendance count
+  getCount() {
+    setState(() {
+      confirmedParts = context.read<DataLoader>().getMemberByStatus(1).length;
+      declinedParts = context.read<DataLoader>().getMemberByStatus(0).length;
+    });
   }
 
   @override
@@ -154,6 +189,33 @@ class _EventDetailsState extends State<EventDetails> {
               space: 30,
             ),
             const Text(
+              "Météo",
+              style: TextStyle(
+                  fontSize: 25.0,
+                  color: Colors.blueGrey,
+                  letterSpacing: 2.0,
+                  fontWeight: FontWeight.w400),
+            ),
+            const SpacerWidget(
+              space: 13,
+            ),
+            Text(
+              weatherStatus,
+              style: const TextStyle(
+                  fontSize: 18.0,
+                  color: Colors.black,
+                  letterSpacing: 2.0,
+                  fontWeight: FontWeight.w300),
+            ),
+            if (weatherIcon != "")
+              Image.network(
+                "https:" + weatherIcon,
+                width: 50,
+              ),
+            const SpacerWidget(
+              space: 30,
+            ),
+            const Text(
               "Participants",
               style: TextStyle(
                   fontSize: 25.0,
@@ -230,9 +292,11 @@ class _EventDetailsState extends State<EventDetails> {
                         onPressed: () {
                           context
                               .read<DataLoader>()
-                              .updateAttendance("confirm", widget.event.id!)
+                              .updateAttendance(1, widget.event.id!)
                               .then((value) {
                             if (value) {
+                              //Refresh count
+                              getCount();
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text(
@@ -278,7 +342,36 @@ class _EventDetailsState extends State<EventDetails> {
                         ),
                       ),
                       RaisedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          context
+                              .read<DataLoader>()
+                              .updateAttendance(0, widget.event.id!)
+                              .then((value) {
+                            if (value) {
+                              //Refresh count
+                              getCount();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    "Bien reçu",
+                                    style: TextStyle(
+                                      color: Color.fromARGB(255, 255, 255, 255),
+                                    ),
+                                  ),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                      "Quelque chose s'est mal passé essaie une autre fois"),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          });
+                        },
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),
                         ),
@@ -310,7 +403,7 @@ class _EventDetailsState extends State<EventDetails> {
                     ),
                   ),
             const SpacerWidget(
-              space: 30,
+              space: 50,
             ),
           ],
         ),
