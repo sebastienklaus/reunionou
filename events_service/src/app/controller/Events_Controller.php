@@ -83,10 +83,6 @@ class Events_Controller
      */
     public function createEvent(Request $req, Response $resp, array $args): Response
     {
-
-        //TODO: - Création d'une nvlle commande => génération d'un token unique, cryptographique, retourné dans la rep
-        //TODO: et utilisé pour valider les prochaines requête de cette même commande
-        //TODO: Remplace FILTER_SANITIZE_STRING par htmlentities, ou htmlspecialchars (check param) ou strip_tags.
         //? check_Token : middleware, mais createToken-> middleware ??
 
         // Récupération du body de la requête
@@ -372,9 +368,6 @@ class Events_Controller
             ->where('id', '=', $id_event)
             ->firstOrFail();
 
-            //TODO Vérifier type de controle depuis réception base de donnée dans cours
-            //TODO étape filtrage à garder ou améliorer ?
-
             $event_resp = [
                 'id' => $event->id,
                 'title' => $event->title,
@@ -485,8 +478,6 @@ class Events_Controller
                         ->whereIn('id', $event_id_list)
                         ->get();
 
-        //TODO Vérifier type de controle depuis réception base de donnée dans cours
-        //TODO étape filtrage à garder ou améliorer ?
             $nbEvents = count($events);
             $events_resp = [];
             foreach ($events as $event) {

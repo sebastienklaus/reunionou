@@ -322,8 +322,6 @@ class Members_Controller
             ->where('id', '=', $id_member)
             ->firstOrFail();
 
-            //TODO Vérifier type de controle depuis réception base de donnée dans cours
-            //TODO étape filtrage à garder ou améliorer ?
             $member_resp = [
                 'id' => $member->id,
                 'user_id' => $member->user_id,

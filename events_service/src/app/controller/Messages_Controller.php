@@ -196,9 +196,7 @@ class Messages_Controller
             $message = Messages::select(['id', 'content', 'member_id', 'event_id', 'media', 'created_at', 'updated_at'])
             ->where('id', '=', $id_message)
             ->firstOrFail();
-
-            //TODO Vérifier type de controle depuis réception base de donnée dans cours
-            //TODO étape filtrage à garder ou améliorer ?
+            
             $message_resp = [
                 'id' => $message->id,
                 'content' => $message->content,
