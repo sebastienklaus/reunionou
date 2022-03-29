@@ -139,8 +139,8 @@ class BackOfficeMembersController
             $responseBodyAsString = $e->getResponse()->getBody()->getContents();
             return Writer::json_error_data($resp, 401, $responseBodyAsString);
         } catch (ServerException $e) {
-            // $responseBodyAsString = $e->getResponse()->getBody()->getContents();
-            return Writer::json_error_data($resp, 500, "serveur error");
+            $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+            return Writer::json_error_data($resp, 500, "$responseBodyAsString");
         } catch (\Exception $e) {
             return Writer::json_error($resp, 500, "Server Error: can't update member");
         }
