@@ -19,6 +19,9 @@ class DataLoader extends ChangeNotifier {
 
   //Events links
   final String _getUserEvents =
+      "http://docketu.iutnc.univ-lorraine.fr:62015/users/{id}/created_events";
+  //Events links
+  final String _getUserParticipate =
       "http://docketu.iutnc.univ-lorraine.fr:62015/users/{id}/events";
   final String _eventsUri =
       "http://docketu.iutnc.univ-lorraine.fr:62015/events";
@@ -323,7 +326,7 @@ class DataLoader extends ChangeNotifier {
         await getUserEvents();
 
         //get memebr event (by user_id )
-        await getMemberEvents("psuedo"); //replace with user_id
+        await getMemberEvents("user");
       } else {
         //get memebr event (by pseudo)
         await getMemberEvents("psuedo");
@@ -339,12 +342,14 @@ class DataLoader extends ChangeNotifier {
     try {
       //Call api
       var _getUserEvents = this._getUserEvents.replaceAll('{id}', _user.id);
+
       var response = await Dio().get(
         _getUserEvents,
         options: Options(
           headers: <String, String>{'Origin': "flutter"},
         ),
       );
+
       if (response.statusCode == 200) {
         for (var event in response.data['events']) {
           var temp = EventItem(
@@ -382,17 +387,17 @@ class DataLoader extends ChangeNotifier {
       if (type == "psuedo") {
         uri = _eventMemberByPseudo.replaceAll('{pseudo}', _user.username!);
       } else {
-        uri = _eventMemberByPseudo.replaceAll('{pseudo}', _user.username!);
+        uri = _getUserParticipate.replaceAll('{id}', _user.id);
       }
-
       var response = await Dio().get(
         uri,
         options: Options(
           headers: <String, String>{'Origin': "flutter"},
         ),
       );
+
       if (response.statusCode == 200) {
-        for (var event in response.data['events']) {
+        for (var event in response.data['member']) {
           var temp = EventItem(
             id: event['id'],
             title: event['title'],
@@ -574,7 +579,6 @@ class DataLoader extends ChangeNotifier {
         }
         notifyListeners();
       }
-
       return participantsList;
     } catch (e) {
       throw ("Failed to fetch event members");
@@ -591,7 +595,7 @@ class DataLoader extends ChangeNotifier {
     try {
       String _uri = _getMember + event_id!;
       if (_user.type == "user") {
-        _uri = _uri + "&user_id=" + _user.id + "/"; //delete /
+        _uri = _uri + "&user_id=" + _user.id;
       } else {
         _uri = _uri + "&pseudo=" + _user.username!;
       }
@@ -633,9 +637,8 @@ class DataLoader extends ChangeNotifier {
         "pseudo": _user.username,
         "status": rep,
       };
-
       var response = await Dio().put(
-        _membersUri + "/" + "00ff2bb1-fd5d-4ed1-b0f8-89a4f3b4c232",
+        _membersUri + "/" + _member.id,
         options: Options(
           headers: {
             'Authorization': "Bearer " + _user.token!,
@@ -702,7 +705,7 @@ class DataLoader extends ChangeNotifier {
       var parsedMessage = {
         "event_id": eventId,
         "content": message,
-        "member_id": "00fad32a-c86f-4e15-a8e9-619fd59793a7"
+        "member_id": _member.id
       };
 
       var response = await Dio().post(

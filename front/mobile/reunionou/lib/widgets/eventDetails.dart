@@ -35,10 +35,10 @@ class _EventDetailsState extends State<EventDetails> {
     super.initState();
     getWeather();
     getMember();
-    confirmedParts = context.read<DataLoader>().getMemberByStatus(1).length;
-    declinedParts = context.read<DataLoader>().getMemberByStatus(0).length;
+    getCount();
   }
 
+  //Get weather info
   Future<void> getWeather() async {
     var temp = await Weather().getWeather(widget.event.location[0]['latitude'],
         widget.event.location[0]['longitude']);
@@ -48,10 +48,19 @@ class _EventDetailsState extends State<EventDetails> {
     });
   }
 
+  //Get member
   Future<void> getMember() async {
     Member? temp = await context.read<DataLoader>().getMember(widget.event.id!);
     setState(() {
       _member = temp;
+    });
+  }
+
+  //Change attendance count
+  getCount() {
+    setState(() {
+      confirmedParts = context.read<DataLoader>().getMemberByStatus(1).length;
+      declinedParts = context.read<DataLoader>().getMemberByStatus(0).length;
     });
   }
 
@@ -286,6 +295,8 @@ class _EventDetailsState extends State<EventDetails> {
                               .updateAttendance(1, widget.event.id!)
                               .then((value) {
                             if (value) {
+                              //Refresh count
+                              getCount();
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text(
@@ -337,6 +348,8 @@ class _EventDetailsState extends State<EventDetails> {
                               .updateAttendance(0, widget.event.id!)
                               .then((value) {
                             if (value) {
+                              //Refresh count
+                              getCount();
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text(
@@ -390,7 +403,7 @@ class _EventDetailsState extends State<EventDetails> {
                     ),
                   ),
             const SpacerWidget(
-              space: 30,
+              space: 50,
             ),
           ],
         ),

@@ -14,9 +14,9 @@ class ParticipantsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Iterable<Member> confirmedParts =
-        context.read<DataLoader>().getMemberByStatus("1");
+        context.read<DataLoader>().getMemberByStatus(1);
     Iterable<Member> declinedParts =
-        context.read<DataLoader>().getMemberByStatus("0");
+        context.read<DataLoader>().getMemberByStatus(0);
     return Center(
       child: Column(
         children: <Widget>[
