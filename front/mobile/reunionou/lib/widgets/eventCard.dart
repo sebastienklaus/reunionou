@@ -27,7 +27,10 @@ class EventCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Text(eventItem.title,
+              Text(
+                  eventItem.title.length > 20
+                      ? eventItem.title.substring(0, 19) + "..."
+                      : eventItem.title,
                   style: const TextStyle(color: Colors.white, fontSize: 25),
                   textAlign: TextAlign.center),
               const SpacerWidget(

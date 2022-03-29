@@ -21,6 +21,11 @@ class _GuestLoginScreenState extends State<GuestLoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //Delete me (just for testing)
+    username.text = "lenovo_65sd";
+    evenUrl.text =
+        "https://reunionou.netlify.app/#/invite/738c14a0-1892-4879-b340-565be6a5ab3c";
+
     return WillPopScope(
       onWillPop: () async => false,
       child: FutureBuilder(
