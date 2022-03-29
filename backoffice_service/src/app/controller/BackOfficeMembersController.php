@@ -136,11 +136,11 @@ class BackOfficeMembersController
             $resp->getBody()->write($response->getBody());
             return $resp;
         } catch (ClientException $e) {
-            // $responseBodyAsString = $e->getResponse()->getBody()->getContents();
-            return Writer::json_error_data($resp, 401, "missing datas");
-        } catch (ServerException $e) {
             $responseBodyAsString = $e->getResponse()->getBody()->getContents();
-            return Writer::json_error_data($resp, 500, $responseBodyAsString);
+            return Writer::json_error_data($resp, 401, $responseBodyAsString);
+        } catch (ServerException $e) {
+            // $responseBodyAsString = $e->getResponse()->getBody()->getContents();
+            return Writer::json_error_data($resp, 500, "serveur error");
         } catch (\Exception $e) {
             return Writer::json_error($resp, 500, "Server Error: can't update member");
         }
