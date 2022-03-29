@@ -81,7 +81,6 @@ class BackOfficeMembersController
                 'form_params'=> [
                     'pseudo' => $received_member['pseudo'],
                     'event_id' => $received_member['event_id'],
-                    // 'user_id' => $pathForUser,
                     'user_id' => $received_member['user_id'],
                     'status' => $received_member['status']
                 ]]  );
