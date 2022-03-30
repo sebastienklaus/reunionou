@@ -102,7 +102,7 @@ class _LoginScreenState extends State<UserLoginScreen> {
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Text(
-                                        "Lorem ipsum",
+                                        "Organiser votre prochain événement",
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 17,
@@ -210,7 +210,7 @@ class _LoginScreenState extends State<UserLoginScreen> {
                                   const Color.fromRGBO(143, 148, 251, 0.3),
                               child: const Center(
                                 child: Text(
-                                  "Authentifier",
+                                  "S'authentifier",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),

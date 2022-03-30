@@ -3,6 +3,7 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:reunionou/screens/addEvent.dart';
 import 'package:reunionou/screens/guest_login.dart';
 import 'package:reunionou/screens/home.dart';
+import 'package:reunionou/screens/joinEvent.dart';
 import 'package:reunionou/screens/profile.dart';
 import 'package:reunionou/screens/user_login.dart';
 import 'package:provider/provider.dart';
@@ -50,6 +51,7 @@ class MyApp extends StatelessWidget {
               UserLoginScreen.route: (context) => const UserLoginScreen(),
               GuestLoginScreen.route: (context) => const GuestLoginScreen(),
               AddEventScreen.route: (context) => const AddEventScreen(),
+              JoinEventScreen.route: (context) => const JoinEventScreen(),
               HomeScreen.route: (context) =>
                   HomeScreen(user: context.read<DataLoader>().getUser()),
               ProfileScreen.route: (context) =>

@@ -50,7 +50,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               '/home',
             ),
           ),
-          title: const Text('Mon profile'),
+          title: const Text('Mon profil'),
           centerTitle: true,
         ),
         body: Scaffold(
@@ -74,7 +74,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       controller: fullname,
                       validator: (fullname) {
                         if (fullname!.isEmpty) {
-                          return 'Veuillez insérer un votre nom';
+                          return 'Veuillez insérer votre nom';
                         }
                         return null;
                       },
@@ -259,7 +259,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   splashColor: const Color.fromRGBO(143, 148, 251, 0.3),
                   child: const Center(
                     child: Text(
-                      "Mise a jour",
+                      "Mettre à jour",
                       style: TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
                     ),
@@ -294,8 +294,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                content:
-                                    Text("Oups quelque chose s'est mal passé"),
+                                content: Text(
+                                    "Quelque chose s'est mal passé, essayé une autre fois"),
                                 backgroundColor: Colors.red,
                               ),
                             );

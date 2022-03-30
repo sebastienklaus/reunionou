@@ -78,7 +78,7 @@ class _ManageEventScreenState extends State<ManageEventScreen> {
                       controller: title,
                       validator: (title) {
                         if (title!.isEmpty) {
-                          return "Veuillez insérer le titre d'événement";
+                          return "Veuillez insérer le titre de l'événement";
                         }
                         return null;
                       },
@@ -109,7 +109,7 @@ class _ManageEventScreenState extends State<ManageEventScreen> {
                       controller: description,
                       validator: (description) {
                         if (description!.isEmpty) {
-                          return "Veuillez insérer le description d'événement";
+                          return "Veuillez insérer le description de l'événement";
                         }
                         return null;
                       },
@@ -141,16 +141,17 @@ class _ManageEventScreenState extends State<ManageEventScreen> {
                       controller: date,
                       validator: (value) {
                         if (date.text == "") {
-                          return "Veuillez insérer le date d'événement";
+                          return "Veuillez insérer la date de l'événement";
                         }
                         return null;
                       },
                       onShowPicker: (context, currentValue) {
+                        var minDate = DateTime.now().add(Duration(hours: 24));
                         return showDatePicker(
-                          helpText: "Date d'événement",
+                          helpText: "Date de l'événement",
                           context: context,
-                          firstDate: DateTime.now(),
-                          initialDate: currentValue ?? DateTime.now(),
+                          firstDate: minDate,
+                          initialDate: currentValue ?? minDate,
                           lastDate: DateTime(2100),
                         );
                       },
@@ -176,7 +177,7 @@ class _ManageEventScreenState extends State<ManageEventScreen> {
                       controller: hour,
                       validator: (value) {
                         if (hour.text == "") {
-                          return "Veuillez insérer l'heure d'événement";
+                          return "Veuillez insérer l'heure de l'événement";
                         }
                         return null;
                       },
@@ -243,7 +244,7 @@ class _ManageEventScreenState extends State<ManageEventScreen> {
                       },
                       validator: (location) {
                         if (location!.isEmpty) {
-                          return "Veuillez insérer l'addresse d'événement";
+                          return "Veuillez insérer l'addresse de l'événement";
                         }
                         return null;
                       },
@@ -266,7 +267,7 @@ class _ManageEventScreenState extends State<ManageEventScreen> {
                     child: Text(
                       widget.action == "add"
                           ? "Ajouter un événement"
-                          : "Mise a jour",
+                          : "Mettre à jour",
                       style: const TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
                     ),
@@ -311,7 +312,7 @@ class _ManageEventScreenState extends State<ManageEventScreen> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text(
-                                    "Quelque chose s'est mal passé essaie une autre fois"),
+                                    "Quelque chose s'est mal passé, essayé une autre fois"),
                                 backgroundColor: Colors.red,
                               ),
                             );
@@ -341,7 +342,7 @@ class _ManageEventScreenState extends State<ManageEventScreen> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text(
-                                  "événement mise à jour avec succès",
+                                  "événement mis à jour avec succès",
                                   style: TextStyle(
                                     color: Color.fromARGB(255, 255, 255, 255),
                                   ),
@@ -357,7 +358,7 @@ class _ManageEventScreenState extends State<ManageEventScreen> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text(
-                                    "Quelque chose s'est mal passé essaie une autre fois"),
+                                    "Quelque chose s'est mal passé, essayé une autre fois"),
                                 backgroundColor: Colors.red,
                               ),
                             );

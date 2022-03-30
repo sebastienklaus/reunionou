@@ -13,6 +13,7 @@ class NavigationDrawerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     user = context.read<DataLoader>().getUser();
+    print(user);
     if (user!.type == "user") {
       return Drawer(
           child: Material(
@@ -35,7 +36,13 @@ class NavigationDrawerWidget extends StatelessWidget {
                 onClicked: () => selectedItem(context, 0)),
             const SizedBox(height: 16),
             buildMenuItem(
-                text: 'Mon Profile',
+                text: "Rejoindre un événement",
+                icon: Icons.share,
+                onClicked: () => selectedItem(context, 4)),
+            const SizedBox(height: 16),
+            const SizedBox(height: 16),
+            buildMenuItem(
+                text: 'Mon Profil',
                 icon: Icons.person,
                 onClicked: () => selectedItem(context, 1)),
             const SizedBox(height: 16),
@@ -103,6 +110,12 @@ class NavigationDrawerWidget extends StatelessWidget {
         Navigator.pushNamed(
           context,
           '/userLogin',
+        );
+        break;
+      case 4:
+        Navigator.pushNamed(
+          context,
+          '/joinEvent',
         );
         break;
     }

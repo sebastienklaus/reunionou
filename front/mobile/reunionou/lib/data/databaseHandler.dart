@@ -12,7 +12,7 @@ class DatabaseHandler {
       onCreate: (database, version) async {
         //Create users table
         await database.execute(
-          'CREATE TABLE users(id TEXT PRIMARY KEY, fullname TEXT, email INTEGER TEXT NULL, username TEXT, token TEXT DEFAULT NULL)',
+          'CREATE TABLE users(id TEXT PRIMARY KEY, fullname TEXT,type TEXT, email INTEGER TEXT NULL, username TEXT, token TEXT DEFAULT NULL)',
         );
       },
       version: 1,
@@ -38,6 +38,7 @@ class DatabaseHandler {
         'fullname': user.fullname,
         'email': user.email,
         'username': user.username,
+        'type': user.type,
         'token': user.token,
       },
       conflictAlgorithm: ConflictAlgorithm.replace,
@@ -54,7 +55,7 @@ class DatabaseHandler {
     return result.map((e) => User.fromMap(e)).toList();
   }
 
-  //Get user by id
+  //Get user
   Future<User> getUser() async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> result =
