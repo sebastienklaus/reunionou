@@ -48,7 +48,6 @@ class _MapWidgetState extends State<MapWidget> {
   Widget build(BuildContext context) {
     if (widget.changedAdr == true) {
       setState(() {
-        print('im called');
         lat = widget.lat!;
         long = widget.long!;
       });
