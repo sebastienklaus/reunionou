@@ -228,10 +228,10 @@ class DataLoader extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         return User(
-          id: response.data['id'],
-          fullname: response.data['fullname'],
-          username: response.data['username'],
-          email: response.data['email'],
+          id: response.data['user']['id'],
+          fullname: response.data['user']['fullname'],
+          username: response.data['user']['username'],
+          email: response.data['user']['email'],
           type: "user",
         );
       } else {
