@@ -169,6 +169,7 @@ class DataLoader extends ChangeNotifier {
       bool dbCheck = await handler.dbIsEmptyOrNot();
       if (!dbCheck) {
         var user = await handler.getUser();
+        print(user.toString() + "564");
         if (user is User) {
           user.type = user.type;
           setUser(user);
@@ -504,6 +505,21 @@ class DataLoader extends ChangeNotifier {
         return true;
       }
       return false;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  //Join event
+  Future<bool> joinEvent(String eventUri) async {
+    try {
+      String eventId =
+          eventUri.substring(eventUri.lastIndexOf("/") + 1, eventUri.length);
+
+      //Add member
+      var rep = await addMember(eventId, _user.id, _user.username!);
+      return rep;
     } catch (e) {
       print(e.toString());
       return false;
