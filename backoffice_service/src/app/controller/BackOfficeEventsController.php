@@ -24,6 +24,48 @@ class BackOfficeEventsController
     }
 
 
+     /**
+     * 
+     * @api {GET} /events getAllEvent
+     * @apiName GetAllEvent
+     * @apiGroup Event
+     * @apiVersion  1.0.0
+     * 
+     * @apiSuccess (Success (200)) {String} title Titre de l'event
+     * @apiSuccess (Success (200)) {String} description Description de l'event
+     * @apiSuccess (Success (200)) {String} user_id ID de l'utilisateur ayant créé l'event
+     * @apiSuccess (Success (200)) {JSON} location Lieu de l'event
+     * @apiSuccess (Success (200)) {date} date Date de l'event
+     * @apiSuccess (Success (200)) {date} heure Heure de l'event
+     * @apiSuccess (Success (200)) {date} created_at Date de création de l'event
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification de l'event
+     * 
+     * @apiSuccessExample Success-Response:
+     *{
+     * "type": "collection",
+     * "count": 24,
+     * "events": [
+     *     {
+     *         "id": "0447ff47-e257-4bfc-b1a6-913a2c6cbd79",
+     *         "title": "Princess Ka'iulani",
+     *         "description": "In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.",
+     *         "user_id": "adcac5ad-206a-449c-8f40-aacb32750c47",
+     *         "location": {
+     *             "name": "Zoombox",
+     *             "latitude": 117.9483319,
+     *             "longitude": -8.3501717
+     *         },
+     *         "date": "2021-07-02",
+     *         "heure": "12:35:00",
+     *         "created_at": "2021-09-07 11:18:26",
+     *         "updated_at": "2021-05-13 10:26:33",
+     *         "href": "/events/0447ff47-e257-4bfc-b1a6-913a2c6cbd79/"
+     *     },
+     *     {
+     *         "id": "0e37cc70-1961-452a-bb0f-84585d6c12dc",
+     *         "title": "Two English Girls (Les deux anglaises et le continent)",
+     * ...
+     */
     public function getAllEvent(Request $req, Response $resp, $args): Response {
 
         try {
