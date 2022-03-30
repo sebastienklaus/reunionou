@@ -68,10 +68,13 @@ class Middleware {
 
         $body = json_decode($response->getBody());
 
-        $req = $req->withAttribute('isAdmin', $body->is_Admin);
-
-        $resp = $next($req,$resp);
-
+        if ($body->is_Admin == 1) {
+            $resp = $next($req,$resp);
+        }
+        else {
+            return Writer::json_error($resp, 401, "User is not admin");
+        }
+        
         return $resp;
 
     }
