@@ -213,8 +213,8 @@ class _ManageEventScreenState extends State<ManageEventScreen> {
                     SizedBox(
                       height: 400,
                       child: MapWidget(
-                        lat: lat,
-                        long: long,
+                        lat: double.parse(lat.toString()),
+                        long: double.parse(long.toString()),
                         action: widget.action,
                         changedAdr: changedAdr,
                         getAddress: (Address address) {
