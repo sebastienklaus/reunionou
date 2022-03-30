@@ -25,10 +25,12 @@ class BackOfficeMembersController
 
     /**
      * 
-     * @api {GET} /members/{id} getMember(renomer tout)
+     * @api {GET} /members/{id} Get Member
      * @apiName GetMemberById
      * @apiGroup Member
      * @apiVersion  1.0.0
+     * 
+     * @apiDescription Récupérer un membre par son ID.
      * 
      * @apiParam  {String} id ID du member
      * 
@@ -90,10 +92,12 @@ class BackOfficeMembersController
 
     /**
      * 
-     * @api {POST} /members createMember
+     * @api {POST} /members Create Member
      * @apiName CreateMember
      * @apiGroup Member
      * @apiVersion  1.0.0
+     * 
+     * @apiDescription Créer un membre
      * 
      * @apiParam {String} user_id ID de l'utilisateur associé au member
      * @apiParam {String} event_id ID de l'event associé au member
@@ -185,10 +189,12 @@ class BackOfficeMembersController
 
     /**
      * 
-     * @api {PUT} /members/{id} updateMember
+     * @api {PUT} /members/{id} Update Member
      * @apiName UpdateMember
      * @apiGroup Member
      * @apiVersion  1.0.0
+     * 
+     * @apiDescription Modifier, mettre à jour les information d'un membre
      * 
      * @apiParam {String} user_id ID de l'utilisateur associé au member
      * @apiParam {String} event_id ID de l'event associé au member
@@ -277,10 +283,12 @@ class BackOfficeMembersController
 
     /**
      * 
-     * @api {GET} /events/{id}/members getMembersByEventId
+     * @api {GET} /events/{id}/members Get Member by Event ID
      * @apiName GetMembersByEventId
      * @apiGroup Member
      * @apiVersion  1.0.0
+     * 
+     * @apiDescription Récupérer tous les membre pour d'un événement
      * 
      * @apiParam  {String} id ID de l'event
      * 
@@ -344,10 +352,12 @@ class BackOfficeMembersController
 
     /**
      * 
-     * @api {DELETE} /members/{id} deleteMember
+     * @api {DELETE} /members/{id} Delete Member
      * @apiName DeleteMemberById
      * @apiGroup Member
      * @apiVersion  1.0.0
+     * 
+     * @apiDescription Supprimer un membre par son id
      * 
      * @apiParam  {String} id ID du member
      * 
@@ -402,7 +412,7 @@ class BackOfficeMembersController
 
     /**
      * 
-     * @api {GET} /members/{id} getMemberByUserID
+     * @api {GET} /users/{id}/members Get Member by User ID
      * @apiName GetMemberByUserID
      * @apiGroup Member
      * @apiVersion  1.0.0
@@ -473,12 +483,12 @@ class BackOfficeMembersController
 
     /**
      * 
-     * @api {GET} /members/{id}/?event_id&pseudo&user_id getOneMember
+     * @api {GET} /members/{id}/?event_id&pseudo&user_id Get Member by Event and by Pseudo or User ID
      * @apiName GetOneMember
      * @apiGroup Member
      * @apiVersion  1.0.0
      * 
-     * @apiDescription Récupérer un membre selon un évenement et selon son urder_id OU son pseudo
+     * @apiDescription Récupérer un membre selon un évenement et selon son user id OU son pseudo
      * 
      * @apiParam  {String} id ID du User
      * @apiParam  {String} event_id ID de l'événement
@@ -539,6 +549,38 @@ class BackOfficeMembersController
     }
 
 
+    /**
+     * 
+     * @api {GET} /members/{id} Get All Members
+     * @apiName GetMembers
+     * @apiGroup Member
+     * @apiVersion  1.0.0
+     * 
+     * @apiDescription Récupérer tous les membres.
+     * 
+     * @apiParam  {String} id ID du member
+     * 
+     * @apiSuccess (Success (200)) {String} id ID du member
+     * @apiSuccess (Success (200)) {String} pseudo Pseudo du member
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification du member
+     * @apiSuccess (Success (200)) {Number} status Status du member (-1: en attente, 0: annulé, 1: confirmé )
+     * 
+     * @apiSuccessExample Success-Response:
+     * {
+     * "type": "collection",
+     *     "count": 46,
+     *     "members": [
+     *         {
+     *             "id": "f377662a-9d55-4c88-b8a1-2334fd9bba48",
+     *             "pseudo": "afinnick2m",
+     *             "updated_at": "2021-04-06T19:54:05.000000Z",
+     *             "status": -1
+     *         },
+     *         {
+     *             "id": "f12b5395-9f2c-4c9c-a5f1-50549341226f",
+     *             "pseudo": "gmacauleyo",
+     * ...
+     */
     public function getMembers(Request $req, Response $resp, $args): Response
     {
 
