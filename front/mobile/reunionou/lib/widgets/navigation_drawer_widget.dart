@@ -36,13 +36,13 @@ class NavigationDrawerWidget extends StatelessWidget {
                 onClicked: () => selectedItem(context, 0)),
             const SizedBox(height: 16),
             buildMenuItem(
-                text: "Rejoindre l'événement",
+                text: "Rejoindre un événement",
                 icon: Icons.share,
                 onClicked: () => selectedItem(context, 4)),
             const SizedBox(height: 16),
             const SizedBox(height: 16),
             buildMenuItem(
-                text: 'Mon Profile',
+                text: 'Mon Profil',
                 icon: Icons.person,
                 onClicked: () => selectedItem(context, 1)),
             const SizedBox(height: 16),

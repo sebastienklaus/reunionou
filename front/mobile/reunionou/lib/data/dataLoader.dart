@@ -234,10 +234,12 @@ class DataLoader extends ChangeNotifier {
       var response = await Dio().get(
         _usersUri + id,
         options: Options(
-          headers: <String, String>{'Origin': "flutter"},
+          headers: {
+            'Origin': "flutter",
+            'Authorization': "Bearer " + _user.token!,
+          },
         ),
       );
-
       if (response.statusCode == 200) {
         return User(
           id: response.data['user']['id'],

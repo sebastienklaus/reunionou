@@ -99,7 +99,7 @@ class CommentsListState extends State<CommentsList> {
                                   const Color.fromRGBO(143, 148, 251, 0.3),
                               child: const Center(
                                 child: Text(
-                                  "commenter",
+                                  "Envoyer",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),
@@ -143,7 +143,7 @@ class CommentsListState extends State<CommentsList> {
                                             .showSnackBar(
                                           const SnackBar(
                                             content: Text(
-                                                "Quelque chose s'est mal passé essaie une autre fois"),
+                                                "Quelque chose s'est mal passé, essayé une autre fois"),
                                             backgroundColor: Colors.red,
                                           ),
                                         );
@@ -157,7 +157,7 @@ class CommentsListState extends State<CommentsList> {
                         ],
                       )
                     : const Text(
-                        "Vous devez mettre à jour votre présence afin de commenter"),
+                        "Veuillez mettre à jour votre présence afin d'ajouter un commentaire"),
                 Expanded(
                   child: ListView.builder(
                     itemCount: snapshot.data.length,

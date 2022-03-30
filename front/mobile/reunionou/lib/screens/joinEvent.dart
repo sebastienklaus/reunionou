@@ -47,7 +47,7 @@ class _AddEventState extends State<JoinEventScreen> {
                   space: 30,
                 ),
                 const Text(
-                  "Rejoindre l'événement",
+                  "Rejoindre un événement",
                   style: TextStyle(
                       fontSize: 25.0,
                       color: Colors.blueGrey,
@@ -112,7 +112,7 @@ class _AddEventState extends State<JoinEventScreen> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text(
-                                    "Evénement ajouté",
+                                    "Evénement rejoint",
                                     style: TextStyle(
                                       color: Color.fromARGB(255, 255, 255, 255),
                                     ),
@@ -128,7 +128,7 @@ class _AddEventState extends State<JoinEventScreen> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text(
-                                      "Quelque chose s'est mal passé essaie une autre fois"),
+                                      "Quelque chose s'est mal passé, essayé une autre fois"),
                                   backgroundColor: Colors.red,
                                 ),
                               );

@@ -105,7 +105,7 @@ class _GuestLoginScreenState extends State<GuestLoginScreen> {
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text(
-                                          "Lorem ipsum",
+                                          "Organiser votre prochain événement",
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 17,
@@ -160,13 +160,13 @@ class _GuestLoginScreenState extends State<GuestLoginScreen> {
                                         controller: username,
                                         validator: (username) {
                                           if (username!.isEmpty) {
-                                            return 'Veuillez insérer votre nom complete';
+                                            return 'Veuillez insérer votre pseudo';
                                           }
                                           return null;
                                         },
                                         decoration: InputDecoration(
                                           border: InputBorder.none,
-                                          hintText: "Votre nom complete",
+                                          hintText: "Votre pseudo",
                                           hintStyle: TextStyle(
                                             color: Colors.grey[400],
                                           ),

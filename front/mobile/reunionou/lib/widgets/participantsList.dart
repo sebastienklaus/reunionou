@@ -30,7 +30,7 @@ class ParticipantsList extends StatelessWidget {
             space: 30,
           ),
           const Text(
-            "Participants confirmé",
+            "Participants confirmés",
             style: TextStyle(
                 fontSize: 25.0,
                 color: Colors.green,
@@ -59,7 +59,7 @@ class ParticipantsList extends StatelessWidget {
             space: 30,
           ),
           const Text(
-            "Participants décliner",
+            "Participants déclinés",
             style: TextStyle(
                 fontSize: 25.0,
                 color: Colors.red,

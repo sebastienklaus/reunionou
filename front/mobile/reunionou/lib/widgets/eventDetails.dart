@@ -169,14 +169,14 @@ class _EventDetailsState extends State<EventDetails> {
                             if (urllaunchable) {
                               await launch(url);
                             } else {
-                              print("URL can't be launched.");
+                              print("L'URL ne peut pas être lancée.");
                             }
                           },
                           child: const Padding(
                             padding: EdgeInsets.symmetric(
                                 vertical: 12, horizontal: 30),
                             child: Text(
-                              "Get direction",
+                              "Obtenir l'itinéraire",
                               style: TextStyle(
                                   letterSpacing: 2.0,
                                   fontWeight: FontWeight.w300),
@@ -285,7 +285,7 @@ class _EventDetailsState extends State<EventDetails> {
                             child: Column(
                               children: [
                                 const Text(
-                                  "Décliner",
+                                  "Décliné",
                                   style: TextStyle(
                                       color: Colors.deepPurple,
                                       fontSize: 22.0,
@@ -341,7 +341,7 @@ class _EventDetailsState extends State<EventDetails> {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
                                         content: Text(
-                                            "Quelque chose s'est mal passé essaie une autre fois"),
+                                            "Quelque chose s'est mal passé, essayé une autre fois"),
                                         backgroundColor: Colors.red,
                                       ),
                                     );
@@ -398,7 +398,7 @@ class _EventDetailsState extends State<EventDetails> {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
                                         content: Text(
-                                            "Quelque chose s'est mal passé essaie une autre fois"),
+                                            "Quelque chose s'est mal passé, essayé une autre fois"),
                                         backgroundColor: Colors.red,
                                       ),
                                     );
