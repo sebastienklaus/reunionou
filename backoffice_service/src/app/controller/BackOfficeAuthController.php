@@ -119,18 +119,12 @@ class BackOfficeAuthController
     }
 
     public function getUsers(Request $req, Response $resp, array $args): Response {
-
-        $token = $req->getAttribute('token');
-
-        if ($token) {
             try {
                 $client = new Client([
                     'base_uri' => $this->container->get('settings')['auth_service'],
                     'timeout' => 5.0,
                 ]);
-                $response = $client->request('GET', '/users', [
-                    'headers'=> ['Authorization' => $token]
-                    ]);
+                $response = $client->request('GET', '/users');
         
                 return $resp->withStatus($response->getStatusCode())
                             ->withHeader('Content-Type', $response->getHeader('Content-Type'))
@@ -144,8 +138,6 @@ class BackOfficeAuthController
                 $responseBodyAsString = $e->getResponse()->getBody()->getContents();
                 return Writer::json_error_data($resp, 500, $responseBodyAsString);
             }
-        }
-        
     }
 
     public function getUserById(Request $req, Response $resp, array $args): Response {
@@ -173,10 +165,6 @@ class BackOfficeAuthController
     }
 
     public function authenticateAdmin(Request $req, Response $resp, array $args): Response {
-
-        $isAdmin = $req->getAttribute('isAdmin');
-
-        if ($isAdmin == 1) {
             try {
                 $client = new Client([
                     'base_uri' => $this->container->get('settings')['auth_service'],
@@ -197,12 +185,6 @@ class BackOfficeAuthController
             catch (ServerException $e) {
                 $responseBodyAsString = $e->getResponse()->getBody()->getContents();
                 return Writer::json_error_data($resp, 500, $responseBodyAsString);
-            }
-        }
-        else{
-            return Writer::json_error($resp, 401, 'User is not admin');
-        }
-
-                
+            }                
     }
 }
