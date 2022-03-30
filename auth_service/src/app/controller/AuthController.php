@@ -227,7 +227,7 @@ class AuthController {
                             'user_username' => $user->username,
                             'user_isAdmin' => $user->is_admin,
                         ]],
-                        $secret, 'HS512');
+                        $secret, 'HS256');
 
                     
                     $user->refresh_token = $token;
