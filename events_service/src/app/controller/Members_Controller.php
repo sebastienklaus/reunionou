@@ -659,8 +659,8 @@ class Members_Controller
 
         try {
             $allMembers = Members::select(['id', 'pseudo', 'updated_at', 'status'])
-                                    ->where('updated_at', '<', date('Y-m-d H:i:s', strtotime('-6 months')))
-                                    ->orderBy('updated_at')->get();
+                ->where('updated_at', '<', date('Y-m-d H:i:s', strtotime('-6 months')))
+                ->orderBy('updated_at')->get();
             $count = count($allMembers);
 
             $data = [
