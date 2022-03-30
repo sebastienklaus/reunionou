@@ -102,7 +102,7 @@ class AuthController {
             }
 
 
-            return Writer::json_output($resp, 200, $token);
+            return Writer::json_output($resp, 200, "Token is verified");
         } 
         catch (ExpiredException $e) {
             return Writer::jsonError($req, $resp, 401, 'The token is expired');
@@ -329,7 +329,7 @@ class AuthController {
         list($email, $pass) = explode(':', $authstring);
 
         try {
-            $admin = User::select('is_Admin')->where('email', '=', $email)->first();
+            $admin = User::select('is_Admin')->where('email', '=', $email)->where('is_Admin', '=', 1)->firstOrFail();
             return Writer::json_output($resp, 200, $admin);
 
         } catch (ModelNotFoundException $e) {
@@ -337,7 +337,7 @@ class AuthController {
             return Writer::jsonError($req, $resp, 401, 'Erreur authentification model');
         } catch (\Exception $e) {
             $resp = $resp->withHeader('WWW-authenticate', 'Basic realm="reunionou auth" ');
-            return Writer::jsonError($req, $resp, 401, 'Erreur PHP');
+            return Writer::jsonError($req, $resp, 500, 'Erreur PHP');
         }
     }
 }
