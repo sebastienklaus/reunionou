@@ -60,7 +60,7 @@ class AuthController {
 
         $secret = $this->container->settings['secret'];
         $token = JWT::encode(['iss' => 'http://docketu.iutnc.univ-lorraine.fr:62011/auth',
-            'aud' => 'http://docketu.iutnc.univ-lorraine.fr:62014',
+            'aud' => 'http://docketu.iutnc.univ-lorraine.fr:62016',
             'iat' => time(),
             'exp' => time() + (3600 * 24 * 30), // validité = 30 jours
             'upr' => [
@@ -70,7 +70,7 @@ class AuthController {
                 'user_username' => $user->username,
                 'user_isAdmin' => $user->is_admin,
             ]],
-            $secret, 'HS512');
+            $secret, 'HS256');
 
         $user->refresh_token = $token;
         $user->save();
@@ -90,14 +90,19 @@ class AuthController {
         try {
             //le secret est conservé dans le container de dépendances
             $secret = $this->container->settings['secret'];
+            $secret_guest = $this->container->settings['secret_guest'];
 
             //le token est récupéré et scanné depuis le header "Authorization" de la requête
             $h = $req->getHeader('Authorization')[0] ;
             $tokenstring = sscanf($h, "Bearer %s")[0] ;
-            $token = JWT::decode($tokenstring, new Key($secret,'HS512' ) );
+            try {
+                $token = JWT::decode($tokenstring, new Key($secret,'HS256' ) );
+            } catch (\Throwable $th) {
+                $token = JWT::decode($tokenstring, new Key($secret_guest,'HS256' ) );
+            }
 
 
-            return Writer::json_output($resp, 200, 'Vérification du token réussi');
+            return Writer::json_output($resp, 200, $token);
         } 
         catch (ExpiredException $e) {
             return Writer::jsonError($req, $resp, 401, 'The token is expired');
