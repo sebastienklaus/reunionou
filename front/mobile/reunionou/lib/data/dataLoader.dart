@@ -7,7 +7,7 @@ import 'package:reunionou/models/member.dart';
 import 'package:reunionou/models/message.dart';
 import 'package:reunionou/models/user.dart';
 
-import 'DatabaseHandler.dart';
+import 'databaseHandler.dart';
 import 'package:uuid/uuid.dart';
 import 'package:dio/dio.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
