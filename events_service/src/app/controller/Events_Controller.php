@@ -129,8 +129,8 @@ class Events_Controller
             // génération id basé sur un aléa : UUID v4
             $new_event->id = $new_uuid(4);
 
-            $new_event->title = filter_var($event_req['title'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $new_event->description = filter_var($event_req['description'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $new_event->title = $event_req['title'];
+            $new_event->description = $event_req['description'];
             $new_event->user_id = filter_var($event_req['user_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             //! FILTE POUR location : location JSON DOIT ETRE OK
             $new_event->location = $event_req['location'];

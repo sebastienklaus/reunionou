@@ -11,8 +11,8 @@ class EventValidator
     {
 
         return [
-            'title' => v::stringType()->notEmpty(),
-            'description' => v::stringType()->notEmpty(),
+            'title' => v::stringType()->notEmpty()->alpha(" ' é è à ç ù ê î"),
+            'description' => v::stringType()->notEmpty()->alpha(" ' é è à ç ù ê î"),
             'user_id' => v::noWhitespace()->length(1, 64),
             'location' => v::json()->notEmpty(),
             'date' => V::date('Y-m-d')->min('now'),
