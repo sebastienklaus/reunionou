@@ -94,8 +94,9 @@ class _EventDetailsState extends State<EventDetails> {
                     child: SizedBox(
                       height: 250,
                       child: MapWidget(
-                        lat: widget.event.location[0]['latitude'],
-                        long: widget.event.location[0]['longitude'],
+                        lat: double.parse(widget.event.location[0]['latitude']),
+                        long:
+                            double.parse(widget.event.location[0]['longitude']),
                       ),
                     ),
                   ),
