@@ -2,10 +2,11 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
-import '../models/event.dart';
-import '../models/member.dart';
-import '../models/message.dart';
-import '../models/user.dart';
+import 'package:reunionou/models/event.dart';
+import 'package:reunionou/models/member.dart';
+import 'package:reunionou/models/message.dart';
+import 'package:reunionou/models/user.dart';
+
 import 'DatabaseHandler.dart';
 import 'package:uuid/uuid.dart';
 import 'package:dio/dio.dart';

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:provider/provider.dart';
+import 'package:reunionou/data/dataLoader.dart';
 import 'package:reunionou/models/event.dart';
 import 'package:reunionou/widgets/map.dart';
-import '../data/dataLoader.dart';
-import '../widgets/spacer.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
+import 'package:reunionou/widgets/spacer.dart';
 
 class ManageEventScreen extends StatefulWidget {
   const ManageEventScreen({

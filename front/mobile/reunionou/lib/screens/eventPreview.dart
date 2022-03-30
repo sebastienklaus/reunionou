@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../data/dataLoader.dart';
-import '../models/event.dart';
-import '../widgets/commentsList.dart';
-import '../widgets/eventDetails.dart';
-import '../widgets/navigation_drawer_widget.dart';
-import '../widgets/organizerDetails.dart';
-import '../widgets/participantsList.dart';
-import '../widgets/manageEvent.dart';
-import '../widgets/spacer.dart';
+import 'package:reunionou/data/dataLoader.dart';
+import 'package:reunionou/models/event.dart';
+import 'package:reunionou/widgets/commentsList.dart';
+import 'package:reunionou/widgets/eventDetails.dart';
+import 'package:reunionou/widgets/manageEvent.dart';
+import 'package:reunionou/widgets/navigation_drawer_widget.dart';
+import 'package:reunionou/widgets/organizerDetails.dart';
+import 'package:reunionou/widgets/participantsList.dart';
+import 'package:reunionou/widgets/spacer.dart';
 
 class EventPreviewScreen extends StatefulWidget {
   const EventPreviewScreen({

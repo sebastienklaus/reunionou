@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reunionou/data/dataLoader.dart';
 import 'package:reunionou/models/user.dart';
-import '../data/dataLoader.dart';
 
 class NavigationDrawerWidget extends StatelessWidget {
   final padding = const EdgeInsets.symmetric(horizontal: 10);

@@ -1,6 +1,7 @@
-# reunionou
+# Reunionou
 
-A new Flutter project.
+This 
+This project was created during the final workshop at IUT Charlemagne Nancy.
 
 ## Getting Started
 

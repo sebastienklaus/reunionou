@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reunionou/animations/loginAnimation.dart';
+import 'package:reunionou/data/dataLoader.dart';
 import 'package:reunionou/widgets/manageEvent.dart';
-import '../animations/loginAnimation.dart';
-import '../data/dataLoader.dart';
-import '../widgets/navigation_drawer_widget.dart';
-import '../widgets/spacer.dart';
+import 'package:reunionou/widgets/navigation_drawer_widget.dart';
+import 'package:reunionou/widgets/spacer.dart';
 
 class JoinEventScreen extends StatefulWidget {
   const JoinEventScreen({

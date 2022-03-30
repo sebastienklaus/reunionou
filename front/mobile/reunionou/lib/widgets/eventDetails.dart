@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reunionou/data/dataLoader.dart';
 import 'package:reunionou/models/event.dart';
+import 'package:reunionou/models/member.dart';
 import 'package:reunionou/services/weather.dart';
 import 'package:reunionou/widgets/spacer.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../data/dataLoader.dart';
-import '../models/member.dart';
 import 'addParticipants.dart';
 import 'map.dart';
 import 'package:flutter_share/flutter_share.dart';

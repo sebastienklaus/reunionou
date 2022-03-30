@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reunionou/data/dataLoader.dart';
 import 'package:reunionou/models/event.dart';
-import '../data/dataLoader.dart';
-import '../models/user.dart';
-import '../screens/eventPreview.dart';
-import '../widgets/spacer.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:reunionou/models/user.dart';
+import 'package:reunionou/screens/eventPreview.dart';
+import 'package:reunionou/widgets/spacer.dart';
 
 class AddParticipantsWidget extends StatefulWidget {
   const AddParticipantsWidget({
