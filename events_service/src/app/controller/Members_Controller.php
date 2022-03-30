@@ -99,14 +99,47 @@ class Members_Controller
             // Création d'un message via le model
             $new_member = new Members();
 
+            // pour table user : vérifier pseudo pas utilisé dans table user
+
+            /**
+             * Logique :
+             * si user_id non null :  uer_id pas utilisé dans l'event
+             * si user_id null + pseudo : vérifier que pseudo pas utilisé par un user ET que pseuo pas utiliser dans event
+             * 
+             */
+            $check_member = false;
+
             if (isset($member_req['user_id'])) {
-                $check_member = Members::select()->where('user_id', $member_req['user_id'])->where('event_id', $member_req['event_id'])->first();
+                // var_dump(Members::select()->where('event_id', $member_req['event_id'])->where('user_id', $member_req['user_id'])->first());
+                $user_id = $member_req['event_id'];
+                // $check_member = Members::select()->where('event_id', $member_req['event_id'])
+                // ->where(function ($query, $user_id) {
+                //     return $query->where('user_id', $user_id)->first();
+                // })->get();
+
+
+                $members_event = Members::select('event_id', 'user_id')->where('event_id', $member_req['event_id'])->get();
+                foreach ($members_event as $member) {
+                    if ($member->user_id == $member_req['event_id']) {
+                        $check_member = false;
+                    } else {
+                        $check_member = true;
+                    }
+                }
+                echo ("user_id set, check user_id in event");
             } else {
-                $check_member = Members::select()->where('user_id', 'd-e-f-a-u-l-t')->where('event_id', $member_req['event_id'])->first();
+                var_dump(Members::select()->where('event_id', $member_req['event_id'])->where('pseudo', $member_req['pseudo'])->first());
+                echo ("user_id null, check pseudo");
             }
 
+            // if (isset($member_req['user_id'])) {
+            //     $check_member = Members::select()->where('user_id', $member_req['user_id'])->where('event_id', $member_req['event_id'])->first();
+            // } else {
+            //     $check_member = Members::select()->where('user_id', 'd-e-f-a-u-l-t')->where('event_id', $member_req['event_id'])->first();
+            // }
 
-            if (is_null($check_member)) {
+
+            if ($check_member) {
                 // Récupération de la fonction UUID generator depuis le container
                 $new_uuid = $this->container->uuid;
                 // génération id basé sur un aléa : UUID v4

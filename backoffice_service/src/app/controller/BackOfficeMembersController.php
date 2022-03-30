@@ -53,9 +53,13 @@ class BackOfficeMembersController
     {
 
         try {
-            $client = new \GuzzleHttp\Client([
+            $client_events = new \GuzzleHttp\Client([
                 'base_uri' => $this->container->get('settings')['events_service'],
                 'timeout' => 5.0
+            ]);
+            $client_auth = new Client([
+                'base_uri' => $this->container->get('settings')['auth_service'],
+                'timeout' => 5.0,
             ]);
 
             $received_member = $req->getParsedBody();
@@ -72,13 +76,18 @@ class BackOfficeMembersController
 
             if (!isset($received_member['user_id'])) {
                 $received_member['user_id'] = null;
+            } else {
+                // Si l'user_id n'est pas null, on récupère l'user, pour en extraire son pseudo et le mettre dans la requête de création de members
+                $client_resp = $client_auth->request('GET', '/users/' . $received_member['user_id']);
+                $client = json_decode($client_resp->getBody()->getContents());
+                $received_member['pseudo'] = $client->user->username;
             }
 
             if (!isset($received_member['status']) || ($received_member['status'] == "")) {
                 $received_member['status'] = "-1";
             }
 
-            $response = $client->request('POST', '/members', [
+            $response = $client_events->request('POST', '/members', [
                 'form_params' => [
                     'pseudo' => $received_member['pseudo'],
                     'event_id' => $received_member['event_id'],
