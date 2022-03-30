@@ -18,10 +18,6 @@ class _LoginScreenState extends State<UserLoginScreen> {
     final email = TextEditingController();
     final password = TextEditingController();
 
-    //Just for testing
-    email.text = "malek@mail.fr";
-    password.text = "password";
-
     final _formKey = GlobalKey<FormState>();
     return WillPopScope(
       onWillPop: () async => false,
