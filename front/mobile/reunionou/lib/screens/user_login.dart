@@ -269,7 +269,7 @@ class _LoginScreenState extends State<UserLoginScreen> {
                               child: const Padding(
                                 padding: EdgeInsets.all(10.0),
                                 child: Text(
-                                  "Connectez-vous en tant qu'invité",
+                                  "Se connecter en tant qu'invité",
                                   style: TextStyle(
                                     color: Color.fromRGBO(143, 148, 251, 1),
                                     fontSize: 18,
