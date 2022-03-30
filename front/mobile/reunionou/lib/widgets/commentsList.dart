@@ -156,7 +156,7 @@ class CommentsListState extends State<CommentsList> {
                           ),
                         ],
                       )
-                    : Text(
+                    : const Text(
                         "Vous devez mettre à jour votre présence afin de commenter"),
                 Expanded(
                   child: ListView.builder(

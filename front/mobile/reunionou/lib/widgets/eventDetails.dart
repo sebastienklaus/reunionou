@@ -11,6 +11,7 @@ import '../models/member.dart';
 import 'addParticipants.dart';
 import 'map.dart';
 import 'package:flutter_share/flutter_share.dart';
+import 'package:intl/intl.dart';
 
 class EventDetails extends StatefulWidget {
   const EventDetails({
@@ -73,6 +74,10 @@ class _EventDetailsState extends State<EventDetails> {
 
   @override
   Widget build(BuildContext context) {
+    DateTime eventDate =
+        DateTime.parse(widget.event.date + " " + widget.event.hour);
+    final formatedDate = DateFormat("dd/MM/yyyy HH:mm").format(eventDate);
+
     return FutureBuilder(
       future: context.read<DataLoader>().getMember(widget.event.id),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
@@ -109,32 +114,38 @@ class _EventDetailsState extends State<EventDetails> {
                     space: 10,
                   ),
                   Text(
-                    widget.event.date + "(" + widget.event.hour + ")",
+                    formatedDate,
                     style: const TextStyle(
                         fontSize: 16.0,
                         color: Colors.black45,
                         letterSpacing: 2.0,
                         fontWeight: FontWeight.w300),
                   ),
-                  Text(
-                    widget.event.location[0]['name'],
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.black45,
-                        letterSpacing: 2.0,
-                        fontWeight: FontWeight.w300),
+                  Container(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Text(
+                      widget.event.location[0]['name'],
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                          fontSize: 16.0,
+                          color: Colors.black45,
+                          letterSpacing: 2.0,
+                          fontWeight: FontWeight.w300),
+                    ),
                   ),
                   const SpacerWidget(
                     space: 10,
                   ),
-                  Text(
-                    widget.event.description,
-                    style: const TextStyle(
-                        fontSize: 18.0,
-                        color: Colors.black,
-                        letterSpacing: 2.0,
-                        fontWeight: FontWeight.w300),
+                  Container(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Text(
+                      widget.event.description,
+                      style: const TextStyle(
+                          fontSize: 18.0,
+                          color: Colors.black,
+                          letterSpacing: 2.0,
+                          fontWeight: FontWeight.w300),
+                    ),
                   ),
                   const SpacerWidget(
                     space: 15,

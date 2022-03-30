@@ -5,6 +5,7 @@ import 'package:reunionou/widgets/spacer.dart';
 import '../data/dataLoader.dart';
 import '../models/event.dart';
 import '../screens/eventPreview.dart';
+import 'package:intl/intl.dart';
 
 class EventCard extends StatelessWidget {
   const EventCard({Key? key, required this.eventItem}) : super(key: key);
@@ -13,6 +14,8 @@ class EventCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String img = context.read<DataLoader>().cardImgUri.toString();
+    DateTime eventDate = DateTime.parse(eventItem.date + " " + eventItem.hour);
+    final formatedDate = DateFormat("dd/MM/yyyy HH:mm").format(eventDate);
 
     return InkWell(
       onTap: () async {
@@ -37,7 +40,7 @@ class EventCard extends StatelessWidget {
                 space: 15,
               ),
               Text(
-                eventItem.date.toString() + " " + eventItem.hour.toString(),
+                formatedDate.toString(),
                 style: const TextStyle(color: Colors.white),
               ),
               const SpacerWidget(

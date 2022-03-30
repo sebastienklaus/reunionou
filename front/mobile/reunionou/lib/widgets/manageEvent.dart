@@ -146,11 +146,12 @@ class _ManageEventScreenState extends State<ManageEventScreen> {
                         return null;
                       },
                       onShowPicker: (context, currentValue) {
+                        var minDate = DateTime.now().add(Duration(hours: 24));
                         return showDatePicker(
                           helpText: "Date d'événement",
                           context: context,
-                          firstDate: DateTime.now(),
-                          initialDate: currentValue ?? DateTime.now(),
+                          firstDate: minDate,
+                          initialDate: currentValue ?? minDate,
                           lastDate: DateTime(2100),
                         );
                       },

@@ -169,7 +169,6 @@ class DataLoader extends ChangeNotifier {
       bool dbCheck = await handler.dbIsEmptyOrNot();
       if (!dbCheck) {
         var user = await handler.getUser();
-        print(user.toString() + "564");
         if (user is User) {
           user.type = user.type;
           setUser(user);
@@ -199,7 +198,7 @@ class DataLoader extends ChangeNotifier {
       );
       List<User> users = [];
       if (response.statusCode == 200) {
-        for (var user in response.data) {
+        for (var user in response.data['users']) {
           if (_user.id != user['user_id']) {
             var temp = User(
               id: user['user_id'],
@@ -327,8 +326,8 @@ class DataLoader extends ChangeNotifier {
 
   //Get events
   Future<List<EventItem>> getEvents() async {
+    myEvents = [];
     try {
-      myEvents = [];
       if (_user.type == "user") {
         //get memebr event (by user_id )
         await getMemberEvents("user");
@@ -417,12 +416,15 @@ class DataLoader extends ChangeNotifier {
       );
 
       if (response.statusCode == 201) {
-        addMember(response.data['event']['id'], _user.id, _user.username!);
+        await addMember(
+            response.data['event']['id'], _user.id, _user.username!);
+        await getEvents();
         notifyListeners();
         return true;
       }
       return false;
     } catch (e) {
+      print(e.toString());
       return false;
     }
   }
