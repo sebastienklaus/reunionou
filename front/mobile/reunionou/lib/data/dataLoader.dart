@@ -10,6 +10,7 @@ import 'DatabaseHandler.dart';
 import 'package:uuid/uuid.dart';
 import 'package:dio/dio.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 
 class DataLoader extends ChangeNotifier {
   /// Links
@@ -128,17 +129,28 @@ class DataLoader extends ChangeNotifier {
   //Authentificate guest
   Future<bool> authentificateGuest(String username, String eventUri) async {
     try {
-      username = username.replaceAll(" ", "_");
+      String pseudo = username.replaceAll(" ", "_");
       String eventId =
           eventUri.substring(eventUri.lastIndexOf("/") + 1, eventUri.length);
 
       //Create temp user
       String id = const Uuid().v4();
+
+      //Generate guest token
+      var secret = "helloimaguestonthereunionouappmadebyssomestudents";
+      var data = JWT({
+        "upr": {
+          "guest_pseudo": pseudo,
+        },
+      });
+      var token = data.sign(SecretKey(secret));
+
       _user = User(
         id: id,
         fullname: username,
         username: username,
         type: "guest",
+        token: token,
       );
       setUser(_user);
 
@@ -351,13 +363,16 @@ class DataLoader extends ChangeNotifier {
       } else {
         uri = _getUserParticipate.replaceAll('{id}', _user.id);
       }
+
       var response = await Dio().get(
         uri,
         options: Options(
-          headers: {'Origin': "flutter"},
+          headers: {
+            'Origin': "flutter",
+            'Authorization': "Bearer " + _user.token!,
+          },
         ),
       );
-
       if (response.statusCode == 200) {
         for (var event in response.data['events']) {
           var temp = EventItem(
@@ -493,7 +508,7 @@ class DataLoader extends ChangeNotifier {
         _membersUri,
         options: Options(
           headers: {
-            //'Authorization': "Bearer " + _user.token!, Add token here please
+            'Authorization': "Bearer " + _user.token!,
             'Origin': "flutter",
             'Content-Type': 'application/json',
           },
@@ -538,7 +553,7 @@ class DataLoader extends ChangeNotifier {
         _newGetUserEvents,
         options: Options(
           headers: {
-            //'Authorization': "Bearer " + _user.token!, Replace me
+            'Authorization': "Bearer " + _user.token!,
             'Origin': "flutter",
           },
         ),
@@ -587,7 +602,7 @@ class DataLoader extends ChangeNotifier {
         _uri,
         options: Options(
           headers: {
-            //'Authorization': "Bearer " + _user.token!, remove comment
+            'Authorization': "Bearer " + _user.token!,
             'Origin': "flutter",
           },
         ),
@@ -627,7 +642,7 @@ class DataLoader extends ChangeNotifier {
         _membersUri + "/" + _member.id,
         options: Options(
           headers: {
-            //'Authorization': "Bearer " + _user.token!, Replace me
+            'Authorization': "Bearer " + _user.token!,
             'Origin': "flutter",
             'Content-Type': 'application/json',
           },
@@ -660,7 +675,10 @@ class DataLoader extends ChangeNotifier {
       var response = await Dio().get(
         _getEventMessages,
         options: Options(
-          headers: <String, String>{'Origin': "flutter"},
+          headers: {
+            'Origin': "flutter",
+            'Authorization': "Bearer " + _user.token!,
+          },
         ),
       );
       if (response.statusCode == 200) {
@@ -699,7 +717,7 @@ class DataLoader extends ChangeNotifier {
         _messageUri,
         options: Options(
           headers: {
-            //'Authorization': "Bearer " + _user.token!, repalce me
+            'Authorization': "Bearer " + _user.token!,
             'Origin': "flutter",
             'Content-Type': 'application/json',
           },
