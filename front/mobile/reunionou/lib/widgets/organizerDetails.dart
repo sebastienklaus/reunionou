@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reunionou/data/dataLoader.dart';
 import 'package:reunionou/models/event.dart';
+import 'package:reunionou/models/user.dart';
 import 'package:reunionou/widgets/spacer.dart';
-
-import '../data/dataLoader.dart';
-import '../models/user.dart';
 
 class OrganizerDetails extends StatelessWidget {
   const OrganizerDetails({

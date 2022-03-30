@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reunionou/data/dataLoader.dart';
+import 'package:reunionou/models/event.dart';
+import 'package:reunionou/screens/eventPreview.dart';
 import 'package:reunionou/widgets/spacer.dart';
-
-import '../data/dataLoader.dart';
-import '../models/event.dart';
-import '../screens/eventPreview.dart';
 import 'package:intl/intl.dart';
 
 class EventCard extends StatelessWidget {

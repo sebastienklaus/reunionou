@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reunionou/animations/loginAnimation.dart';
+import 'package:reunionou/data/dataLoader.dart';
+import 'package:reunionou/models/message.dart';
 import 'package:reunionou/widgets/spacer.dart';
-
-import '../animations/loginAnimation.dart';
-import '../data/dataLoader.dart';
-import '../models/message.dart';
 import 'comment.dart';
 
 class CommentsList extends StatefulWidget {

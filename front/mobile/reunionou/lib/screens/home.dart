@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../data/dataLoader.dart';
-import '../models/user.dart';
-import '../widgets/eventCard.dart';
-import '../widgets/navigation_drawer_widget.dart';
+import 'package:reunionou/data/dataLoader.dart';
+import 'package:reunionou/models/user.dart';
+import 'package:reunionou/widgets/eventCard.dart';
+import 'package:reunionou/widgets/navigation_drawer_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({

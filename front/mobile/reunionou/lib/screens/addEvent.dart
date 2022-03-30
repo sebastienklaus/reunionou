@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reunionou/widgets/manageEvent.dart';
-import '../widgets/navigation_drawer_widget.dart';
+import 'package:reunionou/widgets/navigation_drawer_widget.dart';
 
 class AddEventScreen extends StatefulWidget {
   const AddEventScreen({
