@@ -5,6 +5,7 @@ return [
         'displayErrorDetails' => true,
         'dbfile' => parse_ini_file('users.db.conf.ini'),
         'secret' => 'rbssbq5c255sdsqpoiuytds',
+        'secret_guest' => 'helloimaguestonthereunionouappmadebyssomestudents',
 
         //DEBUG LOG
         // 'debug.name' => 'slim.log',
