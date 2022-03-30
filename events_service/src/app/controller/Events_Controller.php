@@ -640,7 +640,8 @@ class Events_Controller
 
         // Récupérer les commandes depuis le model
         $events = Events::select(['id', 'title', 'description', 'user_id', 'location', 'date', 'heure', 'created_at', 'updated_at'])
-            ->get();
+                        ->where('date', '<', date('Y-m-d', strtotime('-6 months')))
+                        ->get();
 
         $nbEvents = count($events);
         $events_resp = [];
