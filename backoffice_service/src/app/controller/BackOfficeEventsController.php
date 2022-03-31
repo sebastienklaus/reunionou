@@ -204,7 +204,7 @@ class BackOfficeEventsController
      * @apiSuccess (Success (201)) {String} title Titre de l'event
      * @apiSuccess (Success (201)) {String} description Description de l'event
      * @apiSuccess (Success (201)) {String} user_id ID de l'utilisateur ayant créé l'event
-     * @apiSuccess (Success (200)) {JSON} location Lieu de l'event (nom, latitude et longitude)
+     * @apiSuccess (Success (201)) {JSON} location Lieu de l'event (nom, latitude et longitude)
      * @apiSuccess (Success (201)) {date} date Date de l'event
      * @apiSuccess (Success (201)) {date} heure Heure de l'event
      * @apiSuccess (Success (201)) {date} created_at Date de création de l'event
