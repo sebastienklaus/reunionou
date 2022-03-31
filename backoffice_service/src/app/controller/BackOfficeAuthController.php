@@ -48,6 +48,34 @@ class BackOfficeAuthController
         }
     }
 
+
+    /**
+     * 
+     * @api {POST} /users Create User
+     * @apiName CreateUser
+     * @apiGroup User
+     * @apiVersion  1.0.0
+     * 
+     * @apiDescription Créer un utilisateur
+     * 
+     * @apiBody  {String} fullname Nom complet de l'utilisateur
+     * @apiBody  {String} email Email de l'utilisateur
+     * @apiBody  {String} username Username/pseudo de l'utilisateur
+     * @apiBody  {String} password Mot de passe de l'utilisateur
+     * @apiBody  {String} password_confirm Confirmation du mot de passe
+     *
+     * @apiParamExample Request-Example:
+     *{
+     *   "fullname": "Jean Dupond",
+     *   "email": "jd@mail.net",
+     *   "username": "jj"
+     *   "new_passord": "strongpwd"
+     *   "password_confirm": "strongpwd"
+     *}
+     * 
+     * @apiSuccess (Success (201)) user_id UUID de l'utilisateur
+     *
+     */
     public function createUser(Request $req, Response $resp, $args): Response
     {
         $body = $req->getParsedBody();
@@ -79,6 +107,33 @@ class BackOfficeAuthController
         }
     }
 
+        /**
+     * 
+     * @api {PUT} /users Update User
+     * @apiName UpdateUser
+     * @apiGroup User
+     * @apiVersion  1.0.0
+     * 
+     * @apiDescription Modifier un utilisateur
+     * 
+     * @apiBody  {String} fullname Nom complet de l'utilisateur
+     * @apiBody  {String} email Email de l'utilisateur
+     * @apiBody  {String} username Username/pseudo de l'utilisateur
+     * @apiBody  {String} password Mot de passe de l'utilisateur
+     * @apiBody  {String} password_confirm Confirmation du mot de passe
+     *
+     * @apiParamExample Request-Example:
+     *{
+     *   "fullname": "Jean Dupond",
+     *   "email": "jd@mail.net",
+     *   "username": "jj"
+     *   "passord": "strongpwd"
+     *   "password_confirm": "strongpwd"
+     *}
+     * 
+     * @apiSuccess (Success (200)) user_id UUID de l'utilisateur
+     *
+     */
     public function updateUser(Request $req, Response $resp, array $args): Response
     {
         $userID = $args['id'];
@@ -113,6 +168,34 @@ class BackOfficeAuthController
         }
     }
 
+     /**
+     * 
+     * @api {GET} /users Get All Users
+     * @apiName GetAllUser
+     * @apiGroup User
+     * @apiVersion  1.0.0
+     * 
+     * @apiDescription Récupérer tous les utilisateurs
+     * 
+     * @apiSuccess (Success (200)) {String} user_id UUID de l'utilisateur
+     * @apiSuccess (Success (200)) {String} user_fullname Nom complet de l'utilisateur
+     * @apiSuccess (Success (200)) {String} user_username Username ou pseudo de l'utilisateur
+     * 
+     * @apiSuccessExample Success-Response:
+     *{
+     * "type": "collection",
+     * "count": 109,
+     * "users": [
+     *     {
+     *         "user_id": "05edf56d-9436-45e9-8e23-6c9aad24ed07",
+     *         "user_fullname": "Lyn McWaters",
+     *         "user_username": "lmcwatersg"
+     *     },
+     *     {
+     *         "user_id": "0c8116da-d8d4-4b09-9ebc-7f4785f5d4e6",
+     *         "user_fullname": "Marin Conan",
+     * ...
+     */
     public function getUsers(Request $req, Response $resp, array $args): Response
     {
         try {
