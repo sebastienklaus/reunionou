@@ -42,7 +42,7 @@ class BackOfficeMembersController
      * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification du member
      * @apiSuccess (Success (200)) {Number} status Status du member (-1: en attente, 0: annulé, 1: confirmé )
      * 
-     * @apiSuccessExample Success-Response:
+     * @apiParamExample Request-Example:
      * {
      *    "type": "ressource",
      *    "member": {

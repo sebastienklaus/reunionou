@@ -26,19 +26,22 @@ class BackOfficeEventsController
 
      /**
      * 
-     * @api {GET} /events getAllEvent
+     * @api {GET} /events Get All Event
      * @apiName GetAllEvent
      * @apiGroup Event
      * @apiVersion  1.0.0
      * 
+     * @apiDescription Récupérer tous les événements
+     * 
      * @apiSuccess (Success (200)) {String} title Titre de l'event
      * @apiSuccess (Success (200)) {String} description Description de l'event
      * @apiSuccess (Success (200)) {String} user_id ID de l'utilisateur ayant créé l'event
-     * @apiSuccess (Success (200)) {JSON} location Lieu de l'event
+     * @apiSuccess (Success (200)) {JSON} location Lieu de l'event (nom, latitude et longitude)
      * @apiSuccess (Success (200)) {date} date Date de l'event
      * @apiSuccess (Success (200)) {date} heure Heure de l'event
      * @apiSuccess (Success (200)) {date} created_at Date de création de l'event
      * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification de l'event
+     * @apiSuccess (Success (200)) {String} href Lien vers la ressource event
      * 
      * @apiSuccessExample Success-Response:
      *{
@@ -91,6 +94,57 @@ class BackOfficeEventsController
 
     }
 
+        /**
+     * 
+     * @api {GET} /events/{id} Get Event
+     * @apiName GetEventById
+     * @apiGroup Event
+     * @apiVersion  1.0.0
+     * 
+     * @apiDescription Récupérer un événement.
+     * 
+     * @apiParam  {id} id id de l'évènement
+     * 
+     * @apiSuccess (Success (200)) {String} title Titre de l'event
+     * @apiSuccess (Success (200)) {String} description Description de l'event
+     * @apiSuccess (Success (200)) {String} user_id ID de l'utilisateur ayant créé l'event
+     * @apiSuccess (Success (200)) {JSON} location Lieu de l'event (nom, latitude et longitude)
+     * @apiSuccess (Success (200)) {date} date Date de l'event
+     * @apiSuccess (Success (200)) {date} heure Heure de l'event
+     * @apiSuccess (Success (200)) {date} created_at Date de création de l'event
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification de l'event
+     * 
+     * @apiSuccessExample Success-Response:
+     *{
+     * "type": "ressource",
+     * "event": {
+     *     "id": "0447ff47-e257-4bfc-b1a6-913a2c6cbd79",
+     *     "title": "Princess Ka'iulani",
+     *     "description": "In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.",
+     *     "user_id": "adcac5ad-206a-449c-8f40-aacb32750c47",
+     *     "location": {
+     *         "name": "Zoombox",
+     *         "latitude": 117.9483319,
+     *         "longitude": -8.3501717
+     *     },
+     *     "date": "2021-07-02",
+     *     "heure": "12:35:00",
+     *     "created_at": "2021-09-07 11:18:26",
+     *     "updated_at": "2021-05-13 10:26:33"
+     * },
+     * "links": {
+     *     "self": {
+     *         "href": "/events/0447ff47-e257-4bfc-b1a6-913a2c6cbd79/"
+     *     },
+     *     "members": {
+     *         "href": "/events/0447ff47-e257-4bfc-b1a6-913a2c6cbd79/members/"
+     *     },
+     *     "messages": {
+     *         "href": "/events/0447ff47-e257-4bfc-b1a6-913a2c6cbd79/messages/"
+     *     }
+     * }
+     *}
+     */
     public function getEvent(Request $req, Response $resp, $args): Response {
 
         try {
@@ -117,6 +171,65 @@ class BackOfficeEventsController
 
     }
 
+        /**
+     * 
+     * @api {POST} /events Create Event
+     * @apiName CreateEvent
+     * @apiGroup Event
+     * @apiVersion  1.0.0
+     * 
+     * @apiDescription Créer un événement.
+     * 
+     * @apiParam  {String} title Titre de l'event
+     * @apiParam  {String} description Description de l'event
+     * @apiParam  {String} user_id ID de l'utilisateur ayant créé l'event
+     * @apiParam  {JSON} location Lieu de l'event
+     * @apiParam  {date} date Date de l'event
+     * @apiParam  {date} heure Heure de l'event
+     *
+     * @apiParamExample Request-Example:
+     *{
+     *"title" : "Event_Name",
+     *"description" : "Event_Description",
+     *"user_id" : "/users/User_Id",
+     *"location" : {
+     *    "name":"Location_Name",
+     *    "latitude":00.00,
+     *    "longitude":00.00
+     *    },
+     *"date" : "2000-01-01",
+     *"heure" : "12:00"
+     *}
+     *  
+     * @apiSuccess (Success (201)) {String} title Titre de l'event
+     * @apiSuccess (Success (201)) {String} description Description de l'event
+     * @apiSuccess (Success (201)) {String} user_id ID de l'utilisateur ayant créé l'event
+     * @apiSuccess (Success (200)) {JSON} location Lieu de l'event (nom, latitude et longitude)
+     * @apiSuccess (Success (201)) {date} date Date de l'event
+     * @apiSuccess (Success (201)) {date} heure Heure de l'event
+     * @apiSuccess (Success (201)) {date} created_at Date de création de l'event
+     * @apiSuccess (Success (201)) {date} updated_at Date de la dernière modification de l'event
+     * 
+     * @apiSuccessExample Success-Response:
+     *{
+     *"type": "ressource",
+     *"event": {
+     *    "id": "Event_Id",
+     *    "title": "Event_Name",
+     *    "description": "Event_Description",
+     *    "user_id": "/users/User_Id",
+     *    "location" : {
+     *       "name":"Location_Name",
+     *       "latitude":00.00,
+     *       "longitude":00.00
+     *       },
+     *    "date": "2000-01-01",
+     *    "heure": "12:00:00",
+     *    "created_at": "Creation_Date",
+     *    "updated_at": "Creation_Date"
+     *    }
+     *}
+     */
     public function createEvent(Request $req, Response $resp, $args): Response {
 
         try {
@@ -153,6 +266,65 @@ class BackOfficeEventsController
 
     }
 
+        /**
+     * 
+     * @api {PUT} /events Update Event
+     * @apiName UpdateEvent
+     * @apiGroup Event
+     * @apiVersion  1.0.0
+     * 
+     * @apiDescription Mettre à jour un évenement.
+     * 
+     * @apiParam  {String} title Titre de l'event
+     * @apiParam  {String} description Description de l'event
+     * @apiParam  {String} user_id ID de l'utilisateur ayant créé l'event
+     * @apiParam  {JSON} location Lieu de l'event
+     * @apiParam  {date} date Date de l'event
+     * @apiParam  {date} heure Heure de l'event
+     * 
+     * @apiParamExample Request-Example:
+     *{
+     *"title" : "Event_Name",
+     *"description" : "Event_Description",
+     *"user_id" : "/users/User_Id",
+     *"location" : {
+     *    "name":"Location_Name",
+     *    "latitude":00.00,
+     *    "longitude":00.00
+     *    },
+     *"date" : "2000-01-01",
+     *"heure" : "12:00"
+     *}
+     * 
+     * @apiSuccess (Success (201)) {String} title Titre de l'event
+     * @apiSuccess (Success (201)) {String} description Description de l'event
+     * @apiSuccess (Success (201)) {String} user_id ID de l'utilisateur ayant créé l'event
+     * @apiSuccess (Success (200)) {JSON} location Lieu de l'event (nom, latitude et longitude)
+     * @apiSuccess (Success (201)) {date} date Date de l'event
+     * @apiSuccess (Success (201)) {date} heure Heure de l'event
+     * @apiSuccess (Success (201)) {date} created_at Date de création de l'event
+     * @apiSuccess (Success (201)) {date} updated_at Date de la dernière modification de l'event
+     * 
+     * @apiSuccessExample Success-Response:
+     *{
+     *"type": "ressource",
+     *"event": {
+     *    "id": "Event_Id",
+     *    "title": "Event_Name",
+     *    "description": "Event_Description",
+     *    "user_id": "/users/User_Id",
+     *    "location" : {
+     *        "name":"Location_Name",
+     *        "latitude":00.00,
+     *        "longitude":00.00
+     *        },,
+     *    "date": "2000-01-01",
+     *    "heure": "12:00:00",
+     *    "created_at": "Creation_Date",
+     *    "updated_at": "Modification_Date"
+     *    }
+     *}
+     */
     public function updateEvent(Request $req, Response $resp, $args): Response {
 
         try{
@@ -189,6 +361,46 @@ class BackOfficeEventsController
 
     }
 
+        /**
+     * 
+     * @api {GET} /members/{pseudo}/events Get Event by Member's Pseudo
+     * @apiName GetEventByMemberPseudo
+     * @apiGroup Event
+     * @apiVersion  1.0.0
+     * 
+     * @apiDescription Récupérer un événement par le pseudo d'un membre
+     * 
+     * @apiParam  {pseudo} pseudo Pseudo du membre
+     * 
+     * @apiSuccess (Success (200)) {String} title Titre de l'event
+     * @apiSuccess (Success (200)) {String} description Description de l'event
+     * @apiSuccess (Success (200)) {String} user_id ID de l'utilisateur ayant créé l'event
+     * @apiSuccess (Success (200)) {JSON} location Lieu de l'event
+     * @apiSuccess (Success (200)) {date} date Date de l'event
+     * @apiSuccess (Success (200)) {date} heure Heure de l'event
+     * @apiSuccess (Success (200)) {date} created_at Date de création de l'event
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification de l'event
+     * 
+     * @apiSuccessExample Success-Response:
+     *{
+     *"type": "ressource",
+     *"event": {
+     *    "id": "Event_Id",
+     *    "title": "Event_Name",
+     *    "description": "Event_Description",
+     *    "user_id": "/users/User_Id",
+     *    "location" : {
+     *        "name":"Location_Name",
+     *        "latitude":00.00,
+     *        "longitude":00.00
+     *        },,
+     *    "date": "2000-01-01",
+     *    "heure": "12:00:00",
+     *    "created_at": "Creation_Date",
+     *    "updated_at": "Modification_Date"
+     *    }
+     *}
+     */
     public function getEventByMemberPseudo(Request $req, Response $resp, $args): Response {
 
         try {
@@ -215,6 +427,47 @@ class BackOfficeEventsController
 
     }
 
+
+    /**
+     * 
+     * @api {GET} /users/{id}/events Get Event by User ID
+     * @apiName GetEventByUserId
+     * @apiGroup Event
+     * @apiVersion  1.0.0
+     * 
+     * @apiDescription Récupérer un événement par le pseudo d'un membre
+     * 
+     * @apiParam  {id} id ID de l'utilisateur
+     * 
+     * @apiSuccess (Success (200)) {String} title Titre de l'event
+     * @apiSuccess (Success (200)) {String} description Description de l'event
+     * @apiSuccess (Success (200)) {String} user_id ID de l'utilisateur ayant créé l'event
+     * @apiSuccess (Success (200)) {JSON} location Lieu de l'event
+     * @apiSuccess (Success (200)) {date} date Date de l'event
+     * @apiSuccess (Success (200)) {date} heure Heure de l'event
+     * @apiSuccess (Success (200)) {date} created_at Date de création de l'event
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification de l'event
+     * 
+     * @apiSuccessExample Success-Response:
+     *{
+     *"type": "ressource",
+     *"event": {
+     *    "id": "Event_Id",
+     *    "title": "Event_Name",
+     *    "description": "Event_Description",
+     *    "user_id": "/users/User_Id",
+     *    "location" : {
+     *        "name":"Location_Name",
+     *        "latitude":00.00,
+     *        "longitude":00.00
+     *        },,
+     *    "date": "2000-01-01",
+     *    "heure": "12:00:00",
+     *    "created_at": "Creation_Date",
+     *    "updated_at": "Modification_Date"
+     *    }
+     *}
+     */
     public function getEventCreatedByUserId(Request $req, Response $resp, $args): Response {
 
         try {
@@ -241,6 +494,48 @@ class BackOfficeEventsController
 
     }
 
+         /**
+     * 
+     * @api {DELETE} /events/{id} Delete an Event
+     * @apiName DeleteMessageById
+     * @apiGroup Message
+     * @apiVersion  1.0.0
+     * 
+     * @apiDescription Supprimer un évenement.
+     * 
+     * @apiParam  {String} id ID du message
+     * 
+     * @apiSuccess (Success (200)) {String} title Titre de l'event
+     * @apiSuccess (Success (200)) {String} description Description de l'event
+     * @apiSuccess (Success (200)) {String} user_id ID de l'utilisateur ayant créé l'event
+     * @apiSuccess (Success (200)) {JSON} location Lieu de l'event
+     * @apiSuccess (Success (200)) {date} date Date de l'event
+     * @apiSuccess (Success (200)) {date} heure Heure de l'event
+     * @apiSuccess (Success (200)) {date} created_at Date de création de l'event
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification de l'event
+     * 
+     * @apiSuccessExample Success-Response:
+     *  {
+     * "type": "event",
+     * "event": {
+     *    "id": "Event_Id",
+     *    "title": "Event_Name",
+     *    "description": "Event_Description",
+     *    "user_id": "/users/User_Id",
+     *    "location" : {
+     *        "name":"Location_Name",
+     *        "latitude":00.00,
+     *        "longitude":00.00
+     *        },,
+     *    "date": "2000-01-01",
+     *    "heure": "12:00:00",
+     *    "created_at": "Creation_Date",
+     *    "updated_at": "Modification_Date"
+     *    }
+     * },
+     * "response": "event deleted"
+     * }
+     */
     public function deleteEventById(Request $req, Response $resp, $args): Response {
 
 

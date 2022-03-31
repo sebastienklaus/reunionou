@@ -96,7 +96,7 @@ class BackOfficeMessagesController
      * @apiParam  {String} event_id ID de l'event associé au message
      * @apiParam  {JSON} media Media contenu dans le message
      * 
-     * @apiParamExample Success-Response:
+     * @apiParamExample Request-Example:
      * {
      *   "content": "ceci est un message",
      *   "member_id": "b1858803-2305-47f4-be67-1efc10a91da7",
