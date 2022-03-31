@@ -91,10 +91,10 @@ class BackOfficeMessagesController
      * 
      * @apiDescription Créer un message
      * 
-     * @apiParam  {String} content Contenu du message 
-     * @apiParam  {String} member_id ID du membre ayant créé le message
-     * @apiParam  {String} event_id ID de l'event associé au message
-     * @apiParam  {JSON} media Media contenu dans le message
+     * @apiBody  {String} content Contenu du message 
+     * @apiBody  {String} member_id ID du membre ayant créé le message
+     * @apiBody  {String} event_id ID de l'event associé au message
+     * @apiBody  {JSON} media Media contenu dans le message
      * 
      * @apiParamExample Request-Example:
      * {
@@ -175,7 +175,7 @@ class BackOfficeMessagesController
      * @apiGroup Message
      * @apiVersion  1.0.0
      *
-     * @apiDescription Récupérer tous les messages d'un événéement.
+     * @apiDescription Récupérer tous les messages d'un événement.
      * 
      * @apiParam  {String} id ID de l'event
      * 

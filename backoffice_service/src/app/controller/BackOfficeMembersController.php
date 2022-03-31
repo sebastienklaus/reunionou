@@ -99,10 +99,10 @@ class BackOfficeMembersController
      * 
      * @apiDescription Créer un membre
      * 
-     * @apiParam {String} user_id ID de l'utilisateur associé au member
-     * @apiParam {String} event_id ID de l'event associé au member
-     * @apiParam {String} pseudo Pseudo du member
-     * @apiParam {Number} status du member (-1: en attente de réponse, 0: annulé, 1: invitation accepté )
+     * @apiBody {String} user_id ID de l'utilisateur associé au member
+     * @apiBody {String} event_id ID de l'event associé au member
+     * @apiBody {String} pseudo Pseudo du member
+     * @apiBody {Number} status du member (-1: en attente de réponse, 0: annulé, 1: invitation accepté )
      * 
      * @apiParamExample Request-Example:
      * {
@@ -196,10 +196,12 @@ class BackOfficeMembersController
      * 
      * @apiDescription Modifier, mettre à jour les information d'un membre
      * 
-     * @apiParam {String} user_id ID de l'utilisateur associé au member
-     * @apiParam {String} event_id ID de l'event associé au member
-     * @apiParam {String} pseudo Pseudo du member
-     * @apiParam {String} status du member (-1: en attente de réponse, 0: annulé, 1: invitation accepté )
+     * @apiParam  {String} id ID du member
+     * 
+     * @apiBody {String} user_id ID de l'utilisateur associé au member
+     * @apiBody {String} event_id ID de l'event associé au member
+     * @apiBody {String} pseudo Pseudo du member
+     * @apiBody {String} status du member (-1: en attente de réponse, 0: annulé, 1: invitation accepté )
      * 
      * @apiParamExample Request-Example:
      * {
@@ -412,7 +414,7 @@ class BackOfficeMembersController
 
     /**
      * 
-     * @api {GET} /users/{id}/members Get Member by User ID
+     * @api {GET} /users/{id}/members Get Members by User ID
      * @apiName GetMemberByUserID
      * @apiGroup Member
      * @apiVersion  1.0.0
@@ -551,14 +553,12 @@ class BackOfficeMembersController
 
     /**
      * 
-     * @api {GET} /members/{id} Get All Members
+     * @api {GET} /members/ Get All Members
      * @apiName GetMembers
      * @apiGroup Member
      * @apiVersion  1.0.0
      * 
      * @apiDescription Récupérer tous les membres.
-     * 
-     * @apiParam  {String} id ID du member
      * 
      * @apiSuccess (Success (200)) {String} id ID du member
      * @apiSuccess (Success (200)) {String} pseudo Pseudo du member
