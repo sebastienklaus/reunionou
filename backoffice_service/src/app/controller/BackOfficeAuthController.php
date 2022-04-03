@@ -96,7 +96,6 @@ class BackOfficeAuthController
      *   "password_confirm": "strongpwd"
      *}
      * 
-     * @apiSuccess (Success (201)) user_id UUID de l'utilisateur
      *
      */
     public function createUser(Request $req, Response $resp, $args): Response
@@ -153,8 +152,6 @@ class BackOfficeAuthController
      *   "passord": "strongpwd"
      *   "password_confirm": "strongpwd"
      *}
-     * 
-     * @apiSuccess (Success (200)) user_id UUID de l'utilisateur
      *
      */
     public function updateUser(Request $req, Response $resp, array $args): Response
