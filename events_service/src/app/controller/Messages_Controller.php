@@ -110,7 +110,7 @@ class Messages_Controller
             // génération id basé sur un aléa : UUID v4
             $new_message->id = $new_uuid(4);
 
-            $new_message->content = filter_var($message_req['content'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $new_message->content = htmlspecialchars($message_req['content'], ENT_NOQUOTES);
             $new_message->member_id = filter_var($message_req['member_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $new_message->event_id = filter_var($message_req['event_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 

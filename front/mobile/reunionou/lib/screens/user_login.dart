@@ -18,10 +18,6 @@ class _LoginScreenState extends State<UserLoginScreen> {
     final email = TextEditingController();
     final password = TextEditingController();
 
-    //Just for testing
-    email.text = "malek@mail.fr";
-    password.text = "password";
-
     final _formKey = GlobalKey<FormState>();
     return WillPopScope(
       onWillPop: () async => false,
@@ -269,7 +265,7 @@ class _LoginScreenState extends State<UserLoginScreen> {
                               child: const Padding(
                                 padding: EdgeInsets.all(10.0),
                                 child: Text(
-                                  "Connectez-vous en tant qu'invité",
+                                  "Se connecter en tant qu'invité",
                                   style: TextStyle(
                                     color: Color.fromRGBO(143, 148, 251, 1),
                                     fontSize: 18,
