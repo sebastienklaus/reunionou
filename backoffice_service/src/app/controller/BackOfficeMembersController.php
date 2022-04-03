@@ -23,6 +23,47 @@ class BackOfficeMembersController
         $this->container = $container;
     }
 
+    /**
+     * 
+     * @api {GET} /members/{id} Get Member
+     * @apiName GetMemberById
+     * @apiGroup Member
+     * @apiVersion  1.0.0
+     * 
+     * @apiDescription Récupérer un membre par son ID.
+     * 
+     * @apiParam  {String} id ID du member
+     * 
+     * @apiSuccess (Success (200)) {String} id ID du member
+     * @apiSuccess (Success (200)) {String} user_id ID de l'utilisateur associé au member
+     * @apiSuccess (Success (200)) {String} event_id ID de l'event associé au member
+     * @apiSuccess (Success (200)) {String} pseudo Pseudo du member
+     * @apiSuccess (Success (200)) {date} created_at Date de création du member
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification du member
+     * @apiSuccess (Success (200)) {Number} status Status du member (-1: en attente, 0: annulé, 1: confirmé )
+     * 
+     * @apiParamExample Request-Example:
+     * {
+     *    "type": "ressource",
+     *    "member": {
+     *        "id": "9d7761ea-17a7-483b-b0c5-ff740cfc74c1",
+     *        "user_id": "",
+     *        "event_id": "abb18196-937c-483a-a7c5-f77337c14f8b",
+     *        "pseudo": "mmitchell1j",
+     *        "created_at": "2021-09-02 04:55:10",
+     *        "updated_at": "2022-03-29 14:16:25",
+     *        "status": 1
+     *    },
+     *    "links": {
+     *        "self": {
+     *            "href": "/members/9d7761ea-17a7-483b-b0c5-ff740cfc74c1/"
+     *        },
+     *        "event": {
+     *            "href": "/events/abb18196-937c-483a-a7c5-f77337c14f8b/"
+     *        }
+     *    }
+     *}
+     */
     public function getMember(Request $req, Response $resp, $args): Response
     {
 
@@ -49,6 +90,50 @@ class BackOfficeMembersController
         }
     }
 
+    /**
+     * 
+     * @api {POST} /members Create Member
+     * @apiName CreateMember
+     * @apiGroup Member
+     * @apiVersion  1.0.0
+     * 
+     * @apiDescription Créer un membre
+     * 
+     * @apiBody {String} user_id ID de l'utilisateur associé au member
+     * @apiBody {String} event_id ID de l'event associé au member
+     * @apiBody {String} pseudo Pseudo du member
+     * @apiBody {Number} status du member (-1: en attente de réponse, 0: annulé, 1: invitation accepté )
+     * 
+     * @apiParamExample Request-Example:
+     * {
+     * "user_id": "/users/b1858803-2305-47f4-be67-1efc10a91da7",
+     * "event_id": "7be3efde-34b1-4cc8-a52f-1429bdee413b",
+     * "pseudo": "User_5",
+     * "status": -1
+     * }
+     * 
+     * @apiSuccess (Success (201)) {String} id ID du member
+     * @apiSuccess (Success (201)) {String} user_id ID de l'utilisateur associé au member
+     * @apiSuccess (Success (201)) {String} event_id ID de l'event associé au member
+     * @apiSuccess (Success (201)) {String} pseudo Pseudo du member
+     * @apiSuccess (Success (201)) {date} created_at Date de création du member
+     * @apiSuccess (Success (201)) {date} updated_at Date de la dernière modification du member
+     * @apiSuccess (Success (201)) {Number} status Status du member
+     * 
+     * @apiSuccessExample Success-Response:
+     *  {
+     * "type": "ressource",
+     * "member": {
+     *     "id": "a9840463-19a3-4d3c-9cc4-c12fdfed0c35",
+     *     "user_id": "b1858803-2305-47f4-be67-1efc10a91da7",
+     *     "event_id": "7be3efde-34b1-4cc8-a52f-1429bdee413b",
+     *     "pseudo": "User_5",
+     *     "updated_at": "2022-03-28 09:01:22",
+     *     "created_at": "2022-03-28 09:01:22",
+     *     "status": "-1"
+     *           }
+     * }
+     */
     public function createMember(Request $req, Response $resp, $args): Response
     {
 
@@ -102,6 +187,58 @@ class BackOfficeMembersController
         }
     }
 
+    /**
+     * 
+     * @api {PUT} /members/{id} Update Member
+     * @apiName UpdateMember
+     * @apiGroup Member
+     * @apiVersion  1.0.0
+     * 
+     * @apiDescription Modifier, mettre à jour les information d'un membre
+     * 
+     * @apiParam  {String} id ID du member
+     * 
+     * @apiBody {String} user_id ID de l'utilisateur associé au member
+     * @apiBody {String} event_id ID de l'event associé au member
+     * @apiBody {String} pseudo Pseudo du member
+     * @apiBody {String} status du member (-1: en attente de réponse, 0: annulé, 1: invitation accepté )
+     * 
+     * @apiParamExample Request-Example:
+     * {
+     * "user_id": "/users/b1858803-2305-47f4-be67-1efc10a91da7",
+     * "event_id": "7be3efde-34b1-4cc8-a52f-1429bdee413b",
+     * "pseudo": "user_7"
+     * }
+     * 
+     * @apiSuccess (Success (200)) {String} id ID du member
+     * @apiSuccess (Success (200)) {String} user_id ID de l'utilisateur associé au member
+     * @apiSuccess (Success (200)) {String} event_id ID de l'event associé au member
+     * @apiSuccess (Success (200)) {String} pseudo Pseudo du member
+     * @apiSuccess (Success (200)) {date} created_at Date de création du member
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification du member
+     * @apiSuccess (Success (200)) {Number} status Status du member
+     * 
+     * @apiSuccessExample Success-Response:
+     *  {
+     * "type": "ressource",
+     * "member": {
+     *     "id": "a9840463-19a3-4d3c-9cc4-c12fdfed0c35",
+     *     "user_id": "/users/b1858803-2305-47f4-be67-1efc10a91da7",
+     *     "event_id": "7be3efde-34b1-4cc8-a52f-1429bdee413b",
+     *     "pseudo": "user_7",
+     *     "updated_at": "2022-03-28 09:01:22",
+     *     "created_at": "2022-03-28 09:01:22",
+     *     "status": -1
+     *           },
+     *  "links": {
+     *      "self": {
+     *          "href": "/members/a9840463-19a3-4d3c-9cc4-c12fdfed0c35/"
+     *      },
+     *      "event": {
+     *          "href": "/events/7be3efde-34b1-4cc8-a52f-1429bdee413b/"
+     *      }
+     * }
+     */
     public function updateMember(Request $req, Response $resp, $args): Response
     {
 
@@ -146,6 +283,49 @@ class BackOfficeMembersController
         }
     }
 
+    /**
+     * 
+     * @api {GET} /events/{id}/members Get Member by Event ID
+     * @apiName GetMembersByEventId
+     * @apiGroup Member
+     * @apiVersion  1.0.0
+     * 
+     * @apiDescription Récupérer tous les membre pour d'un événement
+     * 
+     * @apiParam  {String} id ID de l'event
+     * 
+     * @apiSuccess (Success (200)) {String} id ID du member
+     * @apiSuccess (Success (200)) {String} user_id ID de l'utilisateur associé au member
+     * @apiSuccess (Success (200)) {String} event_id ID de l'event associé au member
+     * @apiSuccess (Success (200)) {String} pseudo Pseudo du member
+     * @apiSuccess (Success (200)) {date} created_at Date de création du member
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification du member
+     * @apiSuccess (Success (200)) {Number} status Status du member (-1: en attente, 0: annulé, 1: confirmé )
+     * 
+     * @apiSuccessExample Success-Response:
+     *  {
+     * "type": "collection",
+     * "count": 3,
+     * "member": [
+     *     {
+     *         "id": "314fc1b2-a413-481e-b570-c9c2c52e9e07",
+     *         "user_id": "poulette",
+     *         "event_id": "7be3efde-34b1-4cc8-a52f-1429bdee413b",
+     *         "pseudo": "HARMand",
+     *         "created_at": "2021-08-04T01:16:08.000000Z",
+     *         "updated_at": "2022-03-29T14:28:32.000000Z",
+     *         "status": 0,
+     *         "links": {
+     *             "self": {
+     *                 "href": "/members/314fc1b2-a413-481e-b570-c9c2c52e9e07/"
+     *             }
+     *         }
+     *     },
+     *     {
+     *         "id": "9a715068-bf27-467b-b291-0148b40fd70a",
+     *         "user_id": "898f20c4-710d-4508-9129-af7a975572ae",
+     * ...
+     */
     public function getMembersByEvent(Request $req, Response $resp, $args): Response
     {
 
@@ -172,6 +352,40 @@ class BackOfficeMembersController
         }
     }
 
+    /**
+     * 
+     * @api {DELETE} /members/{id} Delete Member
+     * @apiName DeleteMemberById
+     * @apiGroup Member
+     * @apiVersion  1.0.0
+     * 
+     * @apiDescription Supprimer un membre par son id
+     * 
+     * @apiParam  {String} id ID du member
+     * 
+     * @apiSuccess (Success (200)) {String} id ID du member
+     * @apiSuccess (Success (200)) {String} user_id ID de l'utilisateur ayant créé le member
+     * @apiSuccess (Success (200)) {String} event_id ID de l'event associé au member
+     * @apiSuccess (Success (200)) {JSON} media Media contenu dans le member
+     * @apiSuccess (Success (200)) {date} created_at Date de création du member
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification du member
+     * @apiSuccess (Success (200)) {Number} status Status du member (-1: en attente, 0: annulé, 1: confirmé )
+     * 
+     * @apiSuccessExample Success-Response:
+     *  {
+     * "type": "member",
+     * "member": {
+     *     "id": "a9840463-19a3-4d3c-9cc4-c12fdfed0c35",
+     *     "user_id": "/users/b1858803-2305-47f4-be67-1efc10a91da7",
+     *     "event_id": "7be3efde-34b1-4cc8-a52f-1429bdee413b",
+     *     "pseudo": "User_24",
+     *     "created_at": "2022-03-28T09:01:22.000000Z",
+     *     "updated_at": "2022-03-28T09:01:22.000000Z",
+     *     "status": -1
+     * },
+     * "response": "member deleted"
+     * }
+     */
     public function deleteMemberById(Request $req, Response $resp, $args): Response
     {
 
@@ -198,6 +412,50 @@ class BackOfficeMembersController
         }
     }
 
+    /**
+     * 
+     * @api {GET} /users/{id}/members Get Members by User ID
+     * @apiName GetMemberByUserID
+     * @apiGroup Member
+     * @apiVersion  1.0.0
+     * 
+     * @apiDescription Récupérer tous les membres pour un utilisateur enregistré
+     * 
+     * @apiParam  {String} id ID du User
+     * 
+     * @apiSuccess (Success (200)) {String} id ID du member
+     * @apiSuccess (Success (200)) {String} user_id ID de l'utilisateur associé au member
+     * @apiSuccess (Success (200)) {String} event_id ID de l'event associé au member
+     * @apiSuccess (Success (200)) {String} pseudo Pseudo du member
+     * @apiSuccess (Success (200)) {date} created_at Date de création du member
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification du member
+     * @apiSuccess (Success (200)) {Number} status Status du member (-1: en attente, 0: annulé, 1: confirmé )
+     * 
+     * @apiSuccessExample Success-Response:
+     * {
+     * "type": "collection",
+     *     "count": 1,
+     *     "member": [
+     *         {
+     *             "id": "9a715068-bf27-467b-b291-0148b40fd70a",
+     *             "user_id": "898f20c4-710d-4508-9129-af7a975572ae",
+     *             "event_id": "7be3efde-34b1-4cc8-a52f-1429bdee413b",
+     *             "pseudo": "ijanatam",
+     *             "created_at": "2022-01-24T01:17:29.000000Z",
+     *             "updated_at": "2021-11-15T17:16:47.000000Z",
+     *             "status": -1,
+     *             "links": {
+     *                 "self": {
+     *                     "href": "/members/9a715068-bf27-467b-b291-0148b40fd70a/"
+     *                 },
+     *                 "event": {
+     *                     "href": "/events/7be3efde-34b1-4cc8-a52f-1429bdee413b/"
+     *                 }
+     *             }
+     *         }
+     *     ]
+     *}
+     */
     public function getMembersByUserId(Request $req, Response $resp, $args): Response
     {
 
@@ -225,6 +483,45 @@ class BackOfficeMembersController
     }
 
 
+    /**
+     * 
+     * @api {GET} /members/{id}/?event_id&pseudo&user_id Get Member by Event and by Pseudo or User ID
+     * @apiName GetOneMember
+     * @apiGroup Member
+     * @apiVersion  1.0.0
+     * 
+     * @apiDescription Récupérer un membre selon un évenement et selon son user id OU son pseudo
+     * 
+     * @apiParam  {String} id ID du User
+     * @apiParam  {String} event_id ID de l'événement
+     * @apiParam  {String} pseudo String Pseudo du membre
+     * @apiParam  {String} user_id String user associé au membre
+     * 
+     * @apiSuccess (Success (200)) {String} id ID du member
+     * @apiSuccess (Success (200)) {String} user_id ID de l'utilisateur associé au member
+     * @apiSuccess (Success (200)) {String} event_id ID de l'event associé au member
+     * @apiSuccess (Success (200)) {String} pseudo Pseudo du member
+     * @apiSuccess (Success (200)) {date} created_at Date de création du member
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification du member
+     * @apiSuccess (Success (200)) {Number} status Status du member (-1: en attente, 0: annulé, 1: confirmé )
+     * 
+     * @apiSuccessExample Success-Response:
+     * {
+     * "type": "collection",
+     *     "count": 1,
+     *     "member": [
+     *         {
+     *             "id": "9a715068-bf27-467b-b291-0148b40fd70a",
+     *             "user_id": "898f20c4-710d-4508-9129-af7a975572ae",
+     *             "event_id": "7be3efde-34b1-4cc8-a52f-1429bdee413b",
+     *             "pseudo": "ijanatam",
+     *             "created_at": "2022-01-24T01:17:29.000000Z",
+     *             "updated_at": "2021-11-15T17:16:47.000000Z",
+     *             "status": -1
+     *         }
+     *     ]
+     *}
+     */
     public function getOneMember(Request $req, Response $resp, $args): Response
     {
         try {
@@ -254,6 +551,36 @@ class BackOfficeMembersController
     }
 
 
+    /**
+     * 
+     * @api {GET} /members/ Get All Members
+     * @apiName GetMembers
+     * @apiGroup Member
+     * @apiVersion  1.0.0
+     * 
+     * @apiDescription Récupérer tous les membres.
+     * 
+     * @apiSuccess (Success (200)) {String} id ID du member
+     * @apiSuccess (Success (200)) {String} pseudo Pseudo du member
+     * @apiSuccess (Success (200)) {date} updated_at Date de la dernière modification du member
+     * @apiSuccess (Success (200)) {Number} status Status du member (-1: en attente, 0: annulé, 1: confirmé )
+     * 
+     * @apiSuccessExample Success-Response:
+     * {
+     * "type": "collection",
+     *     "count": 46,
+     *     "members": [
+     *         {
+     *             "id": "f377662a-9d55-4c88-b8a1-2334fd9bba48",
+     *             "pseudo": "afinnick2m",
+     *             "updated_at": "2021-04-06T19:54:05.000000Z",
+     *             "status": -1
+     *         },
+     *         {
+     *             "id": "f12b5395-9f2c-4c9c-a5f1-50549341226f",
+     *             "pseudo": "gmacauleyo",
+     * ...
+     */
     public function getMembers(Request $req, Response $resp, $args): Response
     {
 

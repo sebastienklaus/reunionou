@@ -129,8 +129,8 @@ class Events_Controller
             // génération id basé sur un aléa : UUID v4
             $new_event->id = $new_uuid(4);
 
-            $new_event->title = $event_req['title'];
-            $new_event->description = $event_req['description'];
+            $new_event->title = htmlspecialchars($event_req['title'], ENT_NOQUOTES);
+            $new_event->description = htmlspecialchars($event_req['description'], ENT_NOQUOTES);
             $new_event->user_id = filter_var($event_req['user_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             //! FILTE POUR location : location JSON DOIT ETRE OK
             $new_event->location = $event_req['location'];
@@ -274,8 +274,8 @@ class Events_Controller
 
             $event = Events::Select(['id', 'title', 'description', 'user_id', 'location', 'date', 'heure'])->findOrFail($args['id']);
 
-            $event->title = filter_var($received_event['title'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $event->description = filter_var($received_event['description'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $event->title = htmlspecialchars($received_event['title'], ENT_NOQUOTES);
+            $event->description = htmlspecialchars($received_event['description'], ENT_NOQUOTES);
             $event->user_id = filter_var($received_event['user_id'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             //! FILTE POUR location : location JSON DOIT ETRE OK
             $event->location = $received_event['location'];
