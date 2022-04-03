@@ -23,6 +23,29 @@ class BackOfficeAuthController
         $this->container = $container;
     }
 
+    /**
+     * 
+     * @api {POST} /auth Authenticate
+     * @apiName Authenticate
+     * @apiGroup User
+     * @apiVersion  1.0.0
+     * 
+     * @apiDescription Authentification
+     * 
+     * @apiHeader Basic_Auth Email de l'utilisateur
+     *                     <br> Mot de passe de l'utilisateur
+     * 
+     * @apiHeaderExample {json} Header-Example:
+     * {
+     *   "Authorization": "Basic bWF4QG1heC5tYXg6bWF4(...)"
+     * }
+     *
+     * @apiSuccess (Success (200)) {String} resfresh-token Refresh Token lié à l'utisateur
+     * @apiSuccessExample Success-Response:
+     *{
+     * "refresh-token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vZG9ja2V0dS5pdXRuYy51b(...)"
+     * }
+     */
     public function authenticate(Request $req, Response $resp, array $args): Response
     {
 
@@ -217,6 +240,42 @@ class BackOfficeAuthController
         }
     }
 
+    /**
+     * 
+     * @api {GET} /users/{id} Get User By Id
+     * @apiName GetUserById
+     * @apiGroup User
+     * @apiVersion  1.0.0
+     * 
+     * @apiDescription Récupérer un utilisateur par son ID
+     * 
+     * @apiParam  {id} id ID de l'user
+     * 
+     * @apiSuccess (Success (200)) {String} id UUID de l'utilisateur
+     * @apiSuccess (Success (200)) {String} fullname Nom complet de l'utilisateur
+     * @apiSuccess (Success (200)) {String} email Email Email de l'utilisateur
+     * @apiSuccess (Success (200)) {String} user_username Username ou pseudo de l'utilisateur
+     * @apiSuccess (Success (200)) {String} refesh_token Refresh_token ou pseudo de l'utilisateur
+     * 
+     * @apiSuccessExample Success-Response:
+     *{
+     * "type": "ressouce",
+     * "user": {
+     *     "id": "05edf56d-9436-45e9-8e23-6c9aad24ed07",
+     *     "fullname": "Lyn McWaters",
+     *     "email": "lmcwatersg@creativecommons.org",
+     *     "username": "lmcwatersg",
+     *     "refresh_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vZG9ja2V0dS5pdXRuYy51bml2LWxvcnJhaW5lLmZyOjYyMDExL2F1dGgiLCJhdWQiOiJodHRwOi8vZG9ja2V0dS5pdXRuYy51bml2LWxvcnJhaW5lLmZyOjYyMDE2IiwiaWF0IjoxNjQ4NjM2MDQ1LCJleHAiOjE2NTEyMjgwNDUsInVwciI6eyJ1c2VyX2lkIjoiMDVlZGY1NmQtOTQzNi00NWU5LThlMjMtNmM5YWFkMjRlZDA3IiwidXNlcl9mdWxsbmFtZSI6Ikx5biBNY1dhdGVycyIsInVzZXJfZW1haWwiOiJsbWN3YXRlcnNnQGNyZWF0aXZlY29tbW9ucy5vcmciLCJ1c2VyX3VzZXJuYW1lIjoibG1jd2F0ZXJzZyIsInVzZXJfaXNBZG1pbiI6MX19.BWQHMDLV4fYr6GPR6oMxcc8UcoexqUtpRTjOWry99d8"
+     * },
+     * "links": {
+     *     "users": {
+     *         "href": "/users/"
+     *     },
+     *     "self": {
+     *         "href": "/users/05edf56d-9436-45e9-8e23-6c9aad24ed07/"
+     *     }
+     * }
+     */
     public function getUserById(Request $req, Response $resp, array $args): Response
     {
         $userID = $args['id'];
@@ -240,6 +299,30 @@ class BackOfficeAuthController
         }
     }
 
+
+    /**
+     * 
+     * @api {POST} /authAdmin Admin Authenticate
+     * @apiName AuthenticateAdmin
+     * @apiGroup User
+     * @apiVersion  1.0.0
+     * 
+     * @apiDescription Authentification d'un utilisateur ayant les droits administrateur
+     * 
+     * @apiHeader Basic_Auth Email de l'utilisateur administrateur
+     *                     <br> Mot de passe de l'utilisateur
+     * 
+     * @apiHeaderExample {json} Header-Example:
+     * {
+     *   "Authorization": "Basic bWF4QG1heC5tYXg6bWF4(...)"
+     * }
+     *
+     * @apiSuccess (Success (200)) {String} resfresh-token Refresh Token lié à l'utisateur
+     * @apiSuccessExample Success-Response:
+     *{
+     * "refresh-token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vZG9ja2V0dS5pdXRuYy51b(...)"
+     * }
+     */
     public function authenticateAdmin(Request $req, Response $resp, array $args): Response
     {
         try {
